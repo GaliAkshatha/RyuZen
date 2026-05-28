@@ -53,9 +53,19 @@ function AuthPage() {
 
         console.log(data);
 
+        if(!response.ok){
+          alert(data.message);
+          return;
+        }
+        
         localStorage.setItem(
             "user",
             JSON.stringify(data.user)
+        );
+
+        localStorage.setItem(
+          "token",
+          data.token
         );
 
         setUser(data.user);

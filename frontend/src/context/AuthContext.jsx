@@ -6,11 +6,28 @@ export function AuthProvider({ children }) {
 
   const [user, setUser] = useState(() => {
 
-    const storedUser = localStorage.getItem("user");
+    try {
 
-    return storedUser
-      ? JSON.parse(storedUser)
-      : null;
+      const storedUser =
+        localStorage.getItem("user");
+
+      if (
+        !storedUser ||
+        storedUser === "undefined"
+      ) {
+        return null;
+      }
+
+      return JSON.parse(storedUser);
+
+    } catch (error) {
+
+      console.log(
+        "Invalid localStorage user"
+      );
+
+      return null;
+    }
 
   });
 
