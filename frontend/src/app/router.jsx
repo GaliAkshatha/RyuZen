@@ -6,6 +6,7 @@ import AdminLayout from "./layouts/AdminLayout";
 import UserLayout from "./layouts/UserLayout";
 
 import ADashboard from "../admin/pages/ADashboard";
+import ActivitiesPage from "../admin/pages/ActivitiesPage"
 import UDashboard from "../user/pages/UserDashboard";
 
 export const router = createBrowserRouter([
@@ -21,6 +22,10 @@ export const router = createBrowserRouter([
                 path: "dashboard",
                 element: <ADashboard />,
             },
+            {
+                path: "activities",
+                element: <ActivitiesPage />
+            }
         ],
     },
 
