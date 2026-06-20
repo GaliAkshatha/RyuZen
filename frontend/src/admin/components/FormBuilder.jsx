@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import FieldBuilder from "./FieldBuilder";
 
-function FormBuilder({ fetchActivities,}) {
+function FormBuilder({ fetchActivities,setSelectedType}) {
 
   const [loading, setLoading] =
     useState(false);
@@ -124,7 +124,15 @@ function FormBuilder({ fetchActivities,}) {
         return;
       }
 
+      alert(
+        "Form Created"
+      );
+
       fetchActivities();
+
+      if (setSelectedType) {
+        setSelectedType("");
+      }
 
       console.log(data);
 
@@ -161,6 +169,10 @@ function FormBuilder({ fetchActivities,}) {
       onSubmit={handleSubmit}
       className="space-y-8"
     >
+
+      <h2 className="text-3xl font-bold">
+        Form 
+      </h2>
 
       {/* BASIC INFO */}
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import FieldBuilder from "./FieldBuilder";
 
-function WorkshopBuilder({ fetchActivities }) {
+function WorkshopBuilder({ fetchActivities, setSelectedType}) {
 
   const [loading, setLoading] = useState(false);
 
@@ -133,8 +133,49 @@ function WorkshopBuilder({ fetchActivities }) {
         "Workshop Created"
       );
 
+      setFormData({
+
+        title: "",
+        description: "",
+
+        venue: "",
+
+        startDate: "",
+        endDate: "",
+
+        startTime: "",
+        endTime: "",
+
+        registrationDeadline: "",
+
+        attendanceMethod: "manual",
+
+        maxParticipants: "",
+
+        points: "",
+        penaltyPoints: "",
+
+        requirements: [],
+
+        formFields: [],
+
+        type: "workshop",
+      });
+
+      setRequirement("");
+
+      setField({
+        label: "",
+        type: "text",
+        required: false,
+      });
+
       if (fetchActivities) {
         await fetchActivities();
+      }
+
+      if (setSelectedType) {
+        setSelectedType("");
       }
 
     } catch (error) {
@@ -156,7 +197,7 @@ function WorkshopBuilder({ fetchActivities }) {
     >
 
       <h2 className="text-3xl font-bold">
-        Workshop Builder
+        Workshop 
       </h2>
 
       <input
@@ -186,27 +227,55 @@ function WorkshopBuilder({ fetchActivities }) {
         className="w-full p-4 rounded-2xl bg-white/5"
       />
 
+      <input
+          type="number"
+          name="points"
+          placeholder="Reward Points"
+          value={formData.points}
+          onChange={handleChange}
+          className="
+            p-4 rounded-2xl
+            bg-white/5
+            border border-white/10
+          "
+        />
+
       <div className="grid grid-cols-2 gap-5">
+        <div>
+            <label className="block mb-2 text-white/70">
+                Workshop Start Date
+            </label>
 
-        <input
-          type="date"
-          name="startDate"
-          value={formData.startDate}
-          onChange={handleChange}
-          className="p-4 rounded-2xl bg-white/5"
-        />
+            <input
+              type="date"
+              name="startDate"
+              value={formData.startDate}
+              onChange={handleChange}
+              className="p-4 rounded-2xl bg-white/5"
+            />
 
-        <input
-          type="date"
-          name="endDate"
-          value={formData.endDate}
-          onChange={handleChange}
-          className="p-4 rounded-2xl bg-white/5"
-        />
+        </div>
+
+        <div>
+            <label className="block mb-2 text-white/70">
+                Workshop End Date
+            </label>
+
+            <input
+              type="date"
+              name="endDate"
+              value={formData.endDate}
+              onChange={handleChange}
+              className="p-4 rounded-2xl bg-white/5"
+            />
+
+        </div>
 
       </div>
 
       <div className="grid grid-cols-2 gap-5">
+        
+        <label>Start Time</label>
 
         <input
           type="time"
@@ -215,6 +284,8 @@ function WorkshopBuilder({ fetchActivities }) {
           onChange={handleChange}
           className="p-4 rounded-2xl bg-white/5"
         />
+
+        <label>End Time</label>
 
         <input
           type="time"
@@ -225,7 +296,9 @@ function WorkshopBuilder({ fetchActivities }) {
         />
 
       </div>
-
+        <label className="block mb-2 text-white/70">
+            Registration Deadline
+        </label>
       <input
         type="date"
         name="registrationDeadline"
@@ -240,15 +313,15 @@ function WorkshopBuilder({ fetchActivities }) {
         onChange={handleChange}
         className="w-full p-4 rounded-2xl bg-white/5"
       >
-        <option value="manual">
+        <option className="bg-[#151c32] text-white" value="manual">
           Manual
         </option>
 
-        <option value="qr">
+        <option className="bg-[#151c32] text-white" value="qr">
           QR Code
         </option>
 
-        <option value="future">
+        <option className="bg-[#151c32] text-white" value="future">
           Future
         </option>
 
@@ -306,11 +379,92 @@ function WorkshopBuilder({ fetchActivities }) {
 
       </div>
 
+      <div className="mt-4 flex flex-wrap gap-2">
+
+        {formData.requirements.map(
+            (req, index) => (
+
+            <span
+                key={index}
+                className="
+                px-3 py-1
+                rounded-full
+                bg-cyan-500/20
+                text-cyan-300
+                "
+            >
+                {req}
+            </span>
+
+            )
+        )}
+
+      </div>
+
       <FieldBuilder
         field={field}
         setField={setField}
         addField={addField}
       />
+
+      <div>
+        
+         <h3 className="text-2xl font-semibold mb-4">
+            Form Preview
+         </h3>
+      <div className="space-y-3">
+
+        {formData.formFields.map((field, index) => (
+      <div
+        key={index}
+        className="
+        bg-white/5
+        border border-white/10
+        rounded-2xl
+        p-5
+
+        flex justify-between
+        items-center
+
+        hover:border-cyan-400/50
+        transition-all
+        "
+      >
+
+       <div>
+
+        <p className="font-semibold text-lg">
+            {field.label}
+        </p>
+
+        <p className="text-white/50 text-sm">
+            {field.type}
+        </p>
+
+       </div>
+
+       <div className="flex gap-2">
+
+        {field.required && (
+            <span
+                className="
+                px-3 py-1
+                rounded-full
+                bg-red-500/20
+                text-red-300
+                text-xs
+                "
+            >
+                Required
+            </span>
+        )}
+
+       </div>
+
+        </div>
+        ))}
+        </div>
+      </div>
 
       <button
         type="submit"
@@ -331,6 +485,7 @@ function WorkshopBuilder({ fetchActivities }) {
       </button>
 
     </form>
+
   );
 }
 

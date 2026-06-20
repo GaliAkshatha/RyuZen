@@ -144,6 +144,7 @@ function ActivitiesPage() {
 
             <FormBuilder
               fetchActivities={fetchActivities}
+              setSelectedType={setSelectedType}
             />
 
           </div>
@@ -164,6 +165,7 @@ function ActivitiesPage() {
                 fetchActivities={
                     fetchActivities
                 }
+                setSelectedType={setSelectedType}
               />
           </div>
         )
