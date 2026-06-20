@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import FormBuilder from "../components/FormBuilder";
 import WorkshopBuilder from "../components/WorkshopBuilder";
 import AssignmentBuilder from "../components/AssignmentBuilder";
+import { Navigate } from "react-router-dom";
 
 function ActivitiesPage() {
 
   const [selectedType, setSelectedType] = useState("");
 
   const [activities, setActivities] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
 
@@ -242,6 +246,11 @@ function ActivitiesPage() {
 
                   <div
                     key={activity._id}
+                    onClick={() =>
+                      navigate(
+                        `/admin/activities/${activity._id}`
+                      )
+                    }
                     className="
                       bg-white/5
                       border border-white/10

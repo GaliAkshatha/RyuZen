@@ -1,4 +1,5 @@
 import Activity from "../models/Activity.js";
+import ActivitySubmission from "../models/ActivitySubmission.js";
 
 export const createActivity = async(
     req,
@@ -70,4 +71,42 @@ export const getActivities = async(
             message: error.message,
         });
     }
+};
+
+export const getActivityById =
+async (req, res) => {
+
+  try {
+
+    const activity =
+      await Activity.findById(
+        req.params.id
+      );
+
+    if (!activity) {
+
+      return res.status(404).json({
+        message:
+          "Activity not found",
+      });
+    }
+    const totalRegistrations =
+      await ActivitySubmission
+      .countDocuments({
+        activity:
+          req.params.id,
+      });
+
+    res.json({
+      activity,
+      totalRegistrations,
+    });
+
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 };
