@@ -56,7 +56,10 @@ function ActivitiesPage() {
       <div className="grid grid-cols-3 gap-5">
 
         <button
-          onClick={() => setSelectedType("form")}
+          onClick={() => setSelectedType(selectedType ==="form"
+            ? ""
+            :"form"
+          )}
           className="
             p-6 rounded-3xl
             bg-white/5
@@ -82,7 +85,10 @@ function ActivitiesPage() {
         </button>
 
         <button
-          onClick={() => setSelectedType("workshop")}
+          onClick={() => setSelectedType(selectedType === "workshop"
+            ? ""
+            :"workshop"
+          )}
           className="
             p-6 rounded-3xl
             bg-white/5
@@ -102,13 +108,16 @@ function ActivitiesPage() {
           </h2>
 
           <p className="text-white/50">
-            Coming soon
+            workshop creation
           </p>
 
         </button>
 
         <button
-          onClick={() => setSelectedType("assignment")}
+          onClick={() => setSelectedType(selectedType === "assignment"
+            ? ""
+            : "assignment"
+          )}
           className="
             p-6 rounded-3xl
             bg-white/5
@@ -128,7 +137,7 @@ function ActivitiesPage() {
           </h2>
 
           <p className="text-white/50">
-            Coming soon
+            Assignment creation
           </p>
 
         </button>

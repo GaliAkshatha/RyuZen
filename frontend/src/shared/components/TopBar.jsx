@@ -69,7 +69,6 @@ function TopBar() {
                     </button>
 
                     <button
-                    onClick={() => navigate("/admin/activities")}
                     className="hover:text-white transition"
                     >
                         Activities
