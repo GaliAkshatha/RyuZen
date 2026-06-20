@@ -146,6 +146,10 @@ const activitySchema = new mongoose.Schema(
       default: "pdf",
     },
 
+    submissionDeadline: {
+      type: Date,
+    },
+
     // =========================
 
     createdBy: {

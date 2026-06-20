@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 import FormBuilder from "../components/FormBuilder";
 import WorkshopBuilder from "../components/WorkshopBuilder";
+import AssignmentBuilder from "../components/AssignmentBuilder";
 
 function ActivitiesPage() {
 
@@ -107,12 +108,17 @@ function ActivitiesPage() {
         </button>
 
         <button
-          disabled
+          onClick={() => setSelectedType("assignment")}
           className="
             p-6 rounded-3xl
             bg-white/5
-            border border-white/10
-            opacity-40
+            border border-cyan-500/20
+
+            hover:border-cyan-400
+            hover:bg-cyan-500/10
+
+            transition-all duration-300
+
             text-left
           "
         >
@@ -162,6 +168,24 @@ function ActivitiesPage() {
               p-8
           ">
             <WorkshopBuilder
+                fetchActivities={
+                    fetchActivities
+                }
+                setSelectedType={setSelectedType}
+              />
+          </div>
+        )
+      }
+
+      {
+        selectedType === "assignment" && (
+          <div className="
+              bg-white/5
+              border border-white/10
+              rounded-3xl
+              p-8
+          ">
+            <AssignmentBuilder
                 fetchActivities={
                     fetchActivities
                 }
