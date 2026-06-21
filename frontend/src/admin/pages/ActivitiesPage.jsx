@@ -1,12 +1,17 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
-import FormBuilder from "../components/FormBuilder";
+import ActivityForm from "../components/ActivityForm";
+
 
 function ActivitiesPage() {
 
   const [selectedType, setSelectedType] = useState("");
 
   const [activities, setActivities] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
 
@@ -54,7 +59,10 @@ function ActivitiesPage() {
       <div className="grid grid-cols-3 gap-5">
 
         <button
-          onClick={() => setSelectedType("form")}
+          onClick={() => setSelectedType(selectedType ==="form"
+            ? ""
+            :"form"
+          )}
           className="
             p-6 rounded-3xl
             bg-white/5
@@ -80,12 +88,20 @@ function ActivitiesPage() {
         </button>
 
         <button
-          disabled
+          onClick={() => setSelectedType(selectedType === "workshop"
+            ? ""
+            :"workshop"
+          )}
           className="
             p-6 rounded-3xl
             bg-white/5
-            border border-white/10
-            opacity-40
+            border border-cyan-500/20
+
+            hover:border-cyan-400
+            hover:bg-cyan-500/10
+
+            transition-all duration-300
+
             text-left
           "
         >
@@ -95,18 +111,26 @@ function ActivitiesPage() {
           </h2>
 
           <p className="text-white/50">
-            Coming soon
+            workshop creation
           </p>
 
         </button>
 
         <button
-          disabled
+          onClick={() => setSelectedType(selectedType === "assignment"
+            ? ""
+            : "assignment"
+          )}
           className="
             p-6 rounded-3xl
             bg-white/5
-            border border-white/10
-            opacity-40
+            border border-cyan-500/20
+
+            hover:border-cyan-400
+            hover:bg-cyan-500/10
+
+            transition-all duration-300
+
             text-left
           "
         >
@@ -116,7 +140,7 @@ function ActivitiesPage() {
           </h2>
 
           <p className="text-white/50">
-            Coming soon
+            Assignment creation
           </p>
 
         </button>
@@ -136,12 +160,51 @@ function ActivitiesPage() {
             "
           >
 
-            <FormBuilder
+            <ActivityForm
+              type="form"
+              mode="create"
               fetchActivities={fetchActivities}
+              setSelectedType={setSelectedType}
             />
-
           </div>
 
+        )
+      }
+      {/* WORKSHOP BUILDER */}
+
+      {
+        selectedType === "workshop" && (
+          <div className="
+              bg-white/5
+              border border-white/10
+              rounded-3xl
+              p-8
+          ">
+            <ActivityForm
+              type="workshop"
+              mode="create"
+              fetchActivities={fetchActivities}
+              setSelectedType={setSelectedType}
+            />
+          </div>
+        )
+      }
+
+      {
+        selectedType === "assignment" && (
+          <div className="
+              bg-white/5
+              border border-white/10
+              rounded-3xl
+              p-8
+          ">
+            <ActivityForm
+              type="assignment"
+              mode="create"
+              fetchActivities={fetchActivities}
+              setSelectedType={setSelectedType}
+            />
+          </div>
         )
       }
 
@@ -183,6 +246,11 @@ function ActivitiesPage() {
 
                   <div
                     key={activity._id}
+                    onClick={() =>
+                      navigate(
+                        `/admin/activities/${activity._id}`
+                      )
+                    }
                     className="
                       bg-white/5
                       border border-white/10

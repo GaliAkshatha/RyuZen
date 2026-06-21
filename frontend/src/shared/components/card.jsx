@@ -1,6 +1,6 @@
 import React from "react";
 
-function Card({ title, value, className = "", loading = false }) {
+function Card({ title, value, className = "", loading = false, children,}) {
   return (
     <div
       className={`bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5 
@@ -9,7 +9,9 @@ function Card({ title, value, className = "", loading = false }) {
       transition duration-300 hover:-translate-y-1 ${className}`}
     >
       <h2 className="text-sm text-white/70 mb-2">{title}</h2>
-
+      
+      {children}
+      
       {value !== undefined && (
         <p className="text-3xl font-bold mt-3 text-cyan-400">
           {loading ? "Loading..." : value}

@@ -7,7 +7,13 @@ import UserLayout from "./layouts/UserLayout";
 
 import ADashboard from "../admin/pages/ADashboard";
 import ActivitiesPage from "../admin/pages/ActivitiesPage"
+import ActivityDetails from "../admin/pages/ActivityDetails";
+import ActivityResponses from "../admin/pages/ActivityResponses";
+import EditActivity from "../admin/pages/EditActivity";
+
 import UDashboard from "../user/pages/UserDashboard";
+import UserActivities from "../user/pages/UserActivities";
+import UActivityDetails from "../user/pages/ActivityDetails";
 
 export const router = createBrowserRouter([
     {
@@ -25,7 +31,19 @@ export const router = createBrowserRouter([
             {
                 path: "activities",
                 element: <ActivitiesPage />
-            }
+            },
+            {
+                path: "activities/:id",
+                element: <ActivityDetails />,
+            },
+            {
+                path: "activities/:id/responses",
+                element: <ActivityResponses />,
+            },
+            {
+                path: "activities/:id/edit",
+                element: <EditActivity />,
+            },
         ],
     },
 
@@ -36,6 +54,14 @@ export const router = createBrowserRouter([
             {
                 path: "dashboard",
                 element: <UDashboard />,
+            },
+            {
+                path:"activities",
+                element: <UserActivities />
+            },
+            {
+                path: "activities/:id",
+                element: <UActivityDetails />
             },
         ],
     },

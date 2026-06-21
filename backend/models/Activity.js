@@ -1,94 +1,166 @@
 import mongoose from "mongoose";
 
 const fieldSchema = new mongoose.Schema({
-    label: {
-        type: String,
-        required: true,
-    },
+  label: {
+    type: String,
+    required: true,
+  },
 
-    type: {
-        type: String,
-        enum: [
-            "text",
-            "textarea",
-            "number",
-            "email",
-            "dropdown",
-            "checkbox",
-            "date",
-        ],
-        required: true,
-    },
+  type: {
+    type: String,
+    enum: [
+      "text",
+      "textarea",
+      "number",
+      "email",
+      "dropdown",
+      "checkbox",
+      "date",
+    ],
+    required: true,
+  },
 
-    required: {
-        type: Boolean,
-        default: false,
-    },
+  required: {
+    type: Boolean,
+    default: false,
+  },
 
-    options: [String],
+  options: [String],
 });
 
-const activitySchema = new mongoose.Schema({
-
+const activitySchema = new mongoose.Schema(
+  {
     title: {
-        type: String,
-        requried: true,
+      type: String,
+      required: true,
     },
 
     description: {
-        type: String,
+      type: String,
+      default: "",
     },
 
     type: {
-        type: String,
-        enum: [
-            "form",
-            "workshop",
-            "assignment",
-        ],
-        required: true,
+      type: String,
+      enum: [
+        "form",
+        "workshop",
+        "assignment",
+      ],
+      required: true,
     },
 
     points: {
-        type: Number,
-        default: 0,
+      type: Number,
+      default: 0,
     },
 
     penaltyPoints: {
-        type: Number,
-        default: 0,
+      type: Number,
+      default: 0,
     },
 
     startDate: {
-        type: Date,
+      type: Date,
     },
 
     endDate: {
-        type: Date,
+      type: Date,
     },
 
     status: {
-        type: String,
-        enum: [
-            "active",
-            "closed",
-        ],
-        default: "active",
+      type: String,
+      enum: [
+        "active",
+        "closed",
+      ],
+      default: "active",
     },
+
+    // =========================
+    // COMMON DYNAMIC FIELDS
+    // =========================
 
     formFields: [fieldSchema],
 
-    createdBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+    // =========================
+    // WORKSHOP FIELDS
+    // =========================
+
+    venue: {
+      type: String,
+      default: "",
     },
-},{
+
+    startTime: {
+      type: String,
+      default: "",
+    },
+
+    endTime: {
+      type: String,
+      default: "",
+    },
+
+    registrationDeadline: {
+      type: Date,
+    },
+
+    attendanceMethod: {
+      type: String,
+      enum: [
+        "qr",
+        "manual",
+        "future",
+      ],
+      default: "manual",
+    },
+
+    requirements: [
+      {
+        type: String,
+      },
+    ],
+
+    maxParticipants: {
+      type: Number,
+      default: 0,
+    },
+
+    // =========================
+    // ASSIGNMENT FIELDS
+    // =========================
+
+    instructions: {
+      type: String,
+      default: "",
+    },
+
+    submissionType: {
+      type: String,
+      enum: [
+        "pdf",
+        "zip",
+        "link",
+      ],
+      default: "pdf",
+    },
+
+    // =========================
+
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  },
+  {
     timestamps: true,
-});
+  }
+);
 
 const Activity = mongoose.model(
-    "Activity",
-    activitySchema
+  "Activity",
+  activitySchema
 );
 
 export default Activity;
