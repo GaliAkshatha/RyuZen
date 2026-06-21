@@ -50,7 +50,20 @@ new mongoose.Schema({
   timestamps: true,
 });
 
-export default mongoose.model(
-  "ActivitySubmission",
-  activitySubmissionSchema
+activitySubmissionSchema.index(
+  {
+    activity: 1,
+    user: 1,
+  },
+  {
+    unique: true,
+  }
 );
+
+const ActivitySubmission =
+  mongoose.model(
+    "ActivitySubmission",
+    activitySubmissionSchema
+  );
+
+export default ActivitySubmission;

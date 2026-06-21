@@ -101,7 +101,9 @@ function WorkshopBuilder({ fetchActivities, setSelectedType}) {
     try {
 
       setLoading(true);
-
+      const user = JSON.parse(
+        localStorage.getItem("user")
+      );
       const response =
         await fetch(
           "http://localhost:5000/api/activities",
@@ -113,9 +115,10 @@ function WorkshopBuilder({ fetchActivities, setSelectedType}) {
                 "application/json",
             },
 
-            body: JSON.stringify(
-              formData
-            ),
+            body: JSON.stringify({
+              ...formData,
+              createdBy: user.id,
+            }),
           }
         );
 

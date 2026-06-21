@@ -35,18 +35,30 @@ export const createActivity = async(
             instructions,
 
             submissionType,
+
+            createdBy,
         } = req.body;
 
         if (
             !title ||
-            !description ||
-            formFields.length === 0
+            !description
         ){
             return res.status(400).json({
                 message:
                     "Please fill all required fields",
             });
         }
+
+        if(
+            type === "form" && 
+            (!formFields || 
+                formFields.length === 0)
+            ){
+                return res.status(400).json({
+                    message:
+                    "add at least one form field",
+                });
+            }
         
         const activity = await Activity.create({
             title,
@@ -77,6 +89,8 @@ export const createActivity = async(
             instructions,
 
             submissionType,
+
+            createdBy,
         });
 
 
@@ -116,6 +130,9 @@ async (req, res) => {
     const activity =
       await Activity.findById(
         req.params.id
+      ).populate(
+        "createdBy",
+        "name email role"
       );
 
     if (!activity) {
@@ -155,6 +172,28 @@ async (req, res) => {
       userId,
       answers,
     } = req.body;
+
+    const existingSubmission =
+      await ActivitySubmission.findOne({
+
+        activity:
+          req.params.id,
+
+        user:
+          userId,
+
+      });
+
+    if (existingSubmission) {
+
+      return res.status(400).json({
+
+        message:
+          "You have already submitted this activity",
+
+      });
+
+    }
 
     const submission =
       await ActivitySubmission.create({
