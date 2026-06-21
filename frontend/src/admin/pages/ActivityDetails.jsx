@@ -666,6 +666,21 @@ function ActivityDetails() {
           >
             Download CSV
           </button>
+          
+          <button
+            onClick={() =>
+                navigate(
+                    `/admin/activities/${activity._id}/edit`
+                )
+            }
+            className="
+            px-6 py-3
+            rounded-2xl
+            bg-yellow-500
+            "
+          >
+            Edit Activity
+          </button>
 
           <button
             onClick={closeActivity}

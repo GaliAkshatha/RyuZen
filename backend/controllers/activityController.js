@@ -196,25 +196,6 @@ async (req, res) => {
 
     }
 
-    const submission =
-      await ActivitySubmission.create({
-
-        activity:
-          req.params.id,
-
-        user:
-          userId,
-
-        answers,
-      });
-
-    res.status(201).json({
-      message:
-        "Submission Successful",
-
-      submission,
-    });
-
     const activity =
         await Activity.findById(
             req.params.id
@@ -233,6 +214,25 @@ async (req, res) => {
     });
 
     }
+    
+    const submission =
+      await ActivitySubmission.create({
+
+        activity:
+          req.params.id,
+
+        user:
+          userId,
+
+        answers,
+      });
+
+    res.status(201).json({
+      message:
+        "Submission Successful",
+
+      submission,
+    });
 
   } catch (error) {
 
@@ -366,6 +366,55 @@ async (req, res) => {
         "Activity Closed",
 
       activity,
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message:
+        error.message,
+    });
+
+  }
+
+};
+
+export const updateActivity = async (
+  req,
+  res
+) => {
+
+  try {
+
+    const activity =
+      await Activity.findByIdAndUpdate(
+
+        req.params.id,
+
+        req.body,
+
+        {
+          new: true,
+        }
+
+      );
+
+    if (!activity) {
+
+      return res.status(404).json({
+        message:
+          "Activity not found",
+      });
+
+    }
+
+    res.json({
+
+      message:
+        "Activity Updated",
+
+      activity,
+
     });
 
   } catch (error) {

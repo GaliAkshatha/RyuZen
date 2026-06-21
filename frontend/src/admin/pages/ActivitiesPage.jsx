@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-import FormBuilder from "../components/FormBuilder";
-import WorkshopBuilder from "../components/WorkshopBuilder";
-import AssignmentBuilder from "../components/AssignmentBuilder";
 import { Navigate } from "react-router-dom";
+
+import ActivityForm from "../components/ActivityForm";
+
 
 function ActivitiesPage() {
 
@@ -161,11 +160,12 @@ function ActivitiesPage() {
             "
           >
 
-            <FormBuilder
+            <ActivityForm
+              type="form"
+              mode="create"
               fetchActivities={fetchActivities}
               setSelectedType={setSelectedType}
             />
-
           </div>
 
         )
@@ -180,12 +180,12 @@ function ActivitiesPage() {
               rounded-3xl
               p-8
           ">
-            <WorkshopBuilder
-                fetchActivities={
-                    fetchActivities
-                }
-                setSelectedType={setSelectedType}
-              />
+            <ActivityForm
+              type="workshop"
+              mode="create"
+              fetchActivities={fetchActivities}
+              setSelectedType={setSelectedType}
+            />
           </div>
         )
       }
@@ -198,12 +198,12 @@ function ActivitiesPage() {
               rounded-3xl
               p-8
           ">
-            <AssignmentBuilder
-                fetchActivities={
-                    fetchActivities
-                }
-                setSelectedType={setSelectedType}
-              />
+            <ActivityForm
+              type="assignment"
+              mode="create"
+              fetchActivities={fetchActivities}
+              setSelectedType={setSelectedType}
+            />
           </div>
         )
       }
