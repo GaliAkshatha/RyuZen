@@ -6,6 +6,8 @@ import{
     getActivityById,
     submitActivity,
     getActivityResponses,
+    downloadResponsesCSV,
+    closeActivity,
 }from "../controllers/activityController.js";
 
 const router = express.Router();
@@ -19,5 +21,9 @@ router.get("/:id", getActivityById);
 router.post("/:id/submit", submitActivity);
 
 router.get("/:id/responses",getActivityResponses);
+
+router.get("/:id/export-csv",downloadResponsesCSV);
+
+router.patch("/:id/close",closeActivity);
 
 export default router;

@@ -1,5 +1,6 @@
 import Activity from "../models/Activity.js";
 import ActivitySubmission from "../models/ActivitySubmission.js";
+import { Parser } from "json2csv";
 
 export const createActivity = async(
     req,
@@ -214,6 +215,25 @@ async (req, res) => {
       submission,
     });
 
+    const activity =
+        await Activity.findById(
+            req.params.id
+        );
+
+    if (
+        activity.status ===
+        "closed"
+    ) {
+
+    return res.status(400).json({
+
+        message:
+        "Activity is closed",
+
+    });
+
+    }
+
   } catch (error) {
 
     res.status(500).json({
@@ -243,6 +263,109 @@ async (req, res) => {
 
     res.json({
       responses,
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message:
+        error.message,
+    });
+
+  }
+
+};
+
+export const downloadResponsesCSV =
+async (req, res) => {
+
+  try {
+
+    const activity = await Activity.findById(
+        req.params.id
+    );
+
+    const responses =
+      await ActivitySubmission
+        .find({
+          activity:
+            req.params.id,
+        })
+        .populate(
+          "user",
+          "name email"
+        );
+
+    const csvData =
+      responses.map(
+        (submission) => ({
+
+          Name:
+            submission.user?.name,
+
+          Email:
+            submission.user?.email,
+
+          SubmittedAt:
+            submission.createdAt,
+
+          ...submission.answers,
+
+        })
+      );
+
+    const parser =
+      new Parser();
+
+    const csv =
+      parser.parse(csvData);
+
+    res.header(
+      "Content-Type",
+      "text/csv"
+    );
+
+    res.attachment(
+      `${activity.title}-responses.csv`
+    );
+
+    return res.send(csv);
+
+  } catch (error) {
+
+    res.status(500).json({
+      message:
+        error.message,
+    });
+
+  }
+
+};
+
+export const closeActivity =
+async (req, res) => {
+
+  try {
+
+    const activity =
+      await Activity.findByIdAndUpdate(
+
+        req.params.id,
+
+        {
+          status: "closed",
+        },
+
+        {
+          new: true,
+        }
+      );
+
+    res.json({
+      message:
+        "Activity Closed",
+
+      activity,
     });
 
   } catch (error) {

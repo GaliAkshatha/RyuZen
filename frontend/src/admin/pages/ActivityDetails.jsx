@@ -33,6 +33,84 @@ function ActivityDetails() {
     }
   }
 
+  async function downloadCSV() {
+
+  try {
+
+    const response =
+      await fetch(
+        `http://localhost:5000/api/activities/${id}/export-csv`
+      );
+
+    const blob =
+      await response.blob();
+
+    const url =
+      window.URL.createObjectURL(
+        blob
+      );
+
+    const link =
+      document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+      "responses.csv";
+
+    document.body.appendChild(
+      link
+    );
+
+    link.click();
+
+    link.remove();
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+ }
+
+  async function closeActivity() {
+
+  const confirmClose =
+    window.confirm(
+      "Close this activity?"
+    );
+
+  if (!confirmClose)
+    return;
+
+  try {
+
+    const response =
+      await fetch(
+
+        `http://localhost:5000/api/activities/${id}/close`,
+
+        {
+          method: "PATCH",
+        }
+
+      );
+
+    const data =
+      await response.json();
+
+    alert(data.message);
+
+    fetchActivity();
+
+   } catch (error) {
+
+    console.log(error);
+
+   }
+  }
+
   if (!activity) {
 
     return (
@@ -575,6 +653,7 @@ function ActivityDetails() {
           </button>
 
           <button
+            onClick={downloadCSV}
             className="
               px-6 py-3
               rounded-2xl
@@ -589,6 +668,7 @@ function ActivityDetails() {
           </button>
 
           <button
+            onClick={closeActivity}
             className="
               px-6 py-3
               rounded-2xl

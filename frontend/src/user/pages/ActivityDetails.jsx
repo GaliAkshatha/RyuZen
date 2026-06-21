@@ -388,20 +388,50 @@ function ActivityDetails() {
 
         </div>
 
-        <button
-          onClick={handleSubmit}
-          className="
-            w-full
-            mt-8
-            py-4
-            rounded-2xl
-            bg-gradient-to-r
-            from-cyan-500
-            to-blue-500
-          "
-        >
-          Submit
-        </button>
+        
+
+        {
+            activity.status === "active" ? (
+
+            <button
+                onClick={handleSubmit}
+                className="
+                w-full
+                mt-8
+                py-4
+                rounded-2xl
+                bg-gradient-to-r
+                from-cyan-500
+                to-blue-500
+
+                hover:scale-[1.01]
+                transition-all
+                "
+            >
+              Submit
+            </button>
+
+            ) : (
+
+                <div
+                    className="
+                    mt-8
+                    p-4
+                    rounded-2xl
+
+                    bg-red-500/10
+                    border border-red-500/20
+
+                    text-red-300
+                    text-center
+                    font-medium
+                    "
+                >
+                  This activity is closed
+                </div>
+
+            )
+        }
 
       </div>
 
