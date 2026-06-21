@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 function ActivityDetails() {
 
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [activity, setActivity] = useState(null);
   const [totalRegistrations, setTotalRegistrations] = useState(0);
@@ -555,6 +556,11 @@ function ActivityDetails() {
         <div className="flex gap-4">
 
           <button
+            onClick={() =>
+                navigate(
+                    `/admin/activities/${id}/responses`
+                )
+            }
             className="
               px-6 py-3
               rounded-2xl

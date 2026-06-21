@@ -224,3 +224,34 @@ async (req, res) => {
   }
 
 };
+
+export const getActivityResponses =
+async (req, res) => {
+
+  try {
+
+    const responses =
+      await ActivitySubmission
+        .find({
+          activity:
+            req.params.id,
+        })
+        .populate(
+          "user",
+          "name email role"
+        );
+
+    res.json({
+      responses,
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message:
+        error.message,
+    });
+
+  }
+
+};

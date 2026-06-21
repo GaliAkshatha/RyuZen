@@ -8,6 +8,7 @@ import UserLayout from "./layouts/UserLayout";
 import ADashboard from "../admin/pages/ADashboard";
 import ActivitiesPage from "../admin/pages/ActivitiesPage"
 import ActivityDetails from "../admin/pages/ActivityDetails";
+import ActivityResponses from "../admin/pages/ActivityResponses";
 
 import UDashboard from "../user/pages/UserDashboard";
 import UserActivities from "../user/pages/UserActivities";
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
             {
                 path: "activities/:id",
                 element: <ActivityDetails />,
+            },
+            {
+                path: "activities/:id/responses",
+                element: <ActivityResponses />,
             }
         ],
     },

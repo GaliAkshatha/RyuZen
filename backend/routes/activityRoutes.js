@@ -5,6 +5,7 @@ import{
     getActivities,
     getActivityById,
     submitActivity,
+    getActivityResponses,
 }from "../controllers/activityController.js";
 
 const router = express.Router();
@@ -15,6 +16,8 @@ router.get("/",getActivities);
 
 router.get("/:id", getActivityById);
 
-router.post("/:id/submit", submitActivity)
+router.post("/:id/submit", submitActivity);
+
+router.get("/:id/responses",getActivityResponses);
 
 export default router;
