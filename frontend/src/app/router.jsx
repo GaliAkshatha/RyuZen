@@ -10,6 +10,8 @@ import ActivitiesPage from "../admin/pages/ActivitiesPage"
 import ActivityDetails from "../admin/pages/ActivityDetails";
 
 import UDashboard from "../user/pages/UserDashboard";
+import UserActivities from "../user/pages/UserActivities";
+import UActivityDetails from "../user/pages/ActivityDetails";
 
 export const router = createBrowserRouter([
     {
@@ -42,6 +44,14 @@ export const router = createBrowserRouter([
             {
                 path: "dashboard",
                 element: <UDashboard />,
+            },
+            {
+                path:"activities",
+                element: <UserActivities />
+            },
+            {
+                path: "activities/:id",
+                element: <UActivityDetails />
             },
         ],
     },

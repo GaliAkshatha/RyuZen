@@ -27,8 +27,6 @@ function AssignmentBuilder({ fetchActivities, setSelectedType}) {
       startTime: "",
       endTime: "",
 
-      submissionDeadline: "",
-
       points: "",
       penaltyPoints: "",
 
@@ -122,8 +120,6 @@ function AssignmentBuilder({ fetchActivities, setSelectedType}) {
 
         startTime: "",
         endTime: "",
-
-        submissionDeadline: "",
 
         points: "",
         penaltyPoints: "",
@@ -264,16 +260,6 @@ function AssignmentBuilder({ fetchActivities, setSelectedType}) {
 
       </div>
 
-        <label className="block mb-2 text-white/70">
-            Submission Deadline
-        </label>
-      <input
-        type="date"
-        name="registrationDeadline"
-        value={formData.submissionDeadline}
-        onChange={handleChange}
-        className="w-full p-4 rounded-2xl bg-white/5"
-      />
       <label>
           Submission Type
       </label>
@@ -376,7 +362,7 @@ function AssignmentBuilder({ fetchActivities, setSelectedType}) {
         {
           loading
             ? "Creating..."
-            : "Create Workshop"
+            : "Create Assignment"
         }
       </button>
 

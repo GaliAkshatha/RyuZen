@@ -11,11 +11,30 @@ export const createActivity = async(
             title,
             description,
             type,
+
             points,
             penaltyPoints,
+
             startDate,
             endDate,
+
             formFields,
+
+            venue,
+            startTime,
+            endTime,
+
+            registrationDeadline,
+
+            attendanceMethod,
+
+            requirements,
+
+            maxParticipants,
+
+            instructions,
+
+            submissionType,
         } = req.body;
 
         if (
@@ -42,6 +61,22 @@ export const createActivity = async(
             endDate,
 
             formFields,
+
+            venue,
+            startTime,
+            endTime,
+
+            registrationDeadline,
+
+            attendanceMethod,
+
+            requirements,
+
+            maxParticipants,
+
+            instructions,
+
+            submissionType,
         });
 
 
@@ -109,4 +144,44 @@ async (req, res) => {
       message: error.message,
     });
   }
+};
+
+export const submitActivity =
+async (req, res) => {
+
+  try {
+
+    const {
+      userId,
+      answers,
+    } = req.body;
+
+    const submission =
+      await ActivitySubmission.create({
+
+        activity:
+          req.params.id,
+
+        user:
+          userId,
+
+        answers,
+      });
+
+    res.status(201).json({
+      message:
+        "Submission Successful",
+
+      submission,
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message:
+        error.message,
+    });
+
+  }
+
 };
