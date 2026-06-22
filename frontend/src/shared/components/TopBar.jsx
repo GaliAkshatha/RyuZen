@@ -18,7 +18,9 @@ function TopBar() {
           {/* LOGO */}
           <div
             className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent cursor-pointer"
-            onClick={() => navigate("/admin/dashboard")}
+            onClick={() => navigate(user?.role === "admin"
+              ? "/admin/profile"
+              : "/user/profile")}
           >
             RyuZen
           </div>
@@ -62,7 +64,7 @@ function TopBar() {
             { user?.role === "user" && (
                 <>
                     <button
-                    onClick={() => navigate("/admin/dashboard")}
+                    onClick={() => navigate("/user/dashboard")}
                     className="hover:text-white transition"
                     >
                         Dashboard
@@ -119,7 +121,10 @@ function TopBar() {
 
           {/* PROFILE */}
           <button
-            onClick={() => navigate("/admin/profile")}
+            onClick={() => navigate(user?.role === "admin"
+              ? "/admin/profile"
+              : "/user/profile"
+            )}
             className="
               flex items-center gap-3
               bg-white/5

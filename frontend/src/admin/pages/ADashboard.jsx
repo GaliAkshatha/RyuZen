@@ -29,7 +29,7 @@ function ADashboard(){
       {/* LEFT */}
       <div className="col-span-2 flex flex-col gap-5">
 
-        <Card title="Activities" className="h-60" >
+        <Card title="Activities" className="min-h-[250px]" >
         <div className="space-y-3 mt-4">
           {
             activities
