@@ -31,7 +31,9 @@ new mongoose.Schema({
     type: String,
 
     enum: [
+      "registered",
       "submitted",
+      "attended",
       "approved",
       "rejected",
     ],
