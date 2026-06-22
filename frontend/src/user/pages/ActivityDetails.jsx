@@ -64,6 +64,8 @@ function ActivityDetails() {
 
       alert("Submitted Successfully");
 
+      setAnswers({});
+
     } catch (error) {
       console.log(error);
     }
@@ -363,6 +365,8 @@ function ActivityDetails() {
                       ? "date"
                       : "text"
                   }
+
+                  value={answers[field.label]|| ""}
 
                   required={field.required}
 

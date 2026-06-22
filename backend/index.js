@@ -6,6 +6,7 @@ import connectDB from "./config/db.js";
 
 import authRoutes from "./routes/authRoutes.js";
 import activityRoutes from "./routes/activityRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/activities", activityRoutes);
+app.use("/api/notifications",notificationRoutes);
 
 app.get("/", (req,res)=>{
     res.send("API Running");

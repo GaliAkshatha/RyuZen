@@ -1,6 +1,7 @@
 import Activity from "../models/Activity.js";
 import ActivitySubmission from "../models/ActivitySubmission.js";
 import User from "../models/User.js";
+import Notification from "../models/Notification.js";
 
 export const submitActivity = async (
   req,
@@ -162,6 +163,15 @@ async (req, res) => {
 
     await user.save();
 
+    await Notification.create({
+        user: user._id,
+
+        title: "Activity Approved",
+
+        message:
+            `${activity.title} approved. +${activity.points} points awarded.`,
+    });
+
     submission.status =
       "approved";
 
@@ -206,6 +216,16 @@ async (req, res) => {
       "rejected";
 
     await submission.save();
+
+    await Notification.create({
+
+        user: submission.user,
+
+        title: "Activity Rejected",
+
+        message:
+            "Your submission was not approved.",
+    });
 
     res.json({
       message:
@@ -257,10 +277,22 @@ async (req, res) => {
 
     await user.save();
 
+    await Notification.create({
+
+        user: user._id,
+
+        title: "Workshop Attendance Confirmed",
+
+        message:
+            `${activity.title} attended. +${activity.points} points awarded.`,
+    });
+
     submission.status =
       "attended";
 
     await submission.save();
+
+
 
     res.json({
       message:
