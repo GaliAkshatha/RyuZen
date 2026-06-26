@@ -7,6 +7,7 @@ function ActivityForm({
   mode = "create",
   initialData = null,
   fetchActivities,
+  setSelectedType,
 }) {
 
   const navigate = useNavigate();
@@ -178,6 +179,55 @@ function ActivityForm({
           ? "Activity Created"
           : "Activity Updated"
       );
+
+      if (mode === "create") {
+
+        setFormData({
+
+          title: "",
+          description: "",
+
+          points: "",
+          penaltyPoints: "",
+
+          startDate: "",
+          endDate: "",
+
+          type,
+
+          formFields: [],
+
+          venue: "",
+          startTime: "",
+          endTime: "",
+
+          registrationDeadline: "",
+
+          attendanceMethod: "manual",
+
+          requirements: [],
+
+          maxParticipants: "",
+
+          instructions: "",
+
+          submissionType: "pdf",
+
+        });
+
+        setField({
+          label: "",
+          type: "text",
+          required: false,
+        });
+
+        setRequirement("");
+
+      }
+
+      if (mode === "create") {
+        setSelectedType?.("");
+      }
 
       fetchActivities?.();
 
