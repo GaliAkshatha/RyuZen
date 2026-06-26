@@ -1,5 +1,6 @@
 import React,{useEffect, useState} from "react";
 import Card from "../../shared/components/Card";
+import Leaderboard from "../../shared/components/Leaderboard";
 
 function ADashboard(){
     const [activities, setActivities] = useState([]);
@@ -81,7 +82,10 @@ function ADashboard(){
       {/* RIGHT */}
       <div className="flex flex-col gap-5">
         <Card title="Leaderboard (Game)" className="h-60" />
-        <Card title="Leaderboard (Academic)" className="h-60" />
+        <Card title="Leaderboard (Academic)" 
+        className="h-[500px] overflow-y-auto" >
+          <Leaderboard />
+        </Card>
       </div>
 
     </div>

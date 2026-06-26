@@ -158,7 +158,7 @@ async (req, res) => {
         submission.user
       );
 
-    user.points +=
+    user.academicPoints +=
       activity.points;
 
     await user.save();
@@ -272,7 +272,7 @@ async (req, res) => {
         submission.user
       );
 
-    user.points +=
+    user.academicPoints +=
       activity.points;
 
     await user.save();
