@@ -52,7 +52,7 @@ function TopBar() {
                     </button>
 
                     <button className="hover:text-white transition">
-                        Chat
+                        Connect
                     </button>
 
                     <button className="hover:text-white transition">
@@ -87,8 +87,10 @@ function TopBar() {
                         Academic
                     </button>
 
-                    <button className="hover:text-white transition">
-                        Chat
+                    <button 
+                    onClick={() => navigate("/user/connect")}
+                    className="hover:text-white transition">
+                        Connect
                     </button>
 
                     <button className="hover:text-white transition">
