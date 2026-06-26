@@ -310,3 +310,39 @@ async (req, res) => {
 
 };
 
+export const getUserSubmissions =
+async (req,res) => {
+
+  try {
+
+    const submissions =
+      await ActivitySubmission.find({
+
+        user:
+          req.params.userId,
+
+      })
+
+      .populate(
+        "activity",
+        "title points type"
+      )
+
+      .sort({
+        createdAt: -1,
+      });
+
+    res.json({
+      submissions,
+    });
+
+  } catch(error) {
+
+    res.status(500).json({
+      message:
+        error.message,
+    });
+
+  }
+
+};

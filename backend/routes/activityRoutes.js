@@ -17,6 +17,7 @@ import {
   approveSubmission,
   rejectSubmission,
   markAttendance,
+  getUserSubmissions,
 
 } from "../controllers/activitySubmissionController.js";
 
@@ -43,5 +44,7 @@ router.patch("/responses/:id/approve",approveSubmission);
 router.patch("/responses/:id/reject",rejectSubmission);
 
 router.patch("/responses/:id/attend",markAttendance);
+
+router.get("/user/:userId",getUserSubmissions);
 
 export default router;

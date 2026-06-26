@@ -16,7 +16,7 @@ async (req, res) => {
       });
 
       console.log(req.params.userId);
-console.log(notifications);
+      console.log(notifications);
 
     res.json({
       notifications,
