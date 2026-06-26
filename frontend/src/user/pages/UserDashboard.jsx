@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from "react";
 import { useLocation } from "react-router-dom";
-import Card from "./../../shared/components/Card"
+import Card from "./../../shared/components/Card";
+import Leaderboard from "../../shared/components/Leaderboard";
 
 function UDashboard() {
       const [activities, setActivities] = useState([]);
@@ -158,7 +159,10 @@ function UDashboard() {
       {/* RIGHT */}
       <div className="flex flex-col gap-5">
         <Card title="Leaderboard (Game)" className="h-60" />
-        <Card title="Leaderboard (Academic)" className="h-60" />
+        <Card title="Leaderboard (Academic)" 
+        className="h-[500px] overflow-y-auto" >
+          <Leaderboard />
+        </Card>
       </div>
 
     </div>

@@ -14,6 +14,7 @@ import EditActivity from "../admin/pages/EditActivity";
 import UDashboard from "../user/pages/UserDashboard";
 import UserActivities from "../user/pages/UserActivities";
 import UActivityDetails from "../user/pages/ActivityDetails";
+import UserSubmissions from "../user/pages/UserSubmissions";
 
 export const router = createBrowserRouter([
     {
@@ -62,6 +63,10 @@ export const router = createBrowserRouter([
             {
                 path: "activities/:id",
                 element: <UActivityDetails />
+            },
+            {
+                path: "academic",
+                element: <UserSubmissions />,
             },
         ],
     },

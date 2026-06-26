@@ -23,10 +23,14 @@ const userSchema = new mongoose.Schema(
             defalut: "user",
         },
 
-        points: {
+        academicPoints: {
             type: Number,
             default: 0,
         },
+        gamePoints:{
+            type: Number,
+            default: 0,
+        }
     },
     {
             timestamps: true,

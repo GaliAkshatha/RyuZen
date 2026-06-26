@@ -60,6 +60,45 @@ export const createActivity = async(
                     "add at least one form field",
                 });
             }
+
+        if (
+          new Date(startDate) >
+          new Date(endDate)
+        ){
+          return res.status(400).json({
+            message:
+            "End date must be after start date.",
+          })
+        }
+
+        if(type === "workshop"){
+          if (
+            !venue ||
+            !startTime ||
+            !endTime ||
+            !registrationDeadline
+          ){
+            return res.status(400).json({
+              message:
+              "Please complete all workshop details.",
+            });
+          }
+
+          if(startTime >= endTime){
+            return res.status(400).json({
+              message:
+              "Workshop end time must be after start time.",
+            })
+          }
+
+          if( new Date(registrationDeadline) >
+              new Date(startDate) ){
+                return res.status(400).json({
+                  message:
+                  "Registration deadline must be before workshop start.",
+                });
+              }
+        }
         
         const activity = await Activity.create({
             title,

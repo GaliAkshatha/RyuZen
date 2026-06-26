@@ -81,7 +81,9 @@ function TopBar() {
                         Game
                     </button>
 
-                    <button className="hover:text-white transition">
+                    <button 
+                    onClick={() => navigate("/user/academic")} 
+                    className="hover:text-white transition">
                         Academic
                     </button>
 
