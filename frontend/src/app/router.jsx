@@ -15,6 +15,7 @@ import UDashboard from "../user/pages/UserDashboard";
 import UserActivities from "../user/pages/UserActivities";
 import UActivityDetails from "../user/pages/ActivityDetails";
 import UserSubmissions from "../user/pages/UserSubmissions";
+import UserConnect from "../user/pages/Connect";
 
 export const router = createBrowserRouter([
     {
@@ -68,6 +69,10 @@ export const router = createBrowserRouter([
                 path: "academic",
                 element: <UserSubmissions />,
             },
+            {
+                path: "connect",
+                element:<UserConnect />
+            }
         ],
     },
 ]);
