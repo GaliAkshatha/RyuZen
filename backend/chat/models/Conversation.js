@@ -18,6 +18,48 @@ const conversationSchema = new mongoose.Schema(
 
         ],
 
+        isGroup: {
+
+            type: Boolean,
+
+            default: false,
+
+        },
+
+        groupName: {
+
+            type: String,
+
+            default: null,
+
+        },
+
+        groupAvatar: {
+
+            type: String,
+
+            default: null,
+
+        },
+
+        lastMessage: {
+
+            type: mongoose.Schema.Types.ObjectId,
+
+            ref: "Message",
+
+            default: null,
+
+        },
+
+        lastActivity: {
+
+            type: Date,
+
+            default: Date.now,
+
+        },
+
     },
 
     {
@@ -27,6 +69,12 @@ const conversationSchema = new mongoose.Schema(
     }
 
 );
+
+conversationSchema.index({
+
+    participants: 1,
+
+});
 
 export default mongoose.model(
     "Conversation",

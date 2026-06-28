@@ -1,190 +1,56 @@
-import User from "../models/User.js";
-import Conversation from "../models/Conversation.js";
-import Message from "../models/Message.js";
+import conversationService
+from "../services/conversationService.js";
 
-export const getUsers = async (req, res) => {
+export async function createConversation(
+    req,
+    res
+){
 
-    try {
-
-        const users = await User.find({
-
-            role: "user",
-
-        }).select(
-            "name email"
-        );
-
-        res.json({
-            users,
-        });
-
-    } catch (error) {
-
-        res.status(500).json({
-            message: error.message,
-        });
-
-    }
-
-};
-
-export const createConversation =
-async (req, res) => {
-
-    try {
+    try{
 
         const {
 
             senderId,
+
             receiverId,
 
         } = req.body;
 
-        let conversation =
-            await Conversation.findOne({
+        const conversation =
 
-                participants: {
-                    $all: [
-                        senderId,
-                        receiverId,
-                    ],
-                },
+            await conversationService
+            .createConversation(
 
-            });
+                senderId,
 
-        if (!conversation) {
+                receiverId
 
-            conversation =
-                await Conversation.create({
-
-                    participants: [
-
-                        senderId,
-
-                        receiverId,
-
-                    ],
-
-                });
-
-        }
-
-        res.json({
-
-            conversation,
-
-        });
-
-    } catch (error) {
-
-        res.status(500).json({
-
-            message:
-                error.message,
-
-        });
-
-    }
-
-};
-
-export const sendMessage =
-async (req, res) => {
-
-    try {
-
-        const {
-
-            conversationId,
-
-            sender,
-
-            text,
-
-        } = req.body;
-
-        if (!text.trim()) {
-
-            return res.status(400).json({
-
-                message:
-                    "Message cannot be empty.",
-
-            });
-
-        }
-
-        const message =
-            await Message.create({
-
-                conversation:
-                    conversationId,
-
-                sender,
-
-                text,
-
-            });
+            );
 
         res.status(201).json({
 
-            message,
-
-        });
-
-    } catch (error) {
-
-        res.status(500).json({
+            success:true,
 
             message:
-                error.message,
+                "Conversation ready.",
+
+            data:
+                conversation,
 
         });
 
     }
 
-};
-
-export const getMessages =
-async (req, res) => {
-
-    try {
-
-        const messages =
-            await Message.find({
-
-                conversation:
-                    req.params.id,
-
-            })
-
-            .populate(
-                "sender",
-                "name"
-            )
-
-            .sort({
-
-                createdAt: 1,
-
-            });
-
-        res.json({
-
-            messages,
-
-        });
-
-    } catch (error) {
+    catch(error){
 
         res.status(500).json({
 
-            message:
-                error.message,
+            success:false,
+
+            message:error.message,
 
         });
 
     }
 
-};
-
+}
