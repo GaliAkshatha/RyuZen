@@ -3,7 +3,11 @@ import { useLocation } from "react-router-dom";
 import Card from "./../../shared/components/Card";
 import Leaderboard from "../../shared/components/Leaderboard";
 
+const API = import.meta.env.VITE_API_URL;
+
 function UDashboard() {
+
+      
       const [activities, setActivities] = useState([]);
       const [notifications, setNotifications] = useState([]);
       const location = useLocation();
@@ -18,7 +22,7 @@ function UDashboard() {
         try {
           const response =
             await fetch(
-              "http://localhost:5000/api/activities"
+              `${API}/activities`
             );
           
           const data =
@@ -41,7 +45,7 @@ function UDashboard() {
 
           const response =
             await fetch(
-            `http://localhost:5000/api/notifications/${user.id}`
+            `${API}/notifications/${user.id}`
           );
 
            const data =

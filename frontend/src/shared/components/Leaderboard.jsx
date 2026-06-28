@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 
+const API = import.meta.env.VITE_API_URL;
+
 function Leaderboard() {
 
+    
     const [players, setPlayers] =
         useState([]);
 
@@ -17,7 +20,7 @@ function Leaderboard() {
 
             const response =
                 await fetch(
-                    "http://localhost:5000/api/leaderboard/academic"
+                    `${API}/leaderboard/academic`
                 );
 
             const data =

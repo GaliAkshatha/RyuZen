@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+const API = import.meta.env.VITE_API_URL;
+
 function ActivityResponses() {
 
   const { id } = useParams();
@@ -21,7 +23,7 @@ function ActivityResponses() {
 
       const response =
         await fetch(
-          `http://localhost:5000/api/activities/${id}/responses`
+          `${API}/activities/${id}/responses`
         );
 
       const data =
@@ -52,7 +54,7 @@ function ActivityResponses() {
       const response =
         await fetch(
 
-          `http://localhost:5000/api/activities/responses/${submissionId}/approve`,
+          `${API}/activities/responses/${submissionId}/approve`,
 
           {
             method: "PATCH",
@@ -84,7 +86,7 @@ function ActivityResponses() {
       const response =
         await fetch(
 
-          `http://localhost:5000/api/activities/responses/${submissionId}/reject`,
+          `${API}/activities/responses/${submissionId}/reject`,
 
           {
             method: "PATCH",

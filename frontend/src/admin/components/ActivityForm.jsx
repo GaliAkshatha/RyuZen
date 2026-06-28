@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FieldBuilder from "./FieldBuilder";
 
+const API = import.meta.env.VITE_API_URL;
+
 function ActivityForm({
   type,
   mode = "create",
@@ -9,6 +11,7 @@ function ActivityForm({
   fetchActivities,
   setSelectedType,
 }) {
+  
 
   const navigate = useNavigate();
 
@@ -373,9 +376,9 @@ function ActivityForm({
 
         mode === "create"
 
-          ? "http://localhost:5000/api/activities"
+          ? `${API}/activities`
 
-          : `http://localhost:5000/api/activities/${initialData._id}`;
+          : `${API}/activities/${initialData._id}`;
 
       const method =
 

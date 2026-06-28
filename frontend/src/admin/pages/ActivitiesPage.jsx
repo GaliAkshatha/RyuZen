@@ -4,8 +4,10 @@ import { Navigate } from "react-router-dom";
 
 import ActivityForm from "../components/ActivityForm";
 
+const API = import.meta.env.VITE_API_URL;
 
 function ActivitiesPage() {
+
 
   const [selectedType, setSelectedType] = useState("");
 
@@ -24,7 +26,7 @@ function ActivitiesPage() {
     try {
 
       const response = await fetch(
-        "http://localhost:5000/api/activities"
+        `${API}/activities`
       );
 
       const data = await response.json();

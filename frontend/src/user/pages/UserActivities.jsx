@@ -3,8 +3,11 @@ import { useNavigate } from "react-router-dom";
 
 import ActivityCard from "../../shared/components/ActivityCard";
 
+const API = import.meta.env.VITE_API_URL;
+
 function UserActivities() {
 
+  
   const navigate = useNavigate();
 
   const [activities, setActivities] =
@@ -25,7 +28,7 @@ function UserActivities() {
 
       const response =
         await fetch(
-          "http://localhost:5000/api/activities"
+          `${API}/activities`
         );
 
       const data =

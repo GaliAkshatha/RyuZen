@@ -2,7 +2,10 @@ import React,{useEffect, useState} from "react";
 import Card from "../../shared/components/Card";
 import Leaderboard from "../../shared/components/Leaderboard";
 
+const API = import.meta.env.VITE_API_URL;
+
 function ADashboard(){
+
     const [activities, setActivities] = useState([]);
 
     useEffect(()=> {
@@ -13,7 +16,7 @@ function ADashboard(){
       try {
         const response =
           await fetch(
-            "http://localhost:5000/api/activities"
+            `${API}/activities`
           );
         
         const data =

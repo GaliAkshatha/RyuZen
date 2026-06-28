@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
+const API = import.meta.env.VITE_API_URL;
+
 function ActivityDetails() {
 
   const { id } = useParams();
@@ -18,7 +20,7 @@ function ActivityDetails() {
     try {
 
       const response = await fetch(
-        `http://localhost:5000/api/activities/${id}`
+        `${API}/activities/${id}`
       );
 
       const data = await response.json();
@@ -39,7 +41,7 @@ function ActivityDetails() {
 
     const response =
       await fetch(
-        `http://localhost:5000/api/activities/${id}/export-csv`
+        `${API}/activities/${id}/export-csv`
       );
 
     const blob =
@@ -89,7 +91,7 @@ function ActivityDetails() {
     const response =
       await fetch(
 
-        `http://localhost:5000/api/activities/${id}/close`,
+        `${API}/activities/${id}/close`,
 
         {
           method: "PATCH",

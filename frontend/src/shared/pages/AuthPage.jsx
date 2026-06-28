@@ -3,7 +3,11 @@ import { Eye, EyeOff, Trophy, Star, Zap, ConstructionIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
+const API = import.meta.env.VITE_API_URL;
+
 function AuthPage() {
+
+  
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -31,8 +35,8 @@ function AuthPage() {
     try{
 
         const endpoint = isLogin 
-        ? "http://localhost:5000/api/auth/login"
-        : "http://localhost:5000/api/auth/admin-register";
+        ? `${API}/auth/login`
+        : `${API}/auth/admin-register`;
 
         if (isLogin && !formData.role){
             alert("Please select login type");

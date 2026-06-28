@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 
 import ActivityForm from "../components/ActivityForm";
 
+const API = import.meta.env.VITE_API_URL;
+
 function EditActivity() {
 
     const { id } = useParams();
@@ -25,7 +27,7 @@ function EditActivity() {
 
             const response =
                 await fetch(
-                    `http://localhost:5000/api/activities/${id}`
+                    `${API}/activities/${id}`
                 );
 
             const data =

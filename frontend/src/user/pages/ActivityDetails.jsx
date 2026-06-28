@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+const API = import.meta.env.VITE_API_URL;
+
 function ActivityDetails() {
+
   const { id } = useParams();
 
   const [activity, setActivity] = useState(null);
@@ -14,7 +17,7 @@ function ActivityDetails() {
   async function fetchActivity() {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/activities/${id}`
+        `${API}/activities/${id}`
       );
 
       const data = await response.json();
@@ -39,7 +42,7 @@ function ActivityDetails() {
       );
 
       const response = await fetch(
-        `http://localhost:5000/api/activities/${id}/submit`,
+        `${API}/activities/${id}/submit`,
         {
           method: "POST",
 

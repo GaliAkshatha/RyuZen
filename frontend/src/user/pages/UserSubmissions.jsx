@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+  const API = import.meta.env.VITE_API_URL;
+
 function UserSubmissions() {
+
 
   const [submissions, setSubmissions] =
     useState([]);
@@ -28,7 +31,7 @@ function UserSubmissions() {
 
       const response =
         await fetch(
-          `http://localhost:5000/api/activities/user/${user.id}`
+          `${API}/activities/user/${user.id}`
         );
 
       const data =
