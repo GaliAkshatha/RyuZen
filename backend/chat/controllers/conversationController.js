@@ -2,11 +2,14 @@ import conversationService
 from "../services/conversationService.js";
 
 export async function createConversation(
-    req,
-    res
-){
 
-    try{
+    req,
+
+    res
+
+) {
+
+    try {
 
         const {
 
@@ -17,7 +20,6 @@ export async function createConversation(
         } = req.body;
 
         const conversation =
-
             await conversationService
             .createConversation(
 
@@ -29,7 +31,7 @@ export async function createConversation(
 
         res.status(201).json({
 
-            success:true,
+            success: true,
 
             message:
                 "Conversation ready.",
@@ -41,13 +43,14 @@ export async function createConversation(
 
     }
 
-    catch(error){
+    catch (error) {
 
-        res.status(500).json({
+        res.status(400).json({
 
-            success:false,
+            success: false,
 
-            message:error.message,
+            message:
+                error.message,
 
         });
 

@@ -32,6 +32,8 @@ const conversationSchema = new mongoose.Schema(
 
             default: null,
 
+            trim: true,
+
         },
 
         groupAvatar: {
@@ -73,6 +75,12 @@ const conversationSchema = new mongoose.Schema(
 conversationSchema.index({
 
     participants: 1,
+
+});
+
+conversationSchema.index({
+
+    lastActivity: -1,
 
 });
 

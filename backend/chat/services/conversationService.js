@@ -3,9 +3,28 @@ import Conversation from "../models/Conversation.js";
 class ConversationService {
 
     async createConversation(
+
         senderId,
+
         receiverId
+
     ) {
+
+        if (!senderId || !receiverId) {
+
+            throw new Error(
+                "Both users are required."
+            );
+
+        }
+
+        if (senderId === receiverId) {
+
+            throw new Error(
+                "Cannot create conversation with yourself."
+            );
+
+        }
 
         let conversation =
             await Conversation.findOne({
@@ -24,7 +43,12 @@ class ConversationService {
 
                 isGroup: false,
 
-            });
+            })
+
+            .populate(
+                "participants",
+                "name email profilePicture"
+            );
 
         if (conversation) {
 
@@ -43,34 +67,15 @@ class ConversationService {
 
                 ],
 
-                isGroup: false,
-
             });
 
-        return conversation;
-
-    }
-
-    async getConversation(
-        conversationId
-    ) {
-
         return await Conversation.findById(
-            conversationId
+            conversation._id
         )
 
         .populate(
-
             "participants",
-
             "name email profilePicture"
-
-        )
-
-        .populate(
-
-            "lastMessage"
-
         );
 
     }
