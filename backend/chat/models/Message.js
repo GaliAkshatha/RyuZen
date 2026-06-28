@@ -24,7 +24,7 @@ const messageSchema = new mongoose.Schema(
 
         },
 
-        text: {
+        content: {
 
             type: String,
 
@@ -34,14 +34,54 @@ const messageSchema = new mongoose.Schema(
 
         },
 
-        isRead: {
+        messageType: {
+
+            type: String,
+
+            enum: [
+                "text",
+                "image",
+                "pdf",
+                "activity",
+                "assignment",
+                "ai",
+            ],
+
+            default: "text",
+        },
+
+        attachment: {
+
+            type: String,
+
+            default: null,
+
+        },
+
+        replyTo: {
+
+            type: mongoose.Schema.Types.ObjectId,
+
+            ref: "Message",
+
+            default: null,
+        },
+
+        readBy: {
+
+            type:  mongoose.Schema.Types.ObjectId,
+
+            ref: "User",
+
+        },
+        
+        isEdited: {
 
             type: Boolean,
 
             default: false,
-
         },
-
+        
     },
 
     {
