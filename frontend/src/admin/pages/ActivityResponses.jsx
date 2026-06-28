@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { approveSubmission, getResponses, rejectSubmission } from "../../services/activityService";
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -21,16 +22,11 @@ function ActivityResponses() {
 
     try {
 
-      const response =
-        await fetch(
-          `${API}/activities/${id}/responses`
-        );
-
-      const data =
-        await response.json();
+      const userResponses =
+        await getResponses(id);
 
       setResponses(
-        data.responses || []
+        userResponses.responses || []
       );
 
     } catch (error) {
@@ -51,21 +47,14 @@ function ActivityResponses() {
 
     try {
 
-      const response =
-        await fetch(
-
-          `${API}/activities/responses/${submissionId}/approve`,
-
-          {
-            method: "PATCH",
-          }
-
+      const approvalResponse = 
+        await approveSubmission(
+          submissionId
         );
 
-      const data =
-        await response.json();
-
-      alert(data.message);
+      alert(
+        approvalResponse.message
+      );
 
       fetchResponses();
 
@@ -83,21 +72,14 @@ function ActivityResponses() {
 
     try {
 
-      const response =
-        await fetch(
-
-          `${API}/activities/responses/${submissionId}/reject`,
-
-          {
-            method: "PATCH",
-          }
-
+      const rejectionResponse =
+        await rejectSubmission(
+          submissionId
         );
-
-      const data =
-        await response.json();
-
-      alert(data.message);
+      
+      alert(
+        rejectionResponse.message
+      );
 
       fetchResponses();
 

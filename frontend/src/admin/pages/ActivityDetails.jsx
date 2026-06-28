@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { getActivity, getCSV, getClose } from "../../services/activityService";
 
-const API = import.meta.env.VITE_API_URL;
 
 function ActivityDetails() {
 
@@ -19,14 +19,11 @@ function ActivityDetails() {
 
     try {
 
-      const response = await fetch(
-        `${API}/activities/${id}`
-      );
+      const activityResponse = 
+        await getActivity(id);
 
-      const data = await response.json();
-
-      setActivity(data.activity);
-      setTotalRegistrations(data.totalRegistrations);
+      setActivity(activityResponse.activity);
+      setTotalRegistrations(activityResponse.totalRegistrations);
 
     } catch (error) {
 
@@ -39,10 +36,8 @@ function ActivityDetails() {
 
   try {
 
-    const response =
-      await fetch(
-        `${API}/activities/${id}/export-csv`
-      );
+    const csvResponse = 
+      await getCSV(id)
 
     const blob =
       await response.blob();
@@ -88,21 +83,10 @@ function ActivityDetails() {
 
   try {
 
-    const response =
-      await fetch(
+    const closeResponse =
+      await getClose(id);
 
-        `${API}/activities/${id}/close`,
-
-        {
-          method: "PATCH",
-        }
-
-      );
-
-    const data =
-      await response.json();
-
-    alert(data.message);
+    alert(closeResponse.message);
 
     fetchActivity();
 

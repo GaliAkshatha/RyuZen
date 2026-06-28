@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
 import ActivityForm from "../components/ActivityForm";
+import { getActivities } from "../../services/activityService";
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -25,13 +26,10 @@ function ActivitiesPage() {
 
     try {
 
-      const response = await fetch(
-        `${API}/activities`
-      );
+      const activityResponse = 
+        await getActivities();
 
-      const data = await response.json();
-
-      setActivities(data);
+      setActivities(activityResponse);
 
     } catch (error) {
 

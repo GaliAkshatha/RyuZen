@@ -1,8 +1,7 @@
 import React,{useEffect, useState} from "react";
 import Card from "../../shared/components/Card";
 import Leaderboard from "../../shared/components/Leaderboard";
-
-const API = import.meta.env.VITE_API_URL;
+import { getActivities } from "../../services/activityService";
 
 function ADashboard(){
 
@@ -14,15 +13,10 @@ function ADashboard(){
 
     async function fetchActivities() {
       try {
-        const response =
-          await fetch(
-            `${API}/activities`
-          );
+        const activityResponse = 
+          await getActivities();
         
-        const data =
-          await response.json();
-        
-        setActivities(data);
+        setActivities(activityResponse);
       }catch(error){
         console.log(error);
       }

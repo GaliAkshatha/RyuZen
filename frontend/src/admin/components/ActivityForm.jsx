@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { defaultActivity, defaultField } from "../../constants/activityDefaults";
 import FieldBuilder from "./FieldBuilder";
+import { createActivity, updateActivity } from "../../services/activityService";
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -28,46 +30,13 @@ function ActivityForm({
     useState("");
 
   const [field, setField] =
-    useState({
-      label: "",
-      type: "text",
-      required: false,
-    });
+    useState(defaultField);
 
   const [formData, setFormData] =
     useState(
       initialData || {
-
-        title: "",
-        description: "",
-
-        points: "",
-        penaltyPoints: "",
-
-        startDate: "",
-        endDate: "",
-
+        ...defaultActivity,
         type,
-
-        formFields: [],
-
-        venue: "",
-
-        startTime: "",
-        endTime: "",
-
-        registrationDeadline: "",
-
-        attendanceMethod: "manual",
-
-        requirements: [],
-
-        maxParticipants: "",
-
-        instructions: "",
-
-        submissionType: "pdf",
-
       }
     );
 
@@ -341,6 +310,30 @@ function ActivityForm({
 
   }
 
+  function resetForm() {
+
+    setFormData({
+
+        ...defaultActivity,
+
+        type,
+
+    });
+
+    setField(defaultField);
+
+    setRequirement("");
+
+    setErrors({});
+
+    setFieldError("");
+
+    setRequirementError("");
+
+    setSelectedType?.("");
+
+  }
+
   async function handleSubmit(e) {
 
     e.preventDefault();
@@ -372,55 +365,22 @@ function ActivityForm({
           localStorage.getItem("user")
         );
 
-      const url =
+      const activityPayload = {
+        ...formData,
+        createdBy:
+          user.id,
+      };
 
-        mode === "create"
-
-          ? `${API}/activities`
-
-          : `${API}/activities/${initialData._id}`;
-
-      const method =
-
-        mode === "create"
-
-          ? "POST"
-
-          : "PUT";
-
-      const response =
-        await fetch(url, {
-
-          method,
-
-          headers: {
-
-            "Content-Type":
-              "application/json",
-
-          },
-
-          body:
-            JSON.stringify({
-
-              ...formData,
-
-              createdBy:
-                user.id,
-
-            }),
-
-        });
-
-      const data =
-        await response.json();
-
-      if (!response.ok) {
-
-        alert(data.message);
-
-        return;
-
+      if(mode === "create"){
+        await createActivity(
+          activityPayload
+        );
+      }
+      else{
+        await updateActivity(
+          initialData._id,
+          activityPayload
+        );
       }
 
       alert(
@@ -435,63 +395,7 @@ function ActivityForm({
 
       if (mode === "create") {
 
-        setFormData({
-
-          title: "",
-
-          description: "",
-
-          points: "",
-
-          penaltyPoints: "",
-
-          startDate: "",
-
-          endDate: "",
-
-          type,
-
-          formFields: [],
-
-          venue: "",
-
-          startTime: "",
-
-          endTime: "",
-
-          registrationDeadline: "",
-
-          attendanceMethod: "manual",
-
-          requirements: [],
-
-          maxParticipants: "",
-
-          instructions: "",
-
-          submissionType: "pdf",
-
-        });
-
-        setField({
-
-          label: "",
-
-          type: "text",
-
-          required: false,
-
-        });
-
-        setRequirement("");
-
-        setErrors({});
-
-        setFieldError("");
-
-        setRequirementError("");
-
-        setSelectedType?.("");
+        resetForm();
 
       }
 

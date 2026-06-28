@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import ActivityCard from "../../shared/components/ActivityCard";
+import { getActivities } from "../../services/activityService";
 
-const API = import.meta.env.VITE_API_URL;
 
 function UserActivities() {
 
@@ -26,15 +26,10 @@ function UserActivities() {
 
     try {
 
-      const response =
-        await fetch(
-          `${API}/activities`
-        );
+      const activities = 
+          await getActivities();
 
-      const data =
-        await response.json();
-
-      setActivities(data);
+      setActivities(activities);
 
     } catch (error) {
 

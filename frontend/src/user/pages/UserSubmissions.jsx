@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getUserSubmissions } from "../../services/activityService";
 
-  const API = import.meta.env.VITE_API_URL;
 
 function UserSubmissions() {
 
@@ -29,16 +29,13 @@ function UserSubmissions() {
           localStorage.getItem("user")
         );
 
-      const response =
-        await fetch(
-          `${API}/activities/user/${user.id}`
-        );
-
-      const data =
-        await response.json();
+      const submissionResponse = 
+          await getUserSubmissions(
+            user.id
+          );
 
       setSubmissions(
-        data.submissions || []
+        submissionResponse.submissions || []
       );
 
     } catch (error) {

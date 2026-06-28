@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-
-const API = import.meta.env.VITE_API_URL;
+import { getleaderboard } from "../../services/leaderboardService";
 
 function Leaderboard() {
 
@@ -18,16 +17,11 @@ function Leaderboard() {
 
         try {
 
-            const response =
-                await fetch(
-                    `${API}/leaderboard/academic`
-                );
-
-            const data =
-                await response.json();
+            const leaderboardResponse = 
+                await getleaderboard();
 
             setPlayers(
-                data.leaderboard || []
+                leaderboardResponse.leaderboard || []
             );
 
         } catch (error) {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { getActivity, submitActivity } from "../../services/activityService";
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -16,13 +17,10 @@ function ActivityDetails() {
 
   async function fetchActivity() {
     try {
-      const response = await fetch(
-        `${API}/activities/${id}`
-      );
+      const activityResponse = 
+          await getActivity(id);
 
-      const data = await response.json();
-
-      setActivity(data.activity);
+      setActivity(activityRespons.activity);
     } catch (error) {
       console.log(error);
     }
@@ -41,29 +39,14 @@ function ActivityDetails() {
         localStorage.getItem("user")
       );
 
-      const response = await fetch(
-        `${API}/activities/${id}/submit`,
+      await submitActivity(
+        id,
         {
-          method: "POST",
-
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-
-          body: JSON.stringify({
-            userId: user.id,
-            answers,
-          }),
+          userId:
+            user.id,
+          answers,
         }
       );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        alert(data.message);
-        return;
-      }
 
       alert("Submitted Successfully");
 

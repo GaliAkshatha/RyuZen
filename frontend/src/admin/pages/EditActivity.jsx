@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import ActivityForm from "../components/ActivityForm";
+import { getActivity } from "../../services/activityService";
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -25,16 +26,11 @@ function EditActivity() {
 
         try {
 
-            const response =
-                await fetch(
-                    `${API}/activities/${id}`
-                );
-
-            const data =
-                await response.json();
+            const activityResponse = 
+                await getActivity(id);
 
             setActivity(
-                data.activity
+                activityResponse.activity
             );
 
         } catch (error) {

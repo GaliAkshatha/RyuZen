@@ -2,6 +2,8 @@ import React,{useEffect,useState} from "react";
 import { useLocation } from "react-router-dom";
 import Card from "./../../shared/components/Card";
 import Leaderboard from "../../shared/components/Leaderboard";
+import { getActivities } from "../../services/activityService";
+import { getNotifications } from "../../services/notificationService";
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -20,13 +22,8 @@ function UDashboard() {
   
       async function fetchActivities() {
         try {
-          const response =
-            await fetch(
-              `${API}/activities`
-            );
-          
-          const data =
-            await response.json();
+          const activities = 
+              await getActivities();
           
           setActivities(data);
         }catch(error){
@@ -43,18 +40,13 @@ function UDashboard() {
               localStorage.getItem("user")
             );
 
-          const response =
-            await fetch(
-            `${API}/notifications/${user.id}`
-          );
+          const notificationResponse = 
+              await getNotifications(user.id);
 
-           const data =
-            await response.json();
-
-            console.log(data);
+            console.log(notificationResponse);
 
           setNotifications(
-            data.notifications || []
+            notificationResponse.notifications || []
           );
 
         } catch (error) {
