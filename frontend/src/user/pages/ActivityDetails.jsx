@@ -20,7 +20,7 @@ function ActivityDetails() {
       const activityResponse = 
           await getActivity(id);
 
-      setActivity(activityRespons.activity);
+      setActivity(activityResponse.activity);
     } catch (error) {
       console.log(error);
     }

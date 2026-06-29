@@ -1,124 +1,91 @@
-const API =
-    import.meta.env.VITE_API_URL;
+import apiClient from "./apiClient";
+
+function getCurrentUser() {
+
+    return JSON.parse(
+        localStorage.getItem("user")
+    );
+
+}
 
 export async function getConversations() {
 
-    const user =
-        JSON.parse(
-            localStorage.getItem("user")
-        );
+    const user = getCurrentUser();
 
-    const response =
-        await fetch(
+    return await apiClient.get(
 
-            `${API}/conversations/${user.id}`
+        `/conversations/${user.id}`
 
-        );
-
-    return await response.json();
+    );
 
 }
 
-export async function createConversation(
-    receiverId
-) {
+export async function createConversation({
 
-    const user =
-        JSON.parse(
-            localStorage.getItem("user")
-        );
+    receiverId,
 
-    const response =
-        await fetch(
+}) {
 
-            `${API}/conversations`,
+    const user = getCurrentUser();
 
-            {
+    return await apiClient.post(
 
-                method: "POST",
+        "/conversations",
 
-                headers: {
+        {
 
-                    "Content-Type":
-                        "application/json",
+            senderId: user.id,
 
-                },
+            receiverId,
 
-                body: JSON.stringify({
+        }
 
-                    senderId:
-                        user.id,
-
-                    receiverId,
-
-                }),
-
-            }
-
-        );
-
-    return await response.json();
+    );
 
 }
 
-export async function getMessages(
-    conversationId
-) {
-
-    const response =
-        await fetch(
-
-            `${API}/messages/${conversationId}`
-
-        );
-
-    return await response.json();
-
-}
-
-export async function sendMessage(
+export async function getMessages({
 
     conversationId,
 
-    text
+}) {
 
-) {
+    return await apiClient.get(
 
-    const user =
-        JSON.parse(
-            localStorage.getItem("user")
-        );
+        `/messages/${conversationId}`
 
-    const response =
-        await fetch(
+    );
 
-            `${API}/messages`,
+}
 
-            {
+export async function sendMessage({
 
-                method: "POST",
+    conversationId,
 
-                headers: {
+    content,
 
-                    "Content-Type":
-                        "application/json",
+    messageType = "text",
 
-                },
+}) {
 
-                body: JSON.stringify({
+    const user = getCurrentUser();
 
-                    conversationId,
+    return await apiClient.post(
 
-                    sender: user.id,
+        "/messages",
 
-                    text,
+        {
 
-                }),
+            conversationId,
 
-            }
+            senderId: user.id,
 
-        );
+            content,
 
-    return await response.json();
+            messageType,
+
+        }
+
+    );
 
 }

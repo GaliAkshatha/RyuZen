@@ -1,7 +1,14 @@
-import ConversationList from "../components/chat/ConversationList";
-import ChatWindow from "../components/chat/ChatWindow";
+import { useState } from "react";
+
+import ConversationList from "../../components/chat/ConversationList";
+import ChatWindow from "../../components/chat/ChatWindow";
 
 function Connect() {
+
+    const [
+        selectedConversation,
+        setSelectedConversation,
+    ] = useState(null);
 
     return (
 
@@ -14,9 +21,25 @@ function Connect() {
             "
         >
 
-            <ConversationList />
+            <ConversationList
 
-            <ChatWindow />
+                selectedConversation={
+                    selectedConversation
+                }
+
+                onSelectConversation={
+                    setSelectedConversation
+                }
+
+            />
+
+            <ChatWindow
+
+                conversation={
+                    selectedConversation
+                }
+
+            />
 
         </div>
 

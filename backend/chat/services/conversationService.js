@@ -1,6 +1,22 @@
 import Conversation from "../models/Conversation.js";
+import User from "../../models/User.js";
+
 
 class ConversationService {
+
+    async getUsers() {
+
+        return await User.find({
+
+            role: "user",
+
+        }).select(
+
+            "name email"
+
+        );
+
+    }
 
     async createConversation(
 
@@ -80,37 +96,96 @@ class ConversationService {
 
     }
 
-    async getUserConversations(
-        userId
-    ) {
+    async getUserConversations(userId) {
 
-        return await Conversation.find({
+        const conversations =
 
-            participants: userId,
+            await Conversation.find({
 
-        })
+                participants: userId,
 
-        .populate(
+            })
 
-            "participants",
+            .populate(
 
-            "name email profilePicture"
+                "participants",
 
-        )
+                "name email profilePicture role"
 
-        .populate(
+            )
 
-            "lastMessage"
+            .populate({
 
-        )
+                path: "lastMessage",
 
-        .sort({
+                populate: {
 
-            lastActivity: -1,
+                    path: "sender",
 
-        });
+                    select: "name"
+
+                }
+
+            })
+
+            .sort({
+
+                lastActivity: -1,
+
+            });
+
+        return conversations.map(
+
+            (conversation) => {
+
+                const otherParticipant =
+
+                    conversation.participants.find(
+
+                        (participant) =>
+
+                            participant._id.toString() !== userId
+
+                    );
+
+                return {
+
+                    _id: conversation._id,
+
+                    participants: conversation.participants,
+
+                    otherParticipant: conversation.isGroup
+                        ? null
+                        : otherParticipant,
+
+                    lastMessage:
+
+                        conversation.lastMessage,
+
+                    lastActivity:
+
+                        conversation.lastActivity,
+
+                    unreadCount:
+
+                        conversation.unreadCount || 0,
+
+                    isGroup:
+
+                        conversation.isGroup,
+
+                    groupName:
+
+                        conversation.groupName,
+
+                };
+
+            }
+
+        );
 
     }
+
 
 }
 

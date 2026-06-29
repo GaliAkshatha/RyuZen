@@ -25,7 +25,7 @@ function UDashboard() {
           const activities = 
               await getActivities();
           
-          setActivities(data);
+          setActivities(activities);
         }catch(error){
           console.log(error);
         }

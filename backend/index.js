@@ -8,7 +8,8 @@ import authRoutes from "./routes/authRoutes.js";
 import activityRoutes from "./routes/activityRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import leaderboardRoutes from "./routes/leaderboardRoutes.js";
-import chatRoutes from "./routes/chatRoutes.js";
+import conversationRoutes from "./chat/routes/conversationRoutes.js";
+import messageRoutes from "./chat/routes/messageRoutes.js";
 
 dotenv.config();
 
@@ -23,7 +24,10 @@ app.use("/api/auth", authRoutes);
 app.use("/api/activities", activityRoutes);
 app.use("/api/notifications",notificationRoutes);
 app.use("/api/leaderboard",leaderboardRoutes);
-app.use("/api/chat",chatRoutes);
+
+
+app.use("/api/conversations",conversationRoutes);
+app.use("/api/messages",messageRoutes);
 
 app.get("/", (req,res)=>{
     res.send("API Running");
