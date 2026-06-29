@@ -6,8 +6,11 @@ import ChatWindow from "../../components/chat/ChatWindow";
 function Connect() {
 
     const [
+
         selectedConversation,
+
         setSelectedConversation,
+
     ] = useState(null);
 
     return (
@@ -35,7 +38,7 @@ function Connect() {
 
             <ChatWindow
 
-                conversation={
+                selectedConversation={
                     selectedConversation
                 }
 

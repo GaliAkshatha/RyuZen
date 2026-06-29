@@ -6,9 +6,7 @@ import {
 
 import ConversationCard from "./ConversationCard";
 
-import {
-    getConversations,
-} from "../../services/chatService";
+import { getConversations } from "../../services/chatService";
 
 function ConversationList({
 
@@ -55,9 +53,11 @@ function ConversationList({
             const data =
                 await getConversations();
 
+            console.log("Conversation API:", data);
+
             setConversations(
 
-                data.conversations || []
+                data.data || []
 
             );
 

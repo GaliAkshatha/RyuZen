@@ -67,13 +67,14 @@ const messageSchema = new mongoose.Schema(
             default: null,
         },
 
-        readBy: {
+        readBy: [
+            {
 
             type:  mongoose.Schema.Types.ObjectId,
 
             ref: "User",
 
-        },
+        }],
         
         isEdited: {
 
