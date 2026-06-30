@@ -25,6 +25,7 @@ import {
 
 } from "../utils/jwt.js";
 import { USER_ROLE, USER_STATUS } from "../../users/constants/userConstants.js";
+import userService from "../../users/services/userService.js";
 
 class AuthService {
 
@@ -149,7 +150,7 @@ class AuthService {
 
         const user =
 
-            await User.findOne({
+            await userService.getUserByEmail({
 
                 email
 
@@ -169,7 +170,7 @@ class AuthService {
 
     async createUser( registrationData, organization, hashedPassword ){
 
-        const user = await User.create({
+        const user = await userService.createUser({
 
             organization:
 
@@ -197,7 +198,7 @@ class AuthService {
 
         });
 
-        return await user.findById(
+        return await userService.getUserById(
             user._id
         )
         .populate(
