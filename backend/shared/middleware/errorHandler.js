@@ -22,6 +22,10 @@ export default function errorHandler(
 
         "Internal Server Error",
 
+        ...(error.errors && {
+            errors: error.errors,
+        }),
+
         ...(process.env.NODE_ENV !== "production" 
             ? {stack: error.stack}
             : {}),

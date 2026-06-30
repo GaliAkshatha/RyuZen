@@ -1,8 +1,14 @@
 import AppError from "./AppError.js";
 
-class ValidationError extends AppError{
+class ValidationError extends AppError {
 
-    constructor(message){
+    constructor(
+
+        message,
+
+        errors = []
+
+    ) {
 
         super(
 
@@ -11,6 +17,8 @@ class ValidationError extends AppError{
             422
 
         );
+
+        this.errors = errors;
 
     }
 
