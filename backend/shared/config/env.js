@@ -2,11 +2,11 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export default {
+export default  Object.freeze({
 
     PORT:
 
-        process.env.PORT,
+        process.env.PORT || 5000,
 
     MONGO_URI:
 
@@ -18,6 +18,6 @@ export default {
 
     NODE_ENV:
 
-        process.env.NODE_ENV,
+        process.env.NODE_ENV || "development",
 
-};
+});

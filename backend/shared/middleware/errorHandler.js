@@ -22,10 +22,10 @@ export default function errorHandler(
 
         "Internal Server Error",
 
-        ...arguments(process.env.NODE_ENV !== "production" && {
-            stack: error.stack,
-        }),
-
-    });
+        ...(process.env.NODE_ENV !== "production" 
+            ? {stack: error.stack}
+            : {}),
+        });
 
 }
+
