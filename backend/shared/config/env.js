@@ -34,6 +34,10 @@ const env = Object.freeze({
 
         "http://localhost:5173",
 
+    BCRYPT_SALT_ROUNDS:
+    
+    Number(process.env.BCRYPT_SALT_ROUNDS) || 12,
+
 });
 
 export default env;

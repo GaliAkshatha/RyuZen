@@ -1,0 +1,12 @@
+export const USER_ROLE = {
+    SUPER_ADMIN: "SUPER_ADMIN",
+    ORG_ADMIN: "ORG_ADMIN",
+    TEACHER: "TEACHER",
+    STUDENT: "STUDENT",
+};
+
+export const USER_STATUS = {
+    PENDING: "PENDING",
+    ACTIVE: "ACTIVE",
+    SUSPENDED: "SUSPENDED",
+};
