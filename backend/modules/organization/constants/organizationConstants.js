@@ -1,0 +1,21 @@
+export const ORGANIZATION_STATUS = {
+
+    ACTIVE: "ACTIVE",
+
+    INACTIVE: "INACTIVE",
+
+    SUSPENDED: "SUSPENDED",
+
+};
+
+export const REGISTRATION_STRATEGY = {
+
+    EMAIL_DOMAIN: "EMAIL_DOMAIN",
+
+    INVITATION: "INVITATION",
+
+    STUDENT_ID: "STUDENT_ID",
+
+    OPEN: "OPEN",
+
+};
