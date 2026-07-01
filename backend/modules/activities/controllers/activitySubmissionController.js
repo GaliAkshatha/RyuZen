@@ -1,348 +1,177 @@
-import Activity from "../models/Activity.js";
-import ActivitySubmission from "../models/ActivitySubmission.js";
-import User from "../../users/models/User.js";
-import Notification from "../../../models/Notification.js";
+import asyncHandler from "../../../shared/middleware/asyncHandler.js";
 
-export const submitActivity = async (
-  req,
-  res
-) => {
+import ApiResponse from "../../../shared/utils/apiResponse.js";
 
-  try {
+import activityService from "../services/activityService.js";
 
-    const {
-      userId,
-      answers,
-    } = req.body;
+/**
+ * Student submits activity
+ */
+export const submitActivity = asyncHandler(
 
-    const activity =
-      await Activity.findById(
-        req.params.id
-      );
+    async (
 
-    if (
-      activity.status ===
-      "closed"
-    ) {
+        req,
 
-      return res.status(400).json({
-        message:
-          "Activity is closed",
-      });
+        res
 
-    }
+    ) => {
 
-    const existingSubmission =
-      await ActivitySubmission.findOne({
+        const result =
 
-        activity:
-          req.params.id,
+            await activityService.submitActivity(
 
-        user:
-          userId,
+                req.params.id,
 
-      });
+                req.body,
 
-    if (existingSubmission) {
+                req.user
 
-      return res.status(400).json({
+            );
 
-        message:
-          "You have already submitted this activity",
+        return ApiResponse.success(
 
-      });
+            res,
 
-    }
+            result.message,
 
-    const submission =
-      await ActivitySubmission.create({
+            result.submission,
 
-        activity:
-          req.params.id,
+            201
 
-        user:
-          userId,
-
-        answers,
-      });
-
-    res.status(201).json({
-
-      message:
-        "Submission Successful",
-
-      submission,
-
-    });
-
-  } catch (error) {
-
-    res.status(500).json({
-      message:
-        error.message,
-    });
-
-  }
-
-};
-
-export const getActivityResponses =
-async (req, res) => {
-
-  try {
-
-    const responses =
-      await ActivitySubmission
-        .find({
-          activity:
-            req.params.id,
-        })
-        .populate(
-          "user",
-          "name email role"
         );
 
-    res.json({
-      responses,
-    });
+    }
 
-  } catch (error) {
+);
 
-    res.status(500).json({
-      message:
-        error.message,
-    });
+/**
+ * Faculty approves submission
+ */
+export const approveSubmission = asyncHandler(
 
-  }
+    async (
 
-};
+        req,
 
-export const approveSubmission =
-async (req, res) => {
+        res
 
-  try {
+    ) => {
 
-    const submission =
-      await ActivitySubmission.findById(
-        req.params.id
-      );
+        const {
 
-    if (!submission) {
+            feedback,
 
-      return res.status(404).json({
-        message:
-          "Submission not found",
-      });
+            score,
+
+        } = req.body;
+
+        const result =
+
+            await activityService.approveSubmission(
+
+                req.params.id,
+
+                feedback,
+
+                score,
+
+                req.user
+
+            );
+
+        return ApiResponse.success(
+
+            res,
+
+            result.message,
+
+            result.submission
+
+        );
 
     }
 
-    if (
-      submission.status ===
-      "approved"
-    ) {
+);
 
-      return res.status(400).json({
-        message:
-          "Already approved",
-      });
+/**
+ * Faculty rejects submission
+ */
+export const rejectSubmission = asyncHandler(
 
-    }
+    async (
 
-    const activity =
-      await Activity.findById(
-        submission.activity
-      );
+        req,
 
-    const user =
-      await User.findById(
-        submission.user
-      );
+        res
 
-    user.academicPoints +=
-      activity.points;
+    ) => {
 
-    await user.save();
+        const {
 
-    await Notification.create({
-        user: user._id,
+            feedback,
 
-        title: "Activity Approved",
+        } = req.body;
 
-        message:
-            `${activity.title} approved. +${activity.points} points awarded.`,
-    });
+        const result =
 
-    submission.status =
-      "approved";
+            await activityService.rejectSubmission(
 
-    await submission.save();
+                req.params.id,
 
-    res.json({
-      message:
-        "Submission approved",
-    });
+                feedback,
 
-  } catch (error) {
+                req.user
 
-    res.status(500).json({
-      message:
-        error.message,
-    });
+            );
 
-  }
+        return ApiResponse.success(
 
-};
+            res,
 
-export const rejectSubmission =
-async (req, res) => {
+            result.message,
 
-  try {
+            result.submission
 
-    const submission =
-      await ActivitySubmission.findById(
-        req.params.id
-      );
-
-    if (!submission) {
-
-      return res.status(404).json({
-        message:
-          "Submission not found",
-      });
+        );
 
     }
 
-    submission.status =
-      "rejected";
+);
 
-    await submission.save();
+/**
+ * Mark workshop attendance
+ */
+export const markAttendance = asyncHandler(
 
-    await Notification.create({
+    async (
 
-        user: submission.user,
+        req,
 
-        title: "Activity Rejected",
+        res
 
-        message:
-            "Your submission was not approved.",
-    });
+    ) => {
 
-    res.json({
-      message:
-        "Submission rejected",
-    });
+        const result =
 
-  } catch (error) {
+            await activityService.markAttendance(
 
-    res.status(500).json({
-      message:
-        error.message,
-    });
+                req.params.id,
 
-  }
+                req.user
 
-};
+            );
 
-export const markAttendance =
-async (req, res) => {
+        return ApiResponse.success(
 
-  try {
+            res,
 
-    const submission =
-      await ActivitySubmission.findById(
-        req.params.id
-      );
+            result.message,
 
-    if (!submission) {
+            result.submission
 
-      return res.status(404).json({
-        message:
-          "Submission not found",
-      });
+        );
 
     }
 
-    const activity =
-      await Activity.findById(
-        submission.activity
-      );
-
-    const user =
-      await User.findById(
-        submission.user
-      );
-
-    user.academicPoints +=
-      activity.points;
-
-    await user.save();
-
-    await Notification.create({
-
-        user: user._id,
-
-        title: "Workshop Attendance Confirmed",
-
-        message:
-            `${activity.title} attended. +${activity.points} points awarded.`,
-    });
-
-    submission.status =
-      "attended";
-
-    await submission.save();
-
-
-
-    res.json({
-      message:
-        "Attendance marked",
-    });
-
-  } catch (error) {
-
-    res.status(500).json({
-      message:
-        error.message,
-    });
-
-  }
-
-};
-
-export const getUserSubmissions =
-async (req,res) => {
-
-  try {
-
-    const submissions =
-      await ActivitySubmission.find({
-
-        user:
-          req.params.userId,
-
-      })
-
-      .populate(
-        "activity",
-        "title points type"
-      )
-
-      .sort({
-        createdAt: -1,
-      });
-
-    res.json({
-      submissions,
-    });
-
-  } catch(error) {
-
-    res.status(500).json({
-      message:
-        error.message,
-    });
-
-  }
-
-};
+);

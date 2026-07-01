@@ -6,21 +6,29 @@ import {
 
 } from "../../../shared/errors";
 
+import applySession from "../../../shared/database/applySession.js";
+
 export default async function findSubmission(
 
-    submissionId
+    submissionId,
+
+    session = null
 
 ){
 
-    const submission =
+    const submission = await applySession(
 
-        await ActivitySubmission.findOne({
+        ActivitySubmission.findOne({
 
             _id: submissionId,
 
             isDeleted:false,
 
-        });
+        }),
+
+        session
+
+    );
 
     if(!submission){
 

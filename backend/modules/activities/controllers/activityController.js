@@ -1,356 +1,192 @@
-import Activity from "../models/Activity.js";
-import ActivitySubmission from "../models/ActivitySubmission.js";
-import { Parser } from "json2csv";
+import asyncHandler from "../../../shared/middleware/asyncHandler.js";
 
-export const createActivity = async(
-    req,
-    res
-) => {
-    try{
+import ApiResponse from "../../../shared/utils/apiResponse.js";
 
-        const{
-            title,
-            description,
-            type,
+import activityService from "../services/activityService.js";
 
-            points,
-            penaltyPoints,
+/**
+ * Create Activity
+ */
+export const createActivity = asyncHandler(
 
-            startDate,
-            endDate,
+    async (
 
-            formFields,
+        req,
 
-            venue,
-            startTime,
-            endTime,
+        res
 
-            registrationDeadline,
+    ) => {
 
-            attendanceMethod,
+        const result =
 
-            requirements,
+            await activityService.createActivity(
 
-            maxParticipants,
+                req.body,
 
-            instructions,
+                req.user
 
-            submissionType,
+            );
 
-            createdBy,
-        } = req.body;
+        return ApiResponse.success(
 
-        if (
-            !title ||
-            !description
-        ){
-            return res.status(400).json({
-                message:
-                    "Please fill all required fields",
-            });
-        }
+            res,
 
-        if(
-            type === "form" && 
-            (!formFields || 
-                formFields.length === 0)
-            ){
-                return res.status(400).json({
-                    message:
-                    "add at least one form field",
-                });
-            }
+            result.message,
 
-        if (
-          new Date(startDate) >
-          new Date(endDate)
-        ){
-          return res.status(400).json({
-            message:
-            "End date must be after start date.",
-          })
-        }
+            result.activity,
 
-        if(type === "workshop"){
-          if (
-            !venue ||
-            !startTime ||
-            !endTime ||
-            !registrationDeadline
-          ){
-            return res.status(400).json({
-              message:
-              "Please complete all workshop details.",
-            });
-          }
+            201
 
-          if(startTime >= endTime){
-            return res.status(400).json({
-              message:
-              "Workshop end time must be after start time.",
-            })
-          }
-
-          if( new Date(registrationDeadline) >
-              new Date(startDate) ){
-                return res.status(400).json({
-                  message:
-                  "Registration deadline must be before workshop start.",
-                });
-              }
-        }
-        
-        const activity = await Activity.create({
-            title,
-            description,
-
-            type,
-
-            points,
-            penaltyPoints,
-
-            startDate,
-            endDate,
-
-            formFields,
-
-            venue,
-            startTime,
-            endTime,
-
-            registrationDeadline,
-
-            attendanceMethod,
-
-            requirements,
-
-            maxParticipants,
-
-            instructions,
-
-            submissionType,
-
-            createdBy,
-        });
-
-
-        res.status(201).json({
-            message: "Activity created",
-            activity,
-        });
-
-    }catch(error){
-        res.status(500).json({
-            message: error.message,
-        });
-    }
-};
-
-export const getActivities = async(
-    req,
-    res
-) => {
-    try{
-        const activities = await Activity.find()
-        .sort({ createdAt : -1});
-
-        res.json(activities);
-    }catch(error){
-        res.status(500).json({
-            message: error.message,
-        });
-    }
-};
-
-export const getActivityById =
-async (req, res) => {
-
-  try {
-
-    const activity =
-      await Activity.findById(
-        req.params.id
-      ).populate(
-        "createdBy",
-        "name email role"
-      );
-
-    if (!activity) {
-
-      return res.status(404).json({
-        message:
-          "Activity not found",
-      });
-    }
-    const totalRegistrations =
-      await ActivitySubmission
-      .countDocuments({
-        activity:
-          req.params.id,
-      });
-
-    res.json({
-      activity,
-      totalRegistrations,
-    });
-
-
-  } catch (error) {
-
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-export const downloadResponsesCSV =
-async (req, res) => {
-
-  try {
-
-    const activity = await Activity.findById(
-        req.params.id
-    );
-
-    const responses =
-      await ActivitySubmission
-        .find({
-          activity:
-            req.params.id,
-        })
-        .populate(
-          "user",
-          "name email"
         );
 
-    const csvData =
-      responses.map(
-        (submission) => ({
+    }
 
-          Name:
-            submission.user?.name,
+);
 
-          Email:
-            submission.user?.email,
+/**
+ * Update Activity
+ */
+export const updateActivity = asyncHandler(
 
-          SubmittedAt:
-            submission.createdAt,
+    async (
 
-          ...submission.answers,
+        req,
 
-        })
-      );
+        res
 
-    const parser =
-      new Parser();
+    ) => {
 
-    const csv =
-      parser.parse(csvData);
+        const result =
 
-    res.header(
-      "Content-Type",
-      "text/csv"
-    );
+            await activityService.updateActivity(
 
-    res.attachment(
-      `${activity.title}-responses.csv`
-    );
+                req.params.id,
 
-    return res.send(csv);
+                req.body,
 
-  } catch (error) {
+                req.user
 
-    res.status(500).json({
-      message:
-        error.message,
-    });
+            );
 
-  }
+        return ApiResponse.success(
 
-};
+            res,
 
-export const closeActivity =
-async (req, res) => {
+            result.message,
 
-  try {
+            result.activity
 
-    const activity =
-      await Activity.findByIdAndUpdate(
-
-        req.params.id,
-
-        {
-          status: "closed",
-        },
-
-        {
-          new: true,
-        }
-      );
-
-    res.json({
-      message:
-        "Activity Closed",
-
-      activity,
-    });
-
-  } catch (error) {
-
-    res.status(500).json({
-      message:
-        error.message,
-    });
-
-  }
-
-};
-
-export const updateActivity = async (
-  req,
-  res
-) => {
-
-  try {
-
-    const activity =
-      await Activity.findByIdAndUpdate(
-
-        req.params.id,
-
-        req.body,
-
-        {
-          new: true,
-        }
-
-      );
-
-    if (!activity) {
-
-      return res.status(404).json({
-        message:
-          "Activity not found",
-      });
+        );
 
     }
 
-    res.json({
+);
 
-      message:
-        "Activity Updated",
+/**
+ * Publish Activity
+ */
+export const publishActivity = asyncHandler(
 
-      activity,
+    async (
 
-    });
+        req,
 
-  } catch (error) {
+        res
 
-    res.status(500).json({
-      message:
-        error.message,
-    });
+    ) => {
 
-  }
+        const result =
 
-};
+            await activityService.publishActivity(
+
+                req.params.id,
+
+                req.user
+
+            );
+
+        return ApiResponse.success(
+
+            res,
+
+            result.message,
+
+            result.activity
+
+        );
+
+    }
+
+);
+
+/**
+ * Close Activity
+ */
+export const closeActivity = asyncHandler(
+
+    async (
+
+        req,
+
+        res
+
+    ) => {
+
+        const result =
+
+            await activityService.closeActivity(
+
+                req.params.id,
+
+                req.user
+
+            );
+
+        return ApiResponse.success(
+
+            res,
+
+            result.message,
+
+            result.activity
+
+        );
+
+    }
+
+);
+
+/**
+ * Delete Activity
+ */
+export const deleteActivity = asyncHandler(
+
+    async (
+
+        req,
+
+        res
+
+    ) => {
+
+        const result =
+
+            await activityService.deleteActivity(
+
+                req.params.id,
+
+                req.user
+
+            );
+
+        return ApiResponse.success(
+
+            res,
+
+            result.message
+
+        );
+
+    }
+
+);

@@ -6,23 +6,33 @@ import {
 
 } from "../../../shared/errors";
 
+import applySession from "../../../shared/database/applySession.js";
+
 export default async function findActivity(
 
     activityId,
 
-    organizationId
+    organizationId,
+
+    session = null
 
 ) {
 
-    const activity = await Activity.findOne({
+    const activity = await applySession(
 
-        _id: activityId,
+        Activity.findOne({
 
-        organization: organizationId,
+            _id: activityId,
 
-        isDeleted: false,
+            organization: organizationId,
 
-    });
+            isDeleted: false,
+
+        }),
+
+        session
+
+    );
 
     if (!activity) {
 

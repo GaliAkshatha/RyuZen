@@ -38,7 +38,9 @@ export default async function approveSubmission(
 
             await findSubmission(
 
-                submissionId
+                submissionId,
+
+                session
 
             );
 
@@ -48,7 +50,9 @@ export default async function approveSubmission(
 
                 submission.activity,
 
-                submission.organization
+                submission.organization,
+
+                session
 
             );
 
@@ -63,8 +67,6 @@ export default async function approveSubmission(
                     academicPoints:
 
                         activity.rules.points,
-
-                    gamePoints:10,
 
                 },
 
