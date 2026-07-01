@@ -4,11 +4,13 @@ import cors from "cors";
 
 import connectDB from "./config/db.js";
 
-import authRoutes from "./routes/authRoutes.js";
-import activityRoutes from "./routes/activityRoutes.js";
+import authRoutes from "./modules/auth/routes/authRoutes.js";
+
+import activityRoutes from "./modules/activities/routes/activityRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import leaderboardRoutes from "./routes/leaderboardRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
+
 
 dotenv.config();
 

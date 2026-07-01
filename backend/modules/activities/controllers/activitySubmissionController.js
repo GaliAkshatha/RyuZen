@@ -1,7 +1,7 @@
 import Activity from "../models/Activity.js";
 import ActivitySubmission from "../models/ActivitySubmission.js";
-import User from "../models/User.js";
-import Notification from "../models/Notification.js";
+import User from "../../users/models/User.js";
+import Notification from "../../../models/Notification.js";
 
 export const submitActivity = async (
   req,
