@@ -14,6 +14,8 @@ import {
 
 } from "../../../shared/errors";
 
+import findActivity from "../helpers/findActivity.js";
+
 export default async function closeActivity(
 
     activityId,
@@ -22,15 +24,10 @@ export default async function closeActivity(
 
 ){
 
-    const activity = await Activity.findOne({
-
-        _id:activityId,
-
-        organization:user.organization,
-
-        isDeleted:false,
-
-    });
+    const activity = await findActivity(
+        activityId,
+        user.organization
+    );
 
     if(!activity){
 

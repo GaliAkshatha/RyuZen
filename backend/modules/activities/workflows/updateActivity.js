@@ -5,6 +5,7 @@ import {
     NotFoundError,
 
 } from "../../../shared/errors/index.js";
+import findActivity from "../helpers/findActivity.js";
 
 /**
  * Update an existing activity.
@@ -25,15 +26,10 @@ export default async function updateActivity(
 
 ) {
 
-    const activity = await Activity.findOne({
-
-        _id: activityId,
-
-        organization: user.organization,
-
-        isDeleted: false,
-
-    });
+    const activity = await findActivity(
+            activityId,
+            user.organization
+        );
 
     if (!activity) {
 

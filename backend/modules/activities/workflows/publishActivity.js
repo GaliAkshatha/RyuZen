@@ -8,6 +8,7 @@ import {
     NotFoundError,
     BadRequestError,
 } from "../../../shared/errors";
+import findActivity from "../helpers/findActivity.js";
 
 export default async function publishActivity(
 
@@ -17,15 +18,10 @@ export default async function publishActivity(
 
 ){
 
-    const activity = await Activity.findOne({
-
-        _id: activityId,
-
-        organization:user.organization,
-
-        isDeleted:false,
-
-    });
+    const activity = await findActivity(
+            activityId,
+            user.organization
+        );
 
     if(!activity){
 
