@@ -20,11 +20,40 @@ class UserService {
     /**
      * Find user by email.
      */
-    async getUserByEmail(email) {
+    async getUserByEmail(
+        email,
+        {
 
-        return await User.findOne({
-            email,
-        });
+            includePassword = false,
+
+            populateOrganization = false,
+
+        }= {}) {
+
+            let query =
+
+                User.findOne({
+                    email,
+                });
+            if(
+                includePassword
+            ){
+                query =
+                    query.select(
+                        "+auth.password"
+                    );
+            }
+            if(
+                populateOrganization
+            ){
+                query =
+                    query.populate(
+                        "organization",
+                        "name code"
+                    );
+            }
+
+            return await query;
 
     }
 

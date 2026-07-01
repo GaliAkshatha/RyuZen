@@ -1,22 +1,33 @@
 import registrationService from "./registrationService.js";
+import loginService from "./loginService.js";
 
 class AuthService {
 
     async register(
+
         registrationData
+
     ) {
 
         return await registrationService.register(
+
             registrationData
+
         );
 
     }
 
     async login(
+
         credentials
+
     ) {
 
-        // Coming next
+        return await loginService.login(
+
+            credentials
+
+        );
 
     }
 

@@ -28,4 +28,16 @@ router.post(
 
 );
 
+router.post(
+
+    "/login",
+
+    loginValidation,
+
+    validate,
+
+    login
+
+);
+
 export default router;

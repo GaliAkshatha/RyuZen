@@ -51,7 +51,7 @@ class PasswordService {
 
         const valid =
 
-            await comparePassword(
+            await verifyPassword(
 
                 password,
 

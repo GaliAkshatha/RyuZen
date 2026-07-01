@@ -1,24 +1,28 @@
-import asyncHandler from "../../../shared/middleware/asyncHandler.js";
+export const login = asyncHandler(
 
-import ApiResponse from "../../../shared/utils/apiResponse.js";
+    async (
 
-import authService from "../services/authService.js";
+        req,
 
-export const register = asyncHandler(
+        res
 
-    async (req, res) => {
+    ) => {
 
-        const user = await authService.register(req.body);
+        const data =
+
+            await authService.login(
+
+                req.body
+
+            );
 
         return ApiResponse.success(
 
             res,
 
-            "Registration successful. Awaiting approval.",
+            "Login successful.",
 
-            user,
-
-            201
+            data
 
         );
 

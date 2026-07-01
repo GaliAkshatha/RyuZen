@@ -33,3 +33,17 @@ export const registerValidation = [
         .withMessage("Password must contain a special character."),
 
 ];
+
+export const loginValidation = [
+
+    body("email")
+        .trim()
+        .isEmail()
+        .withMessage("Valid email is required.")
+        .normalizeEmail(),
+
+    body("password")
+        .notEmpty()
+        .withMessage("Password is required."),
+
+];
