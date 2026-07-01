@@ -37,7 +37,7 @@ class RegistrationService {
         );
 
         const hashedPassword =
-            await passwordService.hash(
+            await passwordService.hashPassword(
                 registrationData.password
             );
 

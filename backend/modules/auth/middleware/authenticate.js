@@ -6,11 +6,7 @@ import {
 
 } from "../../../shared/errors/index.js";
 
-import {
-
-    verifyAccessToken,
-
-} from "../utils/jwt.js";
+import tokenService from "../services/tokenService.js";
 
 import userService from "../../users/services/userService.js";
 
@@ -66,7 +62,7 @@ const authenticate = asyncHandler(
 
         const payload =
 
-            verifyAccessToken(
+            tokenService.verifyToken(
 
                 token
 
