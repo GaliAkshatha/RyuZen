@@ -1,21 +1,22 @@
-import ActivitySubmission from "../models/ActivitySubmission.js";
+import mongoose from "mongoose";
+
+import User from "../../users/models/User.js";
+
+import Notification from "../../notifications/models/Notification.js";
+
+import findSubmission from "../helpers/findSubmission.js";
+
+import findActivity from "../helpers/findActivity.js";
 
 import {
 
-    SUBMISSION_STATUS,
+SUBMISSION_STATUS,
 
-} from "../constants/activityConstants.js";
+}
 
-import {
-
-    NotFoundError,
-
-    BadRequestError,
-
-} from "../../../shared/errors";
+from "../constants/activityConstants.js";
 
 export default async function approveSubmission(
-
     submissionId,
 
     feedback,
@@ -23,73 +24,146 @@ export default async function approveSubmission(
     score,
 
     user
-
 ){
 
-    const submission = await ActivitySubmission.findById(
+    const session =
 
-        submissionId
+        await mongoose.startSession();
 
-    );
+    session.startTransaction();
 
-    if(!submission){
+    try{
 
-        throw new NotFoundError(
+        const submission =
 
-            "Submission not found."
+            await findSubmission(
+
+                submissionId
+
+            );
+
+        const activity =
+
+            await findActivity(
+
+                submission.activity,
+
+                submission.organization
+
+            );
+
+            await User.findByIdAndUpdate(
+
+                submission.student,
+
+            {
+
+                $inc:{
+
+                    academicPoints:
+
+                        activity.rules.points,
+
+                    gamePoints:10,
+
+                },
+
+            },
+
+            {
+
+                session,
+
+            }
 
         );
 
+        submission.status=
+
+            SUBMISSION_STATUS.APPROVED;
+
+        submission.feedback=
+
+            feedback;
+
+        submission.score=
+
+            score;
+
+        submission.reviewedBy=
+
+            user.id;
+
+        submission.reviewedAt=
+
+            new Date();
+
+        await submission.save({
+
+            session,
+
+        });
+
+        activity.statistics.completed++;
+
+            await activity.save({
+
+                session,
+
+            });
+
+            await Notification.create([
+
+                {
+
+                    user:
+
+                        submission.student,
+
+                    title:
+
+                        "Activity Approved",
+
+                    message:
+
+                        `${activity.title} approved.`,
+
+                }
+
+            ],{
+
+                session,
+
+            });
+
+            await session.commitTransaction();
+
+            return{
+
+                success:true,
+
+                message:
+
+                    "Submission approved.",
+
+                submission,
+
+            };
+
     }
 
-    if(
+    catch(error){
 
-        submission.status===
+        await session.abortTransaction();
 
-        SUBMISSION_STATUS.APPROVED
-
-    ){
-
-        throw new BadRequestError(
-
-            "Submission already approved."
-
-        );
+        throw error;
 
     }
 
-    submission.status=
+    finally{
 
-        SUBMISSION_STATUS.APPROVED;
+        session.endSession();
 
-    submission.feedback=
-
-        feedback || "";
-
-    submission.score=
-
-        score || 0;
-
-    submission.reviewedBy=
-
-        user.id;
-
-    submission.reviewedAt=
-
-        new Date();
-
-    await submission.save();
-
-    return{
-
-        success:true,
-
-        message:
-
-            "Submission approved.",
-
-        submission,
-
-    };
+    }
 
 }

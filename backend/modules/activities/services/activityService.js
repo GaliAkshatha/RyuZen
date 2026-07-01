@@ -6,6 +6,8 @@ import deleteActivity from "../workflows/deleteActivity.js";
 import submitActivity from "../workflows/submitActivity.js";
 import approveSubmission from "../workflows/approveSubmission.js";
 import rejectSubmission from "../workflows/rejectSubmission.js";
+import markAttendance from "../workflows/markAttendance.js";
+import exportCSV from "../workflows/exportCSV.js";
 
 class ActivityService {
 
@@ -171,6 +173,37 @@ class ActivityService {
 
         );
 
+    }
+
+    async markAttendance(
+
+        submissionTd,
+
+        user
+
+    ){
+        
+        return await markAttendance(
+
+            submissionId,
+
+            user
+
+        );
+
+    }
+
+    async exportCSV(
+
+        activityId
+
+    ){
+
+        return await exportCSV(
+
+            activityId
+
+        );
     }
 
 }
