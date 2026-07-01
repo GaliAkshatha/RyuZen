@@ -268,7 +268,7 @@ const activitySchema = new mongoose.Schema(
 
         },
 
-        configuration: {
+        config: {
 
             type: configurationSchema,
 

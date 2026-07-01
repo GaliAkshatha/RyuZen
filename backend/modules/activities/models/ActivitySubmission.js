@@ -1,71 +1,189 @@
 import mongoose from "mongoose";
 
-const activitySubmissionSchema =
-new mongoose.Schema({
+import {
 
-  activity: {
-    type:
-      mongoose.Schema.Types.ObjectId,
+    SUBMISSION_STATUS,
 
-    ref: "Activity",
+} from "../constants/activityConstants.js";
 
-    required: true,
-  },
+const activitySubmissionSchema = new mongoose.Schema(
 
-  user: {
-    type:
-      mongoose.Schema.Types.ObjectId,
+    {
 
-    ref: "User",
+        activity: {
 
-    required: true,
-  },
+            type: mongoose.Schema.Types.ObjectId,
 
-  answers: {
-    type: Object,
+            ref: "Activity",
 
-    default: {},
-  },
+            required: true,
 
-  status: {
-    type: String,
+            index: true,
 
-    enum: [
-      "registered",
-      "submitted",
-      "attended",
-      "approved",
-      "rejected",
-    ],
+        },
 
-    default: "submitted",
-  },
+        organization: {
 
-  submittedAt: {
-    type: Date,
+            type: mongoose.Schema.Types.ObjectId,
 
-    default: Date.now,
-  },
+            ref: "Organization",
 
-},
-{
-  timestamps: true,
-});
+            required: true,
 
-activitySubmissionSchema.index(
-  {
-    activity: 1,
-    user: 1,
-  },
-  {
-    unique: true,
-  }
+            index: true,
+
+        },
+
+        student: {
+
+            type: mongoose.Schema.Types.ObjectId,
+
+            ref: "User",
+
+            required: true,
+
+            index: true,
+
+        },
+
+        answers: {
+
+            type: Map,
+
+            of: mongoose.Schema.Types.Mixed,
+
+            default: new Map(),
+
+        },
+
+        attachment: {
+
+            type: String,
+
+            default: null,
+
+        },
+
+        score: {
+
+            type: Number,
+
+            default: 0,
+
+            min: 0,
+
+        },
+
+        feedback: {
+
+            type: String,
+
+            trim: true,
+
+            default: "",
+
+        },
+
+        status: {
+
+            type: String,
+
+            enum: Object.values(
+
+                SUBMISSION_STATUS
+
+            ),
+
+            default:
+
+                SUBMISSION_STATUS.SUBMITTED,
+
+            index: true,
+
+        },
+
+        reviewedBy: {
+
+            type: mongoose.Schema.Types.ObjectId,
+
+            ref: "User",
+
+            default: null,
+
+        },
+
+        reviewedAt: {
+
+            type: Date,
+
+            default: null,
+
+        },
+
+        submittedAt: {
+
+            type: Date,
+
+            default: Date.now,
+
+        },
+
+        isDeleted: {
+
+            type: Boolean,
+
+            default: false,
+
+        },
+
+    },
+
+    {
+
+        timestamps: true,
+
+    }
+
 );
 
-const ActivitySubmission =
-  mongoose.model(
-    "ActivitySubmission",
-    activitySubmissionSchema
-  );
+/**
+ * One student can only submit once.
+ */
 
-export default ActivitySubmission;
+activitySubmissionSchema.index(
+
+    {
+
+        activity: 1,
+
+        student: 1,
+
+    },
+
+    {
+
+        unique: true,
+
+    }
+
+);
+
+/**
+ * Used for dashboards.
+ */
+
+activitySubmissionSchema.index({
+
+    organization: 1,
+
+    status: 1,
+
+});
+
+export default mongoose.model(
+
+    "ActivitySubmission",
+
+    activitySubmissionSchema
+
+);
