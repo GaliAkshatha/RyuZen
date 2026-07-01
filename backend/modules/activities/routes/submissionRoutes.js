@@ -2,17 +2,15 @@ import express from "express";
 
 import {
 
-    createActivity,
+    submitActivity,
 
-    updateActivity,
+    approveSubmission,
 
-    publishActivity,
+    rejectSubmission,
 
-    closeActivity,
+    markAttendance,
 
-    deleteActivity,
-
-} from "../controllers/activityController.js";
+} from "../controllers/submissionController.js";
 
 import authenticate from "../../auth/middleware/authenticate.js";
 
@@ -22,9 +20,7 @@ import validate from "../../../shared/middleware/validate.js";
 
 import {
 
-    createActivityValidator,
-
-    updateActivityValidator,
+    submitActivityValidator,
 
 } from "../validators";
 
@@ -40,47 +36,25 @@ router.use(authenticate);
 
 router.post(
 
-    "/",
+    "/activities/:id",
 
     authorize(
 
-        USER_ROLE.ADMIN,
-
-        USER_ROLE.TEACHER
+        USER_ROLE.STUDENT
 
     ),
 
-    createActivityValidator,
+    submitActivityValidator,
 
     validate,
 
-    createActivity
-
-);
-
-router.put(
-
-    "/:id",
-
-    authorize(
-
-        USER_ROLE.ADMIN,
-
-        USER_ROLE.TEACHER
-
-    ),
-
-    updateActivityValidator,
-
-    validate,
-
-    updateActivity
+    submitActivity
 
 );
 
 router.patch(
 
-    "/:id/publish",
+    "/:id/approve",
 
     authorize(
 
@@ -90,13 +64,13 @@ router.patch(
 
     ),
 
-    publishActivity
+    approveSubmission
 
 );
 
 router.patch(
 
-    "/:id/close",
+    "/:id/reject",
 
     authorize(
 
@@ -106,21 +80,23 @@ router.patch(
 
     ),
 
-    closeActivity
+    rejectSubmission
 
 );
 
-router.delete(
+router.patch(
 
-    "/:id",
+    "/:id/attendance",
 
     authorize(
 
-        USER_ROLE.ADMIN
+        USER_ROLE.ADMIN,
+
+        USER_ROLE.TEACHER
 
     ),
 
-    deleteActivity
+    markAttendance
 
 );
 
