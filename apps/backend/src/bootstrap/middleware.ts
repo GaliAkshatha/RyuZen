@@ -6,6 +6,8 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
+import { requestLogger } from "../shared/infrastructure/logger/index.js";
+import { requestId } from "../shared/core/middleware/requestId.js";
 
 export function bootstrapMiddleware(app: Express): void {
     app.use(helmet());
@@ -19,6 +21,10 @@ export function bootstrapMiddleware(app: Express): void {
     app.use(cookieParser());
 
     app.use(express.json());
+
+    app.use(requestLogger);
+
+    app.use(requestId);
 
     app.use(
         express.urlencoded({
