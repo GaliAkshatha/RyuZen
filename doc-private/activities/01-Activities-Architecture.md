@@ -674,3 +674,11 @@ MongoDB
 ```
 
 This architecture keeps every layer focused on a single responsibility while remaining scalable for future growth into a multi-university SaaS platform.
+
+
+
+
+
+05-Activities-Interview.md
+06-Activities-Database.md
+07-Activities-Future.md
