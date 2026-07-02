@@ -11,7 +11,7 @@ async function startServer(): Promise<void> {
 
     server.listen(env.PORT, () => {
         console.log(
-            `🚀 Server running at http://localhost:${env.PORT}`
+            `Server running at http://localhost:${env.PORT}`
         );
     });
 }
