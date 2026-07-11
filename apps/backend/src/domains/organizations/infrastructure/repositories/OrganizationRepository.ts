@@ -100,6 +100,52 @@ export class OrganizationRepository
 
     }
 
+    async save(
+
+        organization: Organization
+
+    ): Promise<Organization> {
+
+        const document =
+
+            await OrganizationModel.findByIdAndUpdate(
+
+                organization.id,
+
+                OrganizationMapper.toPersistence(
+
+                    organization
+
+                ),
+
+                {
+
+                    new: true,
+
+                    runValidators: true
+
+                }
+
+            );
+
+        if (!document) {
+
+            throw new Error(
+
+                "Organization not found."
+
+            );
+
+        }
+
+        return OrganizationMapper.toDomain(
+
+            document
+
+        );
+
+    }
+
     async existsByCode(
         code: string
     ): Promise<boolean> {

@@ -1,5 +1,7 @@
 import { IOrganization } from "../interfaces/IOrganization.js";
 
+import { OrganizationStatus } from "../constants/OrganizationStatus.js";
+
 export class Organization {
 
     constructor(
@@ -56,6 +58,72 @@ export class Organization {
             emailDomains: [...this.props.emailDomains],
             settings: { ...this.props.settings }
         });
+    }
+
+    updateDetails(
+
+        values: {
+
+            name?: string;
+
+            logo?: string;
+
+            website?: string;
+
+            emailDomains?: string[];
+
+            settings?: Partial<IOrganization["settings"]>;
+
+        }
+
+    ): void {
+
+        if (values.name !== undefined) {
+
+            this.props.name = values.name;
+
+        }
+
+        if (values.logo !== undefined) {
+
+            this.props.logo = values.logo;
+
+        }
+
+        if (values.website !== undefined) {
+
+            this.props.website = values.website;
+
+        }
+
+        if (values.emailDomains !== undefined) {
+
+            this.props.emailDomains = [...values.emailDomains];
+
+        }
+
+        if (values.settings !== undefined) {
+
+            this.props.settings = {
+
+                ...this.props.settings,
+
+                ...values.settings
+
+            };
+
+        }
+
+    }
+
+    updateStatus(
+
+        status: OrganizationStatus
+
+    ): void {
+
+        this.props.status = status;
+
     }
 
 }

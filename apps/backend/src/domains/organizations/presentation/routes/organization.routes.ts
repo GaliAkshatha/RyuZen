@@ -16,6 +16,10 @@ import { UserRole } from "../../../identity/domain/constants/UserRole.js";
 
 import { CreateOrgAdminSchema } from "../validators/CreateOrgAdminSchema.js";
 
+import { UpdateOrganizationSchema } from "../validators/UpdateOrganizationSchema.js";
+
+import { UpdateOrganizationStatusSchema } from "../validators/UpdateOrganizationStatusSchema.js";
+
 const router = Router();
 
 const controller = new OrganizationController();
@@ -119,6 +123,66 @@ router.get(
     asyncHandler(
 
         controller.getById.bind(controller)
+
+    )
+
+);
+
+/*
+ Update Organization
+*/
+
+router.patch(
+
+    "/:id",
+
+    authenticate,
+
+    authorizePermission(
+
+        UserRole.SUPER_ADMIN
+
+    ),
+
+    validate(
+
+        UpdateOrganizationSchema
+
+    ),
+
+    asyncHandler(
+
+        controller.update.bind(controller)
+
+    )
+
+);
+
+/*
+ Update Organization Status
+*/
+
+router.patch(
+
+    "/:id/status",
+
+    authenticate,
+
+    authorizePermission(
+
+        UserRole.SUPER_ADMIN
+
+    ),
+
+    validate(
+
+        UpdateOrganizationStatusSchema
+
+    ),
+
+    asyncHandler(
+
+        controller.updateStatus.bind(controller)
 
     )
 

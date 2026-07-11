@@ -7,6 +7,8 @@ import { BCryptPasswordHasher } from "../../../identity/infrastructure/security/
 import { CreateOrganizationUseCase } from "../use-cases/CreateOrganizationUseCase.js";
 import { GetOrganizationUseCase } from "../use-cases/GetOrganizationUseCase.js";
 import { GetOrganizationsUseCase } from "../use-cases/GetOrganizationsUseCase.js";
+import { UpdateOrganizationUseCase } from "../use-cases/UpdateOrganizationUseCase.js";
+import { UpdateOrganizationStatusUseCase } from "../use-cases/UpdateOrganizationStatusUseCase.js";
 import { CreateOrgAdminUseCase } from "../use-cases/CreateOrgAdminUseCase.js";
 
 const organizationRepository = new OrganizationRepository();
@@ -32,6 +34,18 @@ export const organizationContainer = {
     getOrganizations:
 
         new GetOrganizationsUseCase(
+            organizationRepository
+        ),
+
+    updateOrganization:
+
+        new UpdateOrganizationUseCase(
+            organizationRepository
+        ),
+
+    updateOrganizationStatus:
+
+        new UpdateOrganizationStatusUseCase(
             organizationRepository
         ),
 

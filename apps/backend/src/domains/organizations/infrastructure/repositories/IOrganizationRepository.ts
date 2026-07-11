@@ -16,6 +16,10 @@ export interface IOrganizationRepository {
 
     findAll(): Promise<Organization[]>;
 
+    save(
+        organization: Organization
+    ): Promise<Organization>;
+
     existsByCode(
         code: string
     ): Promise<boolean>;

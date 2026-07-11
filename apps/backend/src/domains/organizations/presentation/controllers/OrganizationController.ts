@@ -161,4 +161,100 @@ export class OrganizationController {
 
     }
 
+    async update(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const { id } = req.params;
+
+        if (!id || Array.isArray(id)) {
+
+            throw new ApiError(
+
+                "Invalid organization id.",
+
+                HttpStatus.BAD_REQUEST
+
+            );
+
+        }
+
+        const organization =
+
+            await organizationContainer
+
+                .updateOrganization
+
+                .execute(
+
+                    id,
+
+                    req.body
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            organization,
+
+            "Organization updated successfully."
+
+        );
+
+    }
+
+    async updateStatus(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const { id } = req.params;
+
+        if (!id || Array.isArray(id)) {
+
+            throw new ApiError(
+
+                "Invalid organization id.",
+
+                HttpStatus.BAD_REQUEST
+
+            );
+
+        }
+
+        const organization =
+
+            await organizationContainer
+
+                .updateOrganizationStatus
+
+                .execute(
+
+                    id,
+
+                    req.body
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            organization,
+
+            "Organization status updated successfully."
+
+        );
+
+    }
+
 }
