@@ -22,6 +22,10 @@ import { ResetPasswordUseCase } from "../use-cases/ResetPasswordUseCase.js";
 
 import { RefreshTokenUseCase } from "../use-cases/RefreshTokenUseCase.js";
 
+import { GrantPermissionUseCase } from "../use-cases/GrantPermissionUseCase.js";
+
+import { RevokePermissionUseCase } from "../use-cases/RevokePermissionUseCase.js";
+
 const userRepository =
 
     new UserRepository();
@@ -117,6 +121,22 @@ export const identityContainer = {
             userRepository,
 
             tokenProvider
+
+        ),
+
+    grantPermission:
+
+        new GrantPermissionUseCase(
+
+            userRepository
+
+        ),
+
+    revokePermission:
+
+        new RevokePermissionUseCase(
+
+            userRepository
 
         )
 
