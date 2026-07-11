@@ -1,21 +1,18 @@
-import { LoginDto } from "../dto/LoginDto.js";
-import { AuthResponseDto } from "../dto/AuthResponseDto.js";
-
 import { IUserRepository } from "../../infrastructure/repositories/IUserRepository.js";
 
-import { IPasswordHasher } from "../ports/IPasswordHasher.js";
 import { ITokenProvider } from "../ports/ITokenProvider.js";
+
+import { RefreshTokenDto } from "../dto/RefreshTokenDto.js";
+import { AuthResponseDto } from "../dto/AuthResponseDto.js";
 
 import { ApiError } from "../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../shared/core/http/HttpStatus.js";
 
-export class LoginUserUseCase {
+export class RefreshTokenUseCase {
 
     constructor(
 
         private readonly userRepository: IUserRepository,
-
-        private readonly passwordHasher: IPasswordHasher,
 
         private readonly tokenProvider: ITokenProvider
 
@@ -23,69 +20,42 @@ export class LoginUserUseCase {
 
     async execute(
 
-        dto: LoginDto
+        dto: RefreshTokenDto
 
     ): Promise<AuthResponseDto> {
 
+        const payload =
+
+            await this.tokenProvider.verifyRefreshToken(
+                dto.refreshToken
+            );
+
         const user =
-            await this.userRepository.findByEmail(
-                dto.email,
-                {
-                    includePassword: true
-                }
+
+            await this.userRepository.findById(
+                payload.userId
             );
 
         if (!user) {
 
             throw new ApiError(
 
-                "Invalid email or password.",
+                "Invalid refresh token.",
 
                 HttpStatus.UNAUTHORIZED
 
             );
 
         }
-
-        const valid =
-            await this.passwordHasher.compare(
-
-                dto.password,
-
-                user.auth.passwordHash
-
-            );
-
-        if (!valid) {
-
-            await this.userRepository.incrementFailedAttempts(
-                user.id!
-            );
-
-            throw new ApiError(
-
-                "Invalid email or password.",
-
-                HttpStatus.UNAUTHORIZED
-
-            );
-
-        }
-
-        await this.userRepository.resetFailedAttempts(
-            user.id!
-        );
-
-        await this.userRepository.updateLastLogin(
-            user.id!
-        );
 
         const accessToken =
+
             await this.tokenProvider.generateAccessToken(
                 user
             );
 
         const refreshToken =
+
             await this.tokenProvider.generateRefreshToken(
                 user
             );

@@ -51,6 +51,48 @@ export class User {
 
     }
 
+    updateProfile(
+
+        values: {
+
+            name?: string;
+
+            profile?: Partial<IUser["profile"]>;
+
+        }
+
+    ): void {
+
+        if (
+
+            values.name !== undefined
+
+        ) {
+
+            this.props.name =
+
+                values.name;
+
+        }
+
+        if (
+
+            values.profile !== undefined
+
+        ) {
+
+            this.props.profile = {
+
+                ...this.props.profile,
+
+                ...values.profile
+
+            };
+
+        }
+
+    }
+
     get id() {
         return this.props.id;
     }
@@ -91,6 +133,16 @@ export class User {
 
     get auth(): Readonly<IUser["auth"]> {
         return Object.freeze({ ...this.props.auth });
+    }
+
+    get passwordReset(): Readonly<IUser["passwordReset"]> {
+
+        return this.props.passwordReset
+
+            ? Object.freeze({ ...this.props.passwordReset })
+
+            : undefined;
+
     }
 
     get createdAt() {

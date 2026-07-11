@@ -47,6 +47,18 @@ export class UserMapper {
 
             },
 
+            passwordReset: document.passwordReset
+
+                ? {
+
+                    tokenHash: document.passwordReset.tokenHash,
+
+                    expiresAt: document.passwordReset.expiresAt,
+
+                }
+
+                : undefined,
+
             joinedAt: document.joinedAt,
 
             graduationYear: document.graduationYear,

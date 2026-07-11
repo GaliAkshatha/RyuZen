@@ -48,6 +48,14 @@ export interface IUser {
 
     };
 
+    passwordReset?: {
+
+        tokenHash?: string;
+
+        expiresAt?: Date;
+
+    };
+
     createdAt?: Date;
 
     updatedAt?: Date;

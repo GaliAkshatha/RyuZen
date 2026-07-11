@@ -5,7 +5,11 @@ export interface IUserRepository {
 
     create(user: User): Promise<User>;
 
-    findById(id: string): Promise<User | null>;
+    findById(id: string,options?:{
+        includePassword?: boolean;
+    }): Promise<User | null>;
+
+    save(user: User):Promise<User>;
 
     findByEmail(email: string,options?:{
         includePassword?: boolean;
@@ -32,6 +36,21 @@ export interface IUserRepository {
     updateStatus(
         userId: string,
         status: UserStatus
+    ): Promise<void>;
+
+    updatePassword(
+        userId: string,
+        passwordHash: string
+    ): Promise<void>;
+
+    setPasswordResetToken(
+        userId: string,
+        tokenHash: string,
+        expiresAt: Date
+    ): Promise<void>;
+
+    clearPasswordResetToken(
+        userId: string
     ): Promise<void>;
 
 }

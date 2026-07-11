@@ -21,15 +21,57 @@ implements IUserRepository {
     }
 
     async findById(
-        id: string
+        id: string,
+        options?: {
+            includePassword?: boolean;
+        }
     ): Promise<User | null> {
 
+        const query =
+            UserModel.findById(id);
+
+        if (options?.includePassword) {
+
+            query.select("+auth.passwordHash");
+
+        }
+
         const document =
-            await UserModel.findById(id);
+            await query;
 
         if (!document) {
 
             return null;
+
+        }
+
+        return UserMapper.toDomain(document);
+
+    }
+
+    async save(
+        user: User
+    ): Promise<User> {
+
+        const document =
+            await UserModel.findByIdAndUpdate(
+
+                user.id,
+
+                UserMapper.toPersistence(user),
+
+                {
+                    new: true,
+                    runValidators: true,
+                }
+
+            );
+
+        if (!document) {
+
+            throw new Error(
+                "User not found."
+            );
 
         }
 
@@ -155,6 +197,70 @@ implements IUserRepository {
             {
                 $set: {
                     status,
+                },
+            }
+
+        );
+
+    }
+
+    async updatePassword(
+        userId: string,
+        passwordHash: string
+    ): Promise<void> {
+
+        await UserModel.updateOne(
+
+            {
+                _id: userId,
+            },
+
+            {
+                $set: {
+                    "auth.passwordHash": passwordHash,
+                },
+            }
+
+        );
+
+    }
+
+    async setPasswordResetToken(
+        userId: string,
+        tokenHash: string,
+        expiresAt: Date
+    ): Promise<void> {
+
+        await UserModel.updateOne(
+
+            {
+                _id: userId,
+            },
+
+            {
+                $set: {
+                    "passwordReset.tokenHash": tokenHash,
+                    "passwordReset.expiresAt": expiresAt,
+                },
+            }
+
+        );
+
+    }
+
+    async clearPasswordResetToken(
+        userId: string
+    ): Promise<void> {
+
+        await UserModel.updateOne(
+
+            {
+                _id: userId,
+            },
+
+            {
+                $unset: {
+                    passwordReset: "",
                 },
             }
 

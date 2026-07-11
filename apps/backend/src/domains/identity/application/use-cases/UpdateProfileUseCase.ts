@@ -1,11 +1,12 @@
 import { IUserRepository } from "../../infrastructure/repositories/IUserRepository.js";
 
+import { UpdateProfileDto } from "../dto/UpdateProfileDto.js";
 import { ProfileResponseDto } from "../dto/ProfileResponseDto.js";
 
 import { ApiError } from "../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../shared/core/http/HttpStatus.js";
 
-export class GetProfileUseCase {
+export class UpdateProfileUseCase {
 
     constructor(
 
@@ -15,7 +16,9 @@ export class GetProfileUseCase {
 
     async execute(
 
-        userId: string
+        userId: string,
+
+        dto: UpdateProfileDto
 
     ): Promise<ProfileResponseDto> {
 
@@ -37,35 +40,43 @@ export class GetProfileUseCase {
 
         }
 
+        user.updateProfile(dto);
+
+        const updated =
+
+            await this.userRepository.save(
+                user
+            );
+
         return {
 
-            id: user.id!,
+            id: updated.id!,
 
-            organizationId: user.organizationId,
+            organizationId: updated.organizationId,
 
-            name: user.name,
+            name: updated.name,
 
-            email: user.email,
+            email: updated.email,
 
-            role: user.role,
+            role: updated.role,
 
-            status: user.status,
+            status: updated.status,
 
-            permissions: [...user.permissions],
+            permissions: [...updated.permissions],
 
             profile: {
 
-                image: user.profile.image,
+                image: updated.profile.image,
 
-                phone: user.profile.phone,
+                phone: updated.profile.phone,
 
-                bio: user.profile.bio
+                bio: updated.profile.bio
 
             },
 
-            createdAt: user.createdAt,
+            createdAt: updated.createdAt,
 
-            updatedAt: user.updatedAt
+            updatedAt: updated.updatedAt
 
         };
 

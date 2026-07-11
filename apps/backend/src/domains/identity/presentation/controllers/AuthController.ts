@@ -84,4 +84,164 @@ export class AuthController {
 
     }
 
+    async updateProfile(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const profile =
+
+            await identityContainer
+
+                .updateProfile
+
+                .execute(
+
+                    req.user!.userId,
+
+                    req.body
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            profile,
+
+            "Profile updated successfully."
+
+        );
+
+    }
+
+    async changePassword(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        await identityContainer
+
+            .changePassword
+
+            .execute(
+
+                req.user!.userId,
+
+                req.body
+
+            );
+
+        return ApiResponse.success(
+
+            res,
+
+            null,
+
+            "Password changed successfully."
+
+        );
+
+    }
+
+    async forgotPassword(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const result =
+
+            await identityContainer
+
+                .forgotPassword
+
+                .execute(
+
+                    req.body
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            result,
+
+            "If the account exists, password reset instructions have been generated."
+
+        );
+
+    }
+
+    async resetPassword(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        await identityContainer
+
+            .resetPassword
+
+            .execute(
+
+                req.body
+
+            );
+
+        return ApiResponse.success(
+
+            res,
+
+            null,
+
+            "Password reset successfully."
+
+        );
+
+    }
+
+    async refresh(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const result =
+
+            await identityContainer
+
+                .refreshToken
+
+                .execute(
+
+                    req.body
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            result,
+
+            "Token refreshed successfully."
+
+        );
+
+    }
+
 }

@@ -40,6 +40,14 @@ export interface UserDocument extends Document {
 
     };
 
+    passwordReset?: {
+
+        tokenHash?: string;
+
+        expiresAt?: Date;
+
+    };
+
     joinedAt?: Date;
 
     graduationYear?: number;
@@ -121,6 +129,32 @@ const AuthSchema = new Schema(
             type: Number,
 
             default: 0,
+
+        }
+
+    },
+
+    {
+
+        _id: false,
+
+    }
+
+);
+
+const PasswordResetSchema = new Schema(
+
+    {
+
+        tokenHash: {
+
+            type: String,
+
+        },
+
+        expiresAt: {
+
+            type: Date,
 
         }
 
@@ -223,6 +257,12 @@ const UserSchema = new Schema<UserDocument>(
             type: AuthSchema,
 
             required: true,
+
+        },
+
+        passwordReset: {
+
+            type: PasswordResetSchema,
 
         },
 

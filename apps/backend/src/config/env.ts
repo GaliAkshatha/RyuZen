@@ -25,4 +25,8 @@ export const env = {
         process.env.JWT_EXPIRES_IN ??
         "7d",
 
+    REFRESH_TOKEN_EXPIRES_IN:
+        process.env.REFRESH_TOKEN_EXPIRES_IN ??
+        "30d",
+
 };
