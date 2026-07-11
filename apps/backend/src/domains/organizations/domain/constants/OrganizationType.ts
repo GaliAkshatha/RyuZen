@@ -1,0 +1,13 @@
+export enum OrganizationType {
+
+    UNIVERSITY = "UNIVERSITY",
+
+    COLLEGE = "COLLEGE",
+
+    SCHOOL = "SCHOOL",
+
+    TRAINING_INSTITUTE = "TRAINING_INSTITUTE",
+
+    COMPANY = "COMPANY"
+
+}
