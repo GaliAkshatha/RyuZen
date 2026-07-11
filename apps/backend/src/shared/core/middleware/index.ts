@@ -4,3 +4,4 @@ export * from "./notFound.js";
 export * from "./requestId.js";
 export * from "./asyncHandler.js";
 export * from "./authorizeRoles.js";
+export * from "./auditLogger.js";
