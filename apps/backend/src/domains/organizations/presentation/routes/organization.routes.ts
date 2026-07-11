@@ -20,9 +20,18 @@ import { UpdateOrganizationSchema } from "../validators/UpdateOrganizationSchema
 
 import { UpdateOrganizationStatusSchema } from "../validators/UpdateOrganizationStatusSchema.js";
 
+import organizationSettingsRoutes from "./organization-settings.routes.js";
 const router = Router();
 
 const controller = new OrganizationController();
+
+router.use(
+
+    "/settings",
+
+    organizationSettingsRoutes
+
+);
 
 /*
  Create Organization
