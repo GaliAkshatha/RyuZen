@@ -12,6 +12,7 @@ import submissionRoutes from "./domains/academic/submissions/presentation/routes
 import auditLogRoutes from "./domains/platform/audit/presentation/routes/audit-log.routes.js";
 import departmentRoutes from "./domains/academic/departments/presentation/routes/department.routes.js";
 import facultyRoutes from "./domains/academic/faculty/presentation/routes/faculty.routes.js";
+import studentRoutes from "./domains/academic/students/presentation/routes/student.routes.js";
 
 const app: Express = express();
 
@@ -25,6 +26,7 @@ app.use("/api/v1/submissions",submissionRoutes);
 app.use("/api/v1/audit-logs", auditLogRoutes);
 app.use("/api/v1/departments", departmentRoutes);
 app.use("/api/v1/faculty", facultyRoutes);
+app.use("/api/v1/students", studentRoutes);
 
 app.use(notFound);
 
