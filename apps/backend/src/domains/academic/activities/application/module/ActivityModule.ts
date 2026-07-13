@@ -3,7 +3,9 @@ import { ActivityRepository } from "../../infrastructure/repositories/ActivityRe
 import { CreateActivityUseCase } from "../use-cases/CreateActivityUseCase.js";
 import { UpdateActivityUseCase } from "../use-cases/UpdateActivityUseCase.js";
 import { GetActivityUseCase } from "../use-cases/GetActivitiesUseCase.js";
+import { ListActivitiesUseCase } from "../use-cases/ListActivitiesUseCase.js";
 import { PublishActivityUseCase } from "../use-cases/PublishActivityUseCase.js";
+import { CloseActivityUseCase } from "../use-cases/CloseActivityUseCase.js";
 import { DeleteActivityUseCase } from "../use-cases/DeleteActivityUseCase.js";
 
 export class ActivityModule {
@@ -26,8 +28,18 @@ export class ActivityModule {
             this.repository
         );
 
+    readonly listActivities =
+        new ListActivitiesUseCase(
+            this.repository
+        );
+
     readonly publishActivity =
         new PublishActivityUseCase(
+            this.repository
+        );
+
+    readonly closeActivity =
+        new CloseActivityUseCase(
             this.repository
         );
 
