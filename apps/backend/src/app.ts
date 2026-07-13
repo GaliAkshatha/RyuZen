@@ -15,6 +15,7 @@ import facultyRoutes from "./domains/academic/faculty/presentation/routes/facult
 import studentRoutes from "./domains/academic/students/presentation/routes/student.routes.js";
 import alumniRoutes from "./domains/academic/alumni/presentation/routes/alumni.routes.js";
 import mentorshipRoutes from "./domains/academic/mentorship/presentation/routes/mentorship.routes.js";
+import clubRoutes from "./domains/campus/clubs/presentation/routes/club.routes.js";
 
 const app: Express = express();
 
@@ -31,6 +32,7 @@ app.use("/api/v1/faculty", facultyRoutes);
 app.use("/api/v1/students", studentRoutes);
 app.use("/api/v1/alumni", alumniRoutes);
 app.use("/api/v1/mentorships", mentorshipRoutes);
+app.use("/api/v1/clubs", clubRoutes);
 
 app.use(notFound);
 
