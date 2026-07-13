@@ -6,6 +6,9 @@ import { SubmissionEligibilityService } from "../services/SubmissionEligibilityS
 
 import { SubmitActivityUseCase } from "../use-cases/SubmitActivityUseCase.js";
 import { ReviewSubmissionUseCase } from "../use-cases/ReviewSubmissionUseCase.js";
+import { GetSubmissionUseCase } from "../use-cases/GetSubmissionUseCase.js";
+import { ListSubmissionsUseCase } from "../use-cases/ListSubmissionsUseCase.js";
+import { ResubmitSubmissionUseCase } from "../use-cases/ResubmitSubmissionUseCase.js";
 
 const submissionRepository =
     new SubmissionRepository();
@@ -37,6 +40,30 @@ export const submissionContainer = {
     reviewSubmission:
 
         new ReviewSubmissionUseCase(
+
+            submissionRepository
+
+        ),
+
+    getSubmission:
+
+        new GetSubmissionUseCase(
+
+            submissionRepository
+
+        ),
+
+    listSubmissions:
+
+        new ListSubmissionsUseCase(
+
+            submissionRepository
+
+        ),
+
+    resubmitSubmission:
+
+        new ResubmitSubmissionUseCase(
 
             submissionRepository
 
