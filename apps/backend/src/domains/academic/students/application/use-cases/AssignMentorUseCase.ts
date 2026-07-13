@@ -11,6 +11,14 @@ import {
 
 import { FacultyStatus } from "../../../faculty/domain/constants/FacultyStatus.js";
 
+import {
+    IMentorshipRepository,
+} from "../../../mentorship/infrastructure/repositories/IMentorshipRepository.js";
+
+import { Mentorship } from "../../../mentorship/domain/entities/Mentorship.js";
+
+import { MentorshipStatus } from "../../../mentorship/domain/constants/MentorshipStatus.js";
+
 import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
@@ -20,7 +28,9 @@ export class AssignMentorUseCase {
 
         private readonly repository: IStudentRepository,
 
-        private readonly facultyRepository: IFacultyRepository
+        private readonly facultyRepository: IFacultyRepository,
+
+        private readonly mentorshipRepository: IMentorshipRepository
 
     ) {}
 
@@ -29,6 +39,8 @@ export class AssignMentorUseCase {
         id: string,
 
         organizationId: string,
+
+        assignedBy: string,
 
         dto: AssignMentorDto
 
@@ -91,6 +103,50 @@ export class AssignMentorUseCase {
             );
 
         }
+
+        const existingActiveMentorship =
+
+            await this.mentorshipRepository.findActiveByStudentId(
+                id
+            );
+
+        if (existingActiveMentorship) {
+
+            existingActiveMentorship.complete();
+
+            await this.mentorshipRepository.save(
+
+                existingActiveMentorship
+
+            );
+
+        }
+
+        const mentorship = Mentorship.create({
+
+            organizationId,
+
+            facultyId:
+                dto.facultyId,
+
+            studentId:
+                id,
+
+            assignedBy,
+
+            assignedDate:
+                new Date(),
+
+            status:
+                MentorshipStatus.ACTIVE
+
+        });
+
+        await this.mentorshipRepository.create(
+
+            mentorship
+
+        );
 
         student.assignMentor(
 

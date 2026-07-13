@@ -229,6 +229,8 @@ export class StudentController {
 
                     req.user!.organizationId,
 
+                    req.user!.userId,
+
                     req.body
 
                 );

@@ -6,6 +6,8 @@ import { DepartmentRepository } from "../../../departments/infrastructure/reposi
 
 import { FacultyRepository } from "../../../faculty/infrastructure/repositories/FacultyRepository.js";
 
+import { MentorshipRepository } from "../../../mentorship/infrastructure/repositories/MentorshipRepository.js";
+
 import { CreateStudentUseCase } from "../use-cases/CreateStudentUseCase.js";
 import { GetStudentUseCase } from "../use-cases/GetStudentUseCase.js";
 import { GetStudentsUseCase } from "../use-cases/GetStudentsUseCase.js";
@@ -21,6 +23,8 @@ const userRepository = new UserRepository();
 const departmentRepository = new DepartmentRepository();
 
 const facultyRepository = new FacultyRepository();
+
+const mentorshipRepository = new MentorshipRepository();
 
 export const studentContainer = {
 
@@ -60,7 +64,9 @@ export const studentContainer = {
 
             studentRepository,
 
-            facultyRepository
+            facultyRepository,
+
+            mentorshipRepository
 
         ),
 
