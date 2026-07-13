@@ -19,6 +19,10 @@ export interface IEventRegistrationRepository {
         eventId: string
     ): Promise<EventRegistration[]>;
 
+    findByStudent(
+        studentId: string
+    ): Promise<EventRegistration[]>;
+
     countByEvent(
         eventId: string
     ): Promise<number>;

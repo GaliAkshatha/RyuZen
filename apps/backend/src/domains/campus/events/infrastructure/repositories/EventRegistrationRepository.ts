@@ -129,6 +129,38 @@ implements IEventRegistrationRepository {
 
     }
 
+    async findByStudent(
+
+        studentId: string
+
+    ): Promise<EventRegistration[]> {
+
+        const documents =
+
+            await EventRegistrationModel.find({
+
+                studentId
+
+            })
+
+                .sort({
+
+                    registeredAt: -1
+
+                });
+
+        return documents.map(
+
+            document =>
+
+                EventRegistrationMapper.toDomain(
+                    document
+                )
+
+        );
+
+    }
+
     async countByEvent(
 
         eventId: string

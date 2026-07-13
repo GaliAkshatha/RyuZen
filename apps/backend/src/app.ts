@@ -17,6 +17,7 @@ import alumniRoutes from "./domains/academic/alumni/presentation/routes/alumni.r
 import mentorshipRoutes from "./domains/academic/mentorship/presentation/routes/mentorship.routes.js";
 import clubRoutes from "./domains/campus/clubs/presentation/routes/club.routes.js";
 import eventRoutes from "./domains/campus/events/presentation/routes/event.routes.js";
+import leaderboardRoutes from "./domains/campus/leaderboard/presentation/routes/leaderboard.routes.js";
 
 const app: Express = express();
 
@@ -35,6 +36,7 @@ app.use("/api/v1/alumni", alumniRoutes);
 app.use("/api/v1/mentorships", mentorshipRoutes);
 app.use("/api/v1/clubs", clubRoutes);
 app.use("/api/v1/events", eventRoutes);
+app.use("/api/v1/leaderboard", leaderboardRoutes);
 
 app.use(notFound);
 
