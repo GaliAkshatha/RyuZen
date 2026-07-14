@@ -20,6 +20,7 @@ import eventRoutes from "./domains/campus/events/presentation/routes/event.route
 import leaderboardRoutes from "./domains/campus/leaderboard/presentation/routes/leaderboard.routes.js";
 import badgeRoutes from "./domains/campus/badges/presentation/routes/badge.routes.js";
 import certificateRoutes from "./domains/campus/certificates/presentation/routes/certificate.routes.js";
+import skillRoutes from "./domains/career/skills/presentation/routes/skill.routes.js";
 
 const app: Express = express();
 
@@ -41,6 +42,8 @@ app.use("/api/v1/events", eventRoutes);
 app.use("/api/v1/leaderboard", leaderboardRoutes);
 app.use("/api/v1/badges", badgeRoutes);
 app.use("/api/v1/certificates", certificateRoutes);
+app.use("/api/v1/skills", skillRoutes);
+
 app.use(notFound);
 
 app.use(errorHandler);
