@@ -21,6 +21,7 @@ import leaderboardRoutes from "./domains/campus/leaderboard/presentation/routes/
 import badgeRoutes from "./domains/campus/badges/presentation/routes/badge.routes.js";
 import certificateRoutes from "./domains/campus/certificates/presentation/routes/certificate.routes.js";
 import skillRoutes from "./domains/career/skills/presentation/routes/skill.routes.js";
+import portfolioProjectRoutes from "./domains/career/portfolio/presentation/routes/portfolio-project.routes.js";
 
 const app: Express = express();
 
@@ -43,6 +44,7 @@ app.use("/api/v1/leaderboard", leaderboardRoutes);
 app.use("/api/v1/badges", badgeRoutes);
 app.use("/api/v1/certificates", certificateRoutes);
 app.use("/api/v1/skills", skillRoutes);
+app.use("/api/v1/projects", portfolioProjectRoutes);
 
 app.use(notFound);
 
