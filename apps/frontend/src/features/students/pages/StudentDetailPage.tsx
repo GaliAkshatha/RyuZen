@@ -19,6 +19,7 @@ import { useFaculty } from "@/features/faculty/hooks/useFaculty";
 import { facultyLabel, resolveFacultyById } from "@/features/faculty/utils/facultyLabels";
 
 import { StudentCertificatesAndBadgesSection } from "@/features/certificates/components/StudentCertificatesAndBadgesSection";
+import { StudentSkillsSection } from "@/features/skills/components/StudentSkillsSection";
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -105,6 +106,7 @@ export function StudentDetailPage() {
       </Card>
 
       <StudentCertificatesAndBadgesSection studentId={student.id} />
+      <StudentSkillsSection userId={student.userId} />
     </div>
   );
 }

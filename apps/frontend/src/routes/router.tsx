@@ -64,6 +64,8 @@ import { CreateBadgePage } from "@/features/badges/pages/CreateBadgePage";
 
 import { MyCertificatesPage } from "@/features/certificates/pages/MyCertificatesPage";
 
+import { SkillListPage } from "@/features/skills/pages/SkillListPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -140,6 +142,7 @@ export function AppRoutes() {
                 "/app/leaderboard",
                 "/app/badges",
                 "/app/certificates",
+                "/app/career/skills",
               ].includes(item.path),
           )
           .map((item) => (
@@ -403,6 +406,18 @@ export function AppRoutes() {
             </RoleRoute>
           }
         />
+
+        {/* Skills (CE1) — real page, open to ALL_ROLES matching
+            navRegistry. Confirmed this milestone: Create/List/Get/
+            Update/Delete have NO role restriction on the backend at
+            all (any authenticated user maintains their own skill
+            list), but Update/Delete DO enforce real per-record
+            ownership server-side ("You can only update your own
+            skills.", 403) — see skill.types.ts. Verify is the one
+            action gated to [SUPER_ADMIN, ORG_ADMIN, FACULTY], embedded
+            in StudentDetailPage via StudentSkillsSection rather than a
+            standalone route. */}
+        <Route path="/app/career/skills" element={<SkillListPage />} />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />
