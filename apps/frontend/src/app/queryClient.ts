@@ -1,5 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 
+import type { AppApiError } from "@/types/api";
+
 /**
  * Central TanStack Query client.
  *
@@ -17,9 +19,14 @@ export const queryClient = new QueryClient({
       gcTime: 5 * 60 * 1000,
       refetchOnWindowFocus: false,
       retry: (failureCount, error) => {
-        const status = (error as { status?: number } | undefined)?.status;
+        const apiError = error as AppApiError;
 
-        if (status === 401 || status === 403 || status === 404 || status === 429) {
+        if (
+          apiError.isUnauthorized ||
+          apiError.isForbidden ||
+          apiError.isNotFound ||
+          apiError.isRateLimited
+        ) {
           return false;
         }
 
