@@ -7,6 +7,7 @@ import { navRegistry } from "@/shared/constants/navRegistry";
 import { ProtectedRoute } from "@/routes/ProtectedRoute";
 import { RoleRoute } from "@/routes/RoleRoute";
 import { RoleLayoutSwitch } from "@/routes/RoleLayoutSwitch";
+import { DashboardRoleSwitch } from "@/routes/DashboardRoleSwitch";
 import { RouteStubPage } from "@/routes/pages/RouteStubPage";
 import { ForbiddenPage } from "@/routes/pages/ForbiddenPage";
 import { NotFoundPage } from "@/routes/pages/NotFoundPage";
@@ -87,7 +88,7 @@ export function AppRoutes() {
         }
       >
         {navRegistry
-          .filter((item) => item.path !== "/app/profile")
+          .filter((item) => item.path !== "/app/profile" && item.path !== "/app/dashboard")
           .map((item) => (
             <Route
               key={item.path}
@@ -100,11 +101,10 @@ export function AppRoutes() {
             />
           ))}
 
-        {/* Real pages (P2) — /app/profile is in navRegistry (all roles)
-            but rendered explicitly here instead of through the generic
-            stub map above. /app/profile/change-password is a sub-route,
-            not a top-level nav section, matching the same pattern as
-            the :id detail routes below. */}
+        {/* Real pages — /app/dashboard (D1) and /app/profile (P2) are
+            both in navRegistry (all roles) but rendered explicitly
+            here instead of through the generic stub map above. */}
+        <Route path="/app/dashboard" element={<DashboardRoleSwitch />} />
         <Route path="/app/profile" element={<ProfilePage />} />
         <Route path="/app/profile/change-password" element={<ChangePasswordPage />} />
 
