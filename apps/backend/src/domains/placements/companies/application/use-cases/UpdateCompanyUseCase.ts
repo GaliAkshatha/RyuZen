@@ -1,0 +1,68 @@
+import { ICompanyRepository } from "../../infrastructure/repositories/ICompanyRepository.js";
+
+import { CompanyResponseMapper } from "../../infrastructure/mappers/CompanyResponseMapper.js";
+
+import { UpdateCompanyDto } from "../dto/UpdateCompanyDto.js";
+import { CompanyResponseDto } from "../dto/CompanyResponseDto.js";
+
+import { ApiError } from "../../../../../shared/core/http/ApiError.js";
+import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
+
+export class UpdateCompanyUseCase {
+
+    constructor(
+
+        private readonly repository: ICompanyRepository
+
+    ) {}
+
+    async execute(
+
+        id: string,
+
+        organizationId: string,
+
+        dto: UpdateCompanyDto
+
+    ): Promise<CompanyResponseDto> {
+
+        const company =
+
+            await this.repository.findById(
+                id
+            );
+
+        if (
+
+            !company ||
+            company.organizationId !== organizationId
+
+        ) {
+
+            throw new ApiError(
+
+                "Company not found.",
+
+                HttpStatus.NOT_FOUND
+
+            );
+
+        }
+
+        company.updateDetails(dto);
+
+        const updated =
+
+            await this.repository.save(
+                company
+            );
+
+        return CompanyResponseMapper.toDto(
+
+            updated
+
+        );
+
+    }
+
+}
