@@ -3,19 +3,21 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import { queryClient } from "@/app/queryClient";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeToggle } from "@/shared/ui/ThemeToggle";
 
 /**
- * Temporary root page for Milestones F1–F2.
+ * Temporary root page for Milestones F1–F4.
  *
  * Real routing, layouts, and pages are built in later milestones (F5
- * Routing Foundation, F8 Application Shell). This placeholder now also
- * demonstrates the F2 token system end-to-end: the toggle switches the
- * whole app between Dark Fantasy Academy and Light Fantasy instantly,
- * using only semantic Tailwind utilities (bg-background, text-foreground,
- * font-display, etc.) — never a hardcoded color.
+ * Routing Foundation, F8 Application Shell, P1 Auth Pages). The auth
+ * status line below proves AuthContext is live end-to-end (hydration,
+ * isAuthenticated) without building an actual login form here — that is
+ * explicitly P1's scope, not F4's.
  */
 function ScaffoldingPlaceholder() {
+  const { isAuthenticated, isInitializing, user } = useAuth();
+
   return (
     <div className="min-h-screen bg-background px-6 py-12 text-foreground transition-colors">
       <div className="mx-auto flex max-w-2xl flex-col gap-8">
@@ -25,7 +27,8 @@ function ScaffoldingPlaceholder() {
         </header>
 
         <p className="font-body text-base text-muted-foreground">
-          Project scaffolding and the design token system are wired and running.
+          Project scaffolding, the design token system, and the API/auth layer are wired and
+          running.
         </p>
 
         <section className="rounded-lg border border-border bg-card p-6 text-card-foreground">
@@ -40,6 +43,17 @@ function ScaffoldingPlaceholder() {
           </div>
           <p className="mt-4 font-mono text-xs text-muted-foreground">
             font-display · font-body · font-mono
+          </p>
+        </section>
+
+        <section className="rounded-lg border border-border bg-card p-6 text-card-foreground">
+          <h2 className="font-display text-xl font-medium">Auth status</h2>
+          <p className="mt-2 font-mono text-sm text-muted-foreground">
+            {isInitializing
+              ? "Checking for a stored session…"
+              : isAuthenticated
+                ? `Signed in as ${user?.name} (${user?.role})`
+                : "Not signed in. Login pages arrive in Milestone P1."}
           </p>
         </section>
       </div>
@@ -61,11 +75,13 @@ export default function App() {
   return (
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<ScaffoldingPlaceholder />} />
-          </Routes>
-        </BrowserRouter>
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<ScaffoldingPlaceholder />} />
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );
