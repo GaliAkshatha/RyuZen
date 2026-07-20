@@ -18,6 +18,8 @@ import { useDepartments } from "@/features/departments/hooks/useDepartments";
 import { useFaculty } from "@/features/faculty/hooks/useFaculty";
 import { facultyLabel, resolveFacultyById } from "@/features/faculty/utils/facultyLabels";
 
+import { StudentCertificatesAndBadgesSection } from "@/features/certificates/components/StudentCertificatesAndBadgesSection";
+
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
@@ -101,6 +103,8 @@ export function StudentDetailPage() {
           <PromoteStudentAction student={student} />
         </CardContent>
       </Card>
+
+      <StudentCertificatesAndBadgesSection studentId={student.id} />
     </div>
   );
 }

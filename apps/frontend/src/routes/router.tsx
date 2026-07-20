@@ -58,6 +58,12 @@ import { CreateEventPage } from "@/features/events/pages/CreateEventPage";
 import { LeaderboardPage } from "@/features/leaderboard/pages/LeaderboardPage";
 import { LeaderboardEntryDetailPage } from "@/features/leaderboard/pages/LeaderboardEntryDetailPage";
 
+import { BadgeListPage } from "@/features/badges/pages/BadgeListPage";
+import { BadgeDetailPage } from "@/features/badges/pages/BadgeDetailPage";
+import { CreateBadgePage } from "@/features/badges/pages/CreateBadgePage";
+
+import { MyCertificatesPage } from "@/features/certificates/pages/MyCertificatesPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -132,6 +138,8 @@ export function AppRoutes() {
                 "/app/clubs",
                 "/app/events",
                 "/app/leaderboard",
+                "/app/badges",
+                "/app/certificates",
               ].includes(item.path),
           )
           .map((item) => (
@@ -361,6 +369,40 @@ export function AppRoutes() {
             are created implicitly, not via a POST endpoint. */}
         <Route path="/app/leaderboard" element={<LeaderboardPage />} />
         <Route path="/app/leaderboard/:studentId" element={<LeaderboardEntryDetailPage />} />
+
+        {/* Badges (C5) — real pages. List/detail (browse) require only
+            authentication (no role restriction), matching navRegistry's
+            ALL_ROLES. Create/Update/Delete are SUPER_ADMIN ONLY —
+            confirmed this milestone: badges are a global platform-wide
+            catalog (no organizationId field), excluding even ORG_ADMIN,
+            unlike almost every other admin resource in this app. Award
+            is a broader [SUPER_ADMIN, ORG_ADMIN, FACULTY] permission,
+            enforced inside BadgeDetailPage via canAwardBadges(). */}
+        <Route path="/app/badges" element={<BadgeListPage />} />
+        <Route path="/app/badges/:id" element={<BadgeDetailPage />} />
+        <Route
+          path="/app/badges/new"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN]}>
+              <CreateBadgePage />
+            </RoleRoute>
+          }
+        />
+
+        {/* Certificates (C5) — GET /me is a genuine STUDENT-only
+            self-service endpoint, matching navRegistry exactly. Issuing
+            a certificate is embedded in StudentDetailPage (A2, admin-
+            only) rather than a standalone route — see
+            StudentCertificatesAndBadgesSection.tsx for the documented
+            integration-scope limitation this creates for FACULTY. */}
+        <Route
+          path="/app/certificates"
+          element={
+            <RoleRoute allowedRoles={[UserRole.STUDENT]}>
+              <MyCertificatesPage />
+            </RoleRoute>
+          }
+        />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />
