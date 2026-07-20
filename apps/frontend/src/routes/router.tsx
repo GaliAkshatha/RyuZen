@@ -47,6 +47,10 @@ import { CreateActivityPage } from "@/features/activities/pages/CreateActivityPa
 import { SubmissionListPage } from "@/features/submissions/pages/SubmissionListPage";
 import { SubmissionDetailPage } from "@/features/submissions/pages/SubmissionDetailPage";
 
+import { ClubListPage } from "@/features/clubs/pages/ClubListPage";
+import { ClubDetailPage } from "@/features/clubs/pages/ClubDetailPage";
+import { CreateClubPage } from "@/features/clubs/pages/CreateClubPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -67,14 +71,13 @@ function RootRedirect() {
 }
 
 /**
- * A handful of `:id` detail routes from the approved route tree that
- * aren't top-level nav sections (so they don't appear in navRegistry)
- * but still need to exist in the skeleton. Each mirrors the role list
- * of its parent list page — all three parent list pages (Clubs, Events,
- * Activities) are open to every role, so their detail pages are too.
+ * A remaining `:id` detail route from the approved route tree that
+ * isn't a top-level nav section (so it doesn't appear in navRegistry)
+ * but still needs to exist in the skeleton — Events, open to every
+ * role like its parent list page. Clubs' equivalent stub was replaced
+ * by the real route below once C1 built it.
  */
 const detailStubRoutes: { path: string; title: string }[] = [
-  { path: "/app/clubs/:id", title: "Club Detail" },
   { path: "/app/events/:id", title: "Event Detail" },
 ];
 
@@ -122,6 +125,7 @@ export function AppRoutes() {
                 "/app/mentorship",
                 "/app/activities",
                 "/app/submissions",
+                "/app/clubs",
               ].includes(item.path),
           )
           .map((item) => (
@@ -292,6 +296,32 @@ export function AppRoutes() {
             client-side UX safeguard, not a route-level restriction. */}
         <Route path="/app/submissions" element={<SubmissionListPage />} />
         <Route path="/app/submissions/:id" element={<SubmissionDetailPage />} />
+
+        {/* Clubs (C1) — real pages. List/detail (browse) require only
+            authentication on the backend (no role restriction),
+            matching navRegistry's ALL_ROLES. Create/Update/Delete/
+            AssignAdvisor/AddMember/RemoveMember are ALL gated to
+            [SUPER_ADMIN, ORG_ADMIN] — confirmed this milestone by
+            grepping club.routes.ts. Significant finding: there is NO
+            self-service "Join" endpoint anywhere on this router —
+            POST /:id/members (adding a member) is admin-only, so
+            membership is entirely admin-managed, not self-enrollment.
+            The roadmap's "Browse, Join, Manage" framing for this
+            milestone is corrected to "Browse, Manage" — see
+            club.types.ts for the full finding. Management controls are
+            gated inside ClubDetailPage itself via canManageClubs(),
+            which genuinely mirrors this backend rule (not a UX-only
+            safeguard like submissions'). */}
+        <Route path="/app/clubs" element={<ClubListPage />} />
+        <Route path="/app/clubs/:id" element={<ClubDetailPage />} />
+        <Route
+          path="/app/clubs/new"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
+              <CreateClubPage />
+            </RoleRoute>
+          }
+        />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />
