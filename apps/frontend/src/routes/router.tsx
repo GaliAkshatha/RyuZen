@@ -20,6 +20,9 @@ import { RegisterPage } from "@/features/auth/pages/RegisterPage";
 import { ForgotPasswordPage } from "@/features/auth/pages/ForgotPasswordPage";
 import { ResetPasswordPage } from "@/features/auth/pages/ResetPasswordPage";
 
+import { ProfilePage } from "@/features/profile/pages/ProfilePage";
+import { ChangePasswordPage } from "@/features/profile/pages/ChangePasswordPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -83,17 +86,27 @@ export function AppRoutes() {
           </ProtectedRoute>
         }
       >
-        {navRegistry.map((item) => (
-          <Route
-            key={item.path}
-            path={item.path}
-            element={
-              <RoleRoute allowedRoles={item.roles}>
-                <RouteStubPage title={item.label} />
-              </RoleRoute>
-            }
-          />
-        ))}
+        {navRegistry
+          .filter((item) => item.path !== "/app/profile")
+          .map((item) => (
+            <Route
+              key={item.path}
+              path={item.path}
+              element={
+                <RoleRoute allowedRoles={item.roles}>
+                  <RouteStubPage title={item.label} />
+                </RoleRoute>
+              }
+            />
+          ))}
+
+        {/* Real pages (P2) — /app/profile is in navRegistry (all roles)
+            but rendered explicitly here instead of through the generic
+            stub map above. /app/profile/change-password is a sub-route,
+            not a top-level nav section, matching the same pattern as
+            the :id detail routes below. */}
+        <Route path="/app/profile" element={<ProfilePage />} />
+        <Route path="/app/profile/change-password" element={<ChangePasswordPage />} />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />
