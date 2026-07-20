@@ -14,6 +14,10 @@ export interface IJobApplicationRepository {
         placementId: string
     ): Promise<JobApplication[]>;
 
+    findByPlacementIds(
+        placementIds: string[]
+    ): Promise<JobApplication[]>;
+
     findByStudent(
         studentId: string
     ): Promise<JobApplication[]>;

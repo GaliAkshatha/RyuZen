@@ -95,6 +95,42 @@ implements IJobApplicationRepository {
 
     }
 
+    async findByPlacementIds(
+
+        placementIds: string[]
+
+    ): Promise<JobApplication[]> {
+
+        const documents =
+
+            await JobApplicationModel.find({
+
+                placementId: {
+
+                    $in: placementIds
+
+                }
+
+            })
+
+                .sort({
+
+                    appliedAt: -1
+
+                });
+
+        return documents.map(
+
+            document =>
+
+                JobApplicationMapper.toDomain(
+                    document
+                )
+
+        );
+
+    }
+
     async findByStudent(
 
         studentId: string
