@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 
 import { navRegistry } from "@/shared/constants/navRegistry";
+import { UserRole } from "@/types/enums";
 
 import { ProtectedRoute } from "@/routes/ProtectedRoute";
 import { RoleRoute } from "@/routes/RoleRoute";
@@ -23,6 +24,11 @@ import { ResetPasswordPage } from "@/features/auth/pages/ResetPasswordPage";
 
 import { ProfilePage } from "@/features/profile/pages/ProfilePage";
 import { ChangePasswordPage } from "@/features/profile/pages/ChangePasswordPage";
+
+import { DepartmentListPage } from "@/features/departments/pages/DepartmentListPage";
+import { DepartmentDetailPage } from "@/features/departments/pages/DepartmentDetailPage";
+import { FacultyListPage } from "@/features/faculty/pages/FacultyListPage";
+import { FacultyDetailPage } from "@/features/faculty/pages/FacultyDetailPage";
 
 /**
  * "/" redirects based on auth state, per the approved route tree.
@@ -88,7 +94,15 @@ export function AppRoutes() {
         }
       >
         {navRegistry
-          .filter((item) => item.path !== "/app/profile" && item.path !== "/app/dashboard")
+          .filter(
+            (item) =>
+              ![
+                "/app/profile",
+                "/app/dashboard",
+                "/app/admin/departments",
+                "/app/admin/faculty",
+              ].includes(item.path),
+          )
           .map((item) => (
             <Route
               key={item.path}
@@ -107,6 +121,41 @@ export function AppRoutes() {
         <Route path="/app/dashboard" element={<DashboardRoleSwitch />} />
         <Route path="/app/profile" element={<ProfilePage />} />
         <Route path="/app/profile/change-password" element={<ChangePasswordPage />} />
+
+        {/* Departments & Faculty (A1) — real pages, matching
+            navRegistry's [SUPER_ADMIN, ORG_ADMIN] role list exactly. */}
+        <Route
+          path="/app/admin/departments"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
+              <DepartmentListPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/app/admin/departments/:id"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
+              <DepartmentDetailPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/app/admin/faculty"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
+              <FacultyListPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/app/admin/faculty/:id"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
+              <FacultyDetailPage />
+            </RoleRoute>
+          }
+        />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />

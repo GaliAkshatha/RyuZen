@@ -155,8 +155,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "org-admin-department-statistics",
     label: "Department Statistics",
     dashboard: UserRole.ORG_ADMIN,
-    wired: false,
-    milestone: "A1",
+    wired: true,
   },
   {
     id: "org-admin-user-management",
