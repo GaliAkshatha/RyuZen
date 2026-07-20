@@ -70,6 +70,9 @@ import { ExperienceListPage } from "@/features/experience/pages/ExperienceListPa
 import { CertificationListPage } from "@/features/certifications/pages/CertificationListPage";
 import { AchievementListPage } from "@/features/achievements/pages/AchievementListPage";
 
+import { MyResumePage } from "@/features/resume/pages/MyResumePage";
+import { ResumeTemplateListPage } from "@/features/resume/pages/ResumeTemplateListPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -151,6 +154,8 @@ export function AppRoutes() {
                 "/app/career/experience",
                 "/app/career/certifications",
                 "/app/career/achievements",
+                "/app/career/resume",
+                "/app/admin/resume-templates",
               ].includes(item.path),
           )
           .map((item) => (
@@ -458,6 +463,26 @@ export function AppRoutes() {
           element={
             <RoleRoute allowedRoles={[UserRole.STUDENT]}>
               <AchievementListPage />
+            </RoleRoute>
+          }
+        />
+
+        {/* Resume (CE6) — real pages. GET/PATCH/generate/download are
+            ALL self-scoped with no role restriction, matching
+            navRegistry's "/app/career/resume" ALL_ROLES entry.
+            Genuinely different from every other Career module:
+            confirmed this milestone there is NO "/users/:userId" or
+            "/students/:studentId" route anywhere — admins/faculty have
+            no way to view another user's resume through this API at
+            all, so no StudentResumeSection was built (unlike CE1-CE5).
+            Templates (global catalog, SUPER_ADMIN-only) live at their
+            own pre-existing "/app/admin/resume-templates" nav entry. */}
+        <Route path="/app/career/resume" element={<MyResumePage />} />
+        <Route
+          path="/app/admin/resume-templates"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN]}>
+              <ResumeTemplateListPage />
             </RoleRoute>
           }
         />
