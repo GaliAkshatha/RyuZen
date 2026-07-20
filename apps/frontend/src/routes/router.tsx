@@ -10,6 +10,7 @@ import { RouteStubPage } from "@/routes/pages/RouteStubPage";
 import { ForbiddenPage } from "@/routes/pages/ForbiddenPage";
 import { NotFoundPage } from "@/routes/pages/NotFoundPage";
 import { PlaygroundPage } from "@/routes/pages/PlaygroundPage";
+import { CompositePlaygroundPage } from "@/routes/pages/CompositePlaygroundPage";
 
 /**
  * "/" redirects based on auth state, per the approved route tree.
@@ -58,6 +59,7 @@ export function AppRoutes() {
           themes. Not linked from any nav, not auth-gated — a
           verification tool, not a feature page. */}
       <Route path="/dev/playground" element={<PlaygroundPage />} />
+      <Route path="/dev/playground-composites" element={<CompositePlaygroundPage />} />
 
       {/* Every nav section, generated directly from navRegistry so the
           route tree and the sidebar can never disagree about who can

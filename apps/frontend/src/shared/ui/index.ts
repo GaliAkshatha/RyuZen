@@ -10,6 +10,7 @@ export * from "@/shared/ui/Avatar";
 export * from "@/shared/ui/Tooltip";
 export * from "@/shared/ui/Dialog";
 export * from "@/shared/ui/Drawer";
+export * from "@/shared/ui/DropdownMenu";
 export * from "@/shared/ui/Toast";
 export * from "@/shared/ui/Toaster";
 export * from "@/shared/ui/Tabs";
