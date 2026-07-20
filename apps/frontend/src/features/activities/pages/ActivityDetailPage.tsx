@@ -18,6 +18,8 @@ import { DeleteActivityAction } from "@/features/activities/components/DeleteAct
 import { canManageActivities } from "@/features/activities/utils/activityPermissions";
 import type { UpdateActivityFormValues } from "@/features/activities/schemas/activity.schemas";
 
+import { SubmitActivitySection } from "@/features/submissions/components/SubmitActivitySection";
+
 export function ActivityDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
@@ -78,6 +80,8 @@ export function ActivityDetailPage() {
           </p>
         </CardContent>
       </Card>
+
+      <SubmitActivitySection activity={activity} />
 
       {canManage && (
         <Card>

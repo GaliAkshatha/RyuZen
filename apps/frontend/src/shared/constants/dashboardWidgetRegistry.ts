@@ -97,8 +97,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "faculty-pending-reviews",
     label: "Pending Reviews",
     dashboard: UserRole.FACULTY,
-    wired: false,
-    milestone: "AC2",
+    wired: true,
   },
   {
     id: "faculty-attendance-summary",

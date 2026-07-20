@@ -44,6 +44,9 @@ import { ActivityListPage } from "@/features/activities/pages/ActivityListPage";
 import { ActivityDetailPage } from "@/features/activities/pages/ActivityDetailPage";
 import { CreateActivityPage } from "@/features/activities/pages/CreateActivityPage";
 
+import { SubmissionListPage } from "@/features/submissions/pages/SubmissionListPage";
+import { SubmissionDetailPage } from "@/features/submissions/pages/SubmissionDetailPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -118,6 +121,7 @@ export function AppRoutes() {
                 "/app/admin/alumni",
                 "/app/mentorship",
                 "/app/activities",
+                "/app/submissions",
               ].includes(item.path),
           )
           .map((item) => (
@@ -278,6 +282,16 @@ export function AppRoutes() {
             </RoleRoute>
           }
         />
+
+        {/* Submissions (AC2) — real pages, open to all roles matching
+            navRegistry and the backend (submission.routes.ts has no
+            authorizeRoles/authorizePermission at all, confirmed this
+            milestone — see submission.types.ts for the full finding).
+            Review controls (Approve/Reject) are gated inside
+            SubmissionDetailPage via canReviewSubmissions(), a
+            client-side UX safeguard, not a route-level restriction. */}
+        <Route path="/app/submissions" element={<SubmissionListPage />} />
+        <Route path="/app/submissions/:id" element={<SubmissionDetailPage />} />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />
