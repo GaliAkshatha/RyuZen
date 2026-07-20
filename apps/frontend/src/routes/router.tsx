@@ -40,6 +40,10 @@ import { InviteAlumniPage } from "@/features/alumni/pages/InviteAlumniPage";
 import { MentorshipListPage } from "@/features/mentorship/pages/MentorshipListPage";
 import { MentorshipDetailPage } from "@/features/mentorship/pages/MentorshipDetailPage";
 
+import { ActivityListPage } from "@/features/activities/pages/ActivityListPage";
+import { ActivityDetailPage } from "@/features/activities/pages/ActivityDetailPage";
+import { CreateActivityPage } from "@/features/activities/pages/CreateActivityPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -69,7 +73,6 @@ function RootRedirect() {
 const detailStubRoutes: { path: string; title: string }[] = [
   { path: "/app/clubs/:id", title: "Club Detail" },
   { path: "/app/events/:id", title: "Event Detail" },
-  { path: "/app/activities/:id", title: "Activity Detail" },
 ];
 
 export function AppRoutes() {
@@ -114,6 +117,7 @@ export function AppRoutes() {
                 "/app/admin/students",
                 "/app/admin/alumni",
                 "/app/mentorship",
+                "/app/activities",
               ].includes(item.path),
           )
           .map((item) => (
@@ -249,6 +253,28 @@ export function AppRoutes() {
           element={
             <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.FACULTY]}>
               <MentorshipDetailPage />
+            </RoleRoute>
+          }
+        />
+
+        {/* Activities (AC1) — real pages. List/detail (browse) require
+            only authentication on the backend (no role restriction),
+            matching navRegistry's ALL_ROLES. Create is gated to
+            [SUPER_ADMIN, FACULTY] — confirmed this milestone that
+            ORG_ADMIN is explicitly EXCLUDED from activity management,
+            unlike most other admin resources in this app (see
+            activityPermissions.ts). Publish/Update/Close/Delete are
+            gated inside ActivityDetailPage itself via
+            canManageActivities(), not at the route level, since the
+            detail page is genuinely viewable by everyone — only the
+            management controls within it are conditionally shown. */}
+        <Route path="/app/activities" element={<ActivityListPage />} />
+        <Route path="/app/activities/:id" element={<ActivityDetailPage />} />
+        <Route
+          path="/app/activities/new"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.FACULTY]}>
+              <CreateActivityPage />
             </RoleRoute>
           }
         />

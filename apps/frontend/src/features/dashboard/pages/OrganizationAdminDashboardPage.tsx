@@ -4,7 +4,7 @@ import { DashboardHero } from "@/widgets/shared/HeroWidget";
 import { AnalyticsWidget } from "@/widgets/org-admin/AnalyticsWidget";
 import { DepartmentStatisticsWidget } from "@/widgets/org-admin/DepartmentStatisticsWidget";
 import { UserManagementShortcutWidget } from "@/widgets/org-admin/UserManagementShortcutWidget";
-import { ActivityManagementShortcutWidget } from "@/widgets/org-admin/ActivityManagementShortcutWidget";
+import { ActivitiesShortcutWidget } from "@/widgets/org-admin/ActivitiesShortcutWidget";
 import { PlacementsOverviewWidget } from "@/widgets/org-admin/PlacementsOverviewWidget";
 
 export function OrganizationAdminDashboardPage() {
@@ -15,7 +15,7 @@ export function OrganizationAdminDashboardPage() {
         <AnalyticsWidget />
         <DepartmentStatisticsWidget />
         <UserManagementShortcutWidget />
-        <ActivityManagementShortcutWidget />
+        <ActivitiesShortcutWidget />
         <PlacementsOverviewWidget />
       </DashboardGrid>
     </div>

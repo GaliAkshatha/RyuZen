@@ -32,8 +32,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "student-recent-activities",
     label: "Recent Activities",
     dashboard: UserRole.STUDENT,
-    wired: false,
-    milestone: "AC1",
+    wired: true,
   },
   {
     id: "student-upcoming-events",
@@ -85,8 +84,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "faculty-assigned-activities",
     label: "Assigned Activities",
     dashboard: UserRole.FACULTY,
-    wired: false,
-    milestone: "AC1",
+    wired: true,
   },
   {
     id: "faculty-student-progress",
@@ -165,7 +163,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
   },
   {
     id: "org-admin-activity-management",
-    label: "Activity Management",
+    label: "Activities",
     dashboard: UserRole.ORG_ADMIN,
     wired: true,
   },
