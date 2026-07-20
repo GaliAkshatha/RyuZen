@@ -29,4 +29,11 @@ export const env = {
         process.env.REFRESH_TOKEN_EXPIRES_IN ??
         "30d",
 
+    // Reserved for a future real IAIProvider implementation
+    // (see domains/ai/chat/infrastructure/ai/StubAIProvider.ts).
+    // Not read by the current stub provider.
+    AI_PROVIDER_API_KEY:
+        process.env.AI_PROVIDER_API_KEY ??
+        "",
+
 };

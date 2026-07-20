@@ -35,6 +35,7 @@ import placementAnalyticsRoutes from "./domains/placements/analytics/presentatio
 import notificationRoutes from "./domains/communication/notifications/presentation/routes/notification.routes.js";
 import chatRoutes from "./domains/communication/chat/presentation/routes/chat.routes.js";
 import messageRoutes from "./domains/communication/chat/presentation/routes/message.routes.js";
+import aiChatRoutes from "./domains/ai/chat/presentation/routes/ai-chat.routes.js";
 
 const app: Express = express();
 
@@ -71,6 +72,7 @@ app.use("/api/v1/placement-analytics", placementAnalyticsRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
 app.use("/api/v1/chats", chatRoutes);
 app.use("/api/v1/messages", messageRoutes);
+app.use("/api/v1/ai/chat", aiChatRoutes);
 app.use(notFound);
 
 app.use(errorHandler);
