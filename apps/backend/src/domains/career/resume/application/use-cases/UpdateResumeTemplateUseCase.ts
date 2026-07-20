@@ -8,11 +8,17 @@ import { ResumeTemplateResponseDto } from "../dto/ResumeTemplateResponseDto.js";
 import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
+import { ICacheService } from "../../../../../shared/core/cache/ICacheService.js";
+
+import { RESUME_TEMPLATES_CACHE_KEY } from "./GetResumeTemplatesUseCase.js";
+
 export class UpdateResumeTemplateUseCase {
 
     constructor(
 
-        private readonly repository: IResumeTemplateRepository
+        private readonly repository: IResumeTemplateRepository,
+
+        private readonly cacheService: ICacheService
 
     ) {}
 
@@ -76,6 +82,12 @@ export class UpdateResumeTemplateUseCase {
             await this.repository.save(
                 template
             );
+
+        await this.cacheService.delete(
+
+            RESUME_TEMPLATES_CACHE_KEY
+
+        );
 
         return ResumeTemplateResponseMapper.toDto(
 
