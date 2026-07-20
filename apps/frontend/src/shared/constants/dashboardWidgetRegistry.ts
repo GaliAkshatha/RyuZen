@@ -38,8 +38,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "student-upcoming-events",
     label: "Upcoming Events",
     dashboard: UserRole.STUDENT,
-    wired: false,
-    milestone: "C2",
+    wired: true,
   },
   {
     id: "student-leaderboard-snippet",

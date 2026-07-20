@@ -51,6 +51,10 @@ import { ClubListPage } from "@/features/clubs/pages/ClubListPage";
 import { ClubDetailPage } from "@/features/clubs/pages/ClubDetailPage";
 import { CreateClubPage } from "@/features/clubs/pages/CreateClubPage";
 
+import { EventListPage } from "@/features/events/pages/EventListPage";
+import { EventDetailPage } from "@/features/events/pages/EventDetailPage";
+import { CreateEventPage } from "@/features/events/pages/CreateEventPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -71,15 +75,12 @@ function RootRedirect() {
 }
 
 /**
- * A remaining `:id` detail route from the approved route tree that
- * isn't a top-level nav section (so it doesn't appear in navRegistry)
- * but still needs to exist in the skeleton — Events, open to every
- * role like its parent list page. Clubs' equivalent stub was replaced
- * by the real route below once C1 built it.
+ * All detail-route stubs have now been replaced by real pages
+ * (Clubs in C1, Events in C2) — this array is kept as the established
+ * pattern for any future `:id` route that isn't a top-level nav
+ * section, even though it's currently empty.
  */
-const detailStubRoutes: { path: string; title: string }[] = [
-  { path: "/app/events/:id", title: "Event Detail" },
-];
+const detailStubRoutes: { path: string; title: string }[] = [];
 
 export function AppRoutes() {
   return (
@@ -126,6 +127,7 @@ export function AppRoutes() {
                 "/app/activities",
                 "/app/submissions",
                 "/app/clubs",
+                "/app/events",
               ].includes(item.path),
           )
           .map((item) => (
@@ -319,6 +321,29 @@ export function AppRoutes() {
           element={
             <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
               <CreateClubPage />
+            </RoleRoute>
+          }
+        />
+
+        {/* Events (C2) — real pages. List/detail (browse) require only
+            authentication on the backend (no role restriction),
+            matching navRegistry's ALL_ROLES. Create/Update/Delete/
+            Publish are gated to [SUPER_ADMIN, ORG_ADMIN, FACULTY] —
+            confirmed this milestone. Registration (POST /:id/register)
+            is a real, hard STUDENT-only backend rule (unlike
+            Activities' open submission) — enforced inside
+            RegisterForEventSection via canRegisterForEvents(). Note:
+            GET /:id/registrations excludes STUDENT entirely, confirmed
+            this milestone — a student has no backend-supported way to
+            see their own past registrations; see
+            RegisterForEventSection.tsx for the full finding. */}
+        <Route path="/app/events" element={<EventListPage />} />
+        <Route path="/app/events/:id" element={<EventDetailPage />} />
+        <Route
+          path="/app/events/new"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.FACULTY]}>
+              <CreateEventPage />
             </RoleRoute>
           }
         />
