@@ -54,3 +54,22 @@ export const updateEventSchema = z.object({
 });
 
 export type UpdateEventFormValues = z.infer<typeof updateEventSchema>;
+
+/** Mirrors MarkAttendanceSchema exactly */
+export const markAttendanceSchema = z.object({
+  studentId: z.string().trim().min(1, "Student id is required."),
+  attended: z.boolean(),
+});
+
+export type MarkAttendanceFormValues = z.infer<typeof markAttendanceSchema>;
+
+/** Mirrors SubmitEventFeedbackSchema exactly */
+export const submitEventFeedbackSchema = z.object({
+  feedback: z
+    .string()
+    .trim()
+    .min(1, "Feedback is required.")
+    .max(1000, "Feedback cannot exceed 1000 characters."),
+});
+
+export type SubmitEventFeedbackFormValues = z.infer<typeof submitEventFeedbackSchema>;

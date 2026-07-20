@@ -15,6 +15,9 @@ import { EventForm } from "@/features/events/components/EventForm";
 import { PublishEventAction } from "@/features/events/components/PublishEventAction";
 import { DeleteEventAction } from "@/features/events/components/DeleteEventAction";
 import { RegisterForEventSection } from "@/features/events/components/RegisterForEventSection";
+import { SubmitFeedbackSection } from "@/features/events/components/SubmitFeedbackSection";
+import { MarkAttendanceList } from "@/features/events/components/MarkAttendanceList";
+import { IssueCertificatesAction } from "@/features/events/components/IssueCertificatesAction";
 import { canManageEvents } from "@/features/events/utils/eventPermissions";
 import type { UpdateEventFormValues } from "@/features/events/schemas/event.schemas";
 
@@ -82,18 +85,17 @@ export function EventDetailPage() {
       </Card>
 
       <RegisterForEventSection event={event} />
+      <SubmitFeedbackSection eventId={event.id} />
 
       {canManage && (
         <>
           <Card>
-            <CardHeader>
-              <CardTitle>Registrations</CardTitle>
+            <CardHeader className="flex-row items-center justify-between space-y-0">
+              <CardTitle>Registrations & Attendance</CardTitle>
+              <IssueCertificatesAction event={event} />
             </CardHeader>
             <CardContent>
-              <p className="font-body text-sm text-muted-foreground">
-                {registrations?.length ?? 0} student{registrations?.length === 1 ? "" : "s"}{" "}
-                registered.
-              </p>
+              <MarkAttendanceList eventId={event.id} registrations={registrations ?? []} />
             </CardContent>
           </Card>
 

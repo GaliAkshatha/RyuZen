@@ -27,9 +27,8 @@ export interface EventResponseDto {
 
 /**
  * Mirrors EventRegistrationResponseDto exactly. `attendance`,
- * `feedback`, `certificateIssued` are all C3 (Event Attendance) concerns
- * — MarkAttendance, SubmitFeedback, and IssueCertificates use cases are
- * deliberately out of scope for this milestone (see event.service.ts).
+ * `feedback`, `certificateIssued` are populated by C3's MarkAttendance,
+ * SubmitFeedback, and IssueCertificates actions respectively.
  */
 export interface EventRegistrationResponseDto {
   id: string;
@@ -66,4 +65,15 @@ export interface UpdateEventPayload {
   capacity?: number;
   points?: number;
   certificateEnabled?: boolean;
+}
+
+/** Mirrors MarkAttendanceDto — marks ONE student's attendance at a time, not bulk */
+export interface MarkAttendancePayload {
+  studentId: string;
+  attended: boolean;
+}
+
+/** Mirrors SubmitEventFeedbackDto */
+export interface SubmitEventFeedbackPayload {
+  feedback: string;
 }

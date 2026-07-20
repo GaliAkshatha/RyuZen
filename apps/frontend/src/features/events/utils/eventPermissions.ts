@@ -17,3 +17,14 @@ export function canManageEvents(role: UserRole | undefined): boolean {
 export function canRegisterForEvents(role: UserRole | undefined): boolean {
   return role === UserRole.STUDENT;
 }
+
+/**
+ * Confirmed against event.routes.ts this milestone: POST /:id/feedback
+ * is also gated to STUDENT ONLY — the same rule as registration, but a
+ * distinct action, kept as its own named function for clarity (matching
+ * how canManageActivities/canManageClubs/canManageEvents stay separate
+ * despite conceptual overlap).
+ */
+export function canSubmitEventFeedback(role: UserRole | undefined): boolean {
+  return role === UserRole.STUDENT;
+}

@@ -5,13 +5,15 @@ import type {
   CreateEventPayload,
   EventRegistrationResponseDto,
   EventResponseDto,
+  MarkAttendancePayload,
+  SubmitEventFeedbackPayload,
   UpdateEventPayload,
 } from "@/features/events/types/event.types";
 
 /**
- * Deliberately does not include MarkAttendance, SubmitFeedback, or
- * IssueCertificates — those are C3 (Event Attendance)'s scope, even
- * though they live in the same backend controller/router.
+ * C2 built list/get/create/update/delete/publish/register/
+ * listRegistrations. C3 (this milestone) extends this same file with
+ * markAttendance, submitFeedback, and issueCertificates.
  */
 export const eventService = {
   list(): Promise<EventResponseDto[]> {
@@ -59,6 +61,31 @@ export const eventService = {
   listRegistrations(id: string): Promise<EventRegistrationResponseDto[]> {
     return apiClient
       .get<EventRegistrationResponseDto[]>(`${API_ENDPOINTS.events}/${id}/registrations`)
+      .then((response) => response.data);
+  },
+
+  markAttendance(
+    id: string,
+    payload: MarkAttendancePayload,
+  ): Promise<EventRegistrationResponseDto> {
+    return apiClient
+      .patch<EventRegistrationResponseDto>(`${API_ENDPOINTS.events}/${id}/attendance`, payload)
+      .then((response) => response.data);
+  },
+
+  submitFeedback(
+    id: string,
+    payload: SubmitEventFeedbackPayload,
+  ): Promise<EventRegistrationResponseDto> {
+    return apiClient
+      .post<EventRegistrationResponseDto>(`${API_ENDPOINTS.events}/${id}/feedback`, payload)
+      .then((response) => response.data);
+  },
+
+  /** Bulk action — no body. Issues certificates to all attended-but-not-yet-issued registrations for the event. */
+  issueCertificates(id: string): Promise<EventRegistrationResponseDto[]> {
+    return apiClient
+      .post<EventRegistrationResponseDto[]>(`${API_ENDPOINTS.events}/${id}/certificates`, {})
       .then((response) => response.data);
   },
 };

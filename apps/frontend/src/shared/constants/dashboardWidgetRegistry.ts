@@ -52,7 +52,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     label: "Attendance",
     dashboard: UserRole.STUDENT,
     wired: false,
-    milestone: "C3",
+    milestone: "C3*",
   },
   { id: "student-ai-launcher", label: "AI Assistant", dashboard: UserRole.STUDENT, wired: true },
   {
@@ -102,8 +102,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "faculty-attendance-summary",
     label: "Attendance Summary",
     dashboard: UserRole.FACULTY,
-    wired: false,
-    milestone: "C3",
+    wired: true,
   },
   {
     id: "faculty-announcements",
