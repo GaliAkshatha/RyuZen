@@ -23,6 +23,7 @@ import certificateRoutes from "./domains/campus/certificates/presentation/routes
 import skillRoutes from "./domains/career/skills/presentation/routes/skill.routes.js";
 import portfolioProjectRoutes from "./domains/career/portfolio/presentation/routes/portfolio-project.routes.js";
 import experienceRoutes from "./domains/career/experience/presentation/routes/experience.routes.js";
+import educationRoutes from "./domains/career/education/presentation/routes/education.routes.js";
 
 const app: Express = express();
 
@@ -47,7 +48,7 @@ app.use("/api/v1/certificates", certificateRoutes);
 app.use("/api/v1/skills", skillRoutes);
 app.use("/api/v1/projects", portfolioProjectRoutes);
 app.use("/api/v1/experience", experienceRoutes);
-
+app.use("/api/v1/education", educationRoutes);
 app.use(notFound);
 
 app.use(errorHandler);
