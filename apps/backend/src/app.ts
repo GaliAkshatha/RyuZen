@@ -26,6 +26,7 @@ import experienceRoutes from "./domains/career/experience/presentation/routes/ex
 import educationRoutes from "./domains/career/education/presentation/routes/education.routes.js";
 import certificationRoutes from "./domains/career/certifications/presentation/routes/certification.routes.js";
 import achievementRoutes from "./domains/career/achievements/presentation/routes/achievement.routes.js";
+import userPortfolioRoutes from "./domains/career/user-portfolio/presentation/routes/user-portfolio.routes.js";
 
 const app: Express = express();
 
@@ -53,6 +54,7 @@ app.use("/api/v1/experience", experienceRoutes);
 app.use("/api/v1/education", educationRoutes);
 app.use("/api/v1/certifications", certificationRoutes);
 app.use("/api/v1/achievements", achievementRoutes);
+app.use("/api/v1/portfolio", userPortfolioRoutes);
 app.use(notFound);
 
 app.use(errorHandler);
