@@ -67,6 +67,7 @@ import { MyCertificatesPage } from "@/features/certificates/pages/MyCertificates
 import { SkillListPage } from "@/features/skills/pages/SkillListPage";
 import { EducationListPage } from "@/features/education/pages/EducationListPage";
 import { ExperienceListPage } from "@/features/experience/pages/ExperienceListPage";
+import { CertificationListPage } from "@/features/certifications/pages/CertificationListPage";
 
 /**
  * "/" redirects based on auth state, per the approved route tree.
@@ -147,6 +148,7 @@ export function AppRoutes() {
                 "/app/career/skills",
                 "/app/career/education",
                 "/app/career/experience",
+                "/app/career/certifications",
               ].includes(item.path),
           )
           .map((item) => (
@@ -436,6 +438,11 @@ export function AppRoutes() {
             each entry is free-text tags, not linked to CE1's Skill
             catalog. */}
         <Route path="/app/career/experience" element={<ExperienceListPage />} />
+
+        {/* Certifications (CE4) — real page, open to ALL_ROLES matching
+            navRegistry. Same open-route/ownership-enforced pattern as
+            Skills/Education/Experience, confirmed this milestone. */}
+        <Route path="/app/career/certifications" element={<CertificationListPage />} />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />

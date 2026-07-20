@@ -22,6 +22,7 @@ import { StudentCertificatesAndBadgesSection } from "@/features/certificates/com
 import { StudentSkillsSection } from "@/features/skills/components/StudentSkillsSection";
 import { StudentEducationSection } from "@/features/education/components/StudentEducationSection";
 import { StudentExperienceSection } from "@/features/experience/components/StudentExperienceSection";
+import { StudentCertificationsSection } from "@/features/certifications/components/StudentCertificationsSection";
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -111,6 +112,7 @@ export function StudentDetailPage() {
       <StudentSkillsSection userId={student.userId} />
       <StudentEducationSection userId={student.userId} />
       <StudentExperienceSection userId={student.userId} />
+      <StudentCertificationsSection userId={student.userId} />
     </div>
   );
 }
