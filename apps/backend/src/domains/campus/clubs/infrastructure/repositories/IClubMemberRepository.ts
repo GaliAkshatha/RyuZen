@@ -1,5 +1,7 @@
 import { ClubMember } from "../../domain/entities/ClubMember.js";
 
+import { ClientSession } from "mongoose";
+
 export interface IClubMemberRepository {
 
     create(
@@ -32,7 +34,8 @@ export interface IClubMemberRepository {
     ): Promise<void>;
 
     deleteByClub(
-        clubId: string
+        clubId: string,
+        session?: ClientSession
     ): Promise<void>;
 
 }

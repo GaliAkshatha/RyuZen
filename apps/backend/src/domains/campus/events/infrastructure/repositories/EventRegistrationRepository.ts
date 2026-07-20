@@ -1,5 +1,7 @@
 import { EventRegistration } from "../../domain/entities/EventRegistration.js";
 
+import { ClientSession } from "mongoose";
+
 import { EventRegistrationModel } from "../persistence/EventRegistrationModel.js";
 
 import { EventRegistrationMapper } from "../mappers/EventRegistrationMapper.js";
@@ -223,7 +225,9 @@ implements IEventRegistrationRepository {
 
     async deleteByEvent(
 
-        eventId: string
+        eventId: string,
+
+        session?: ClientSession
 
     ): Promise<void> {
 
@@ -231,7 +235,11 @@ implements IEventRegistrationRepository {
 
             eventId
 
-        });
+        }).session(
+
+            session ?? null
+
+        );
 
     }
 

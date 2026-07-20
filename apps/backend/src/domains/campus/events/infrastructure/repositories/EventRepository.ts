@@ -1,5 +1,7 @@
 import { Event } from "../../domain/entities/Event.js";
 
+import { ClientSession } from "mongoose";
+
 import { EventModel } from "../persistence/EventModel.js";
 
 import { EventMapper } from "../mappers/EventMapper.js";
@@ -165,13 +167,19 @@ implements IEventRepository {
 
     async delete(
 
-        id: string
+        id: string,
+
+        session?: ClientSession
 
     ): Promise<void> {
 
         await EventModel.findByIdAndDelete(
 
             id
+
+        ).session(
+
+            session ?? null
 
         );
 

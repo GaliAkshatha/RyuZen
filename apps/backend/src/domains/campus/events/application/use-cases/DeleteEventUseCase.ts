@@ -2,6 +2,8 @@ import { IEventRepository } from "../../infrastructure/repositories/IEventReposi
 
 import { IEventRegistrationRepository } from "../../infrastructure/repositories/IEventRegistrationRepository.js";
 
+import { startTransaction } from "../../../../../shared/infrastructure/database/index.js";
+
 import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
@@ -46,17 +48,41 @@ export class DeleteEventUseCase {
 
         }
 
-        await this.registrationRepository.deleteByEvent(
+        const session =
 
-            id
+            await startTransaction();
 
-        );
+        try {
 
-        await this.repository.delete(
+            await this.registrationRepository.deleteByEvent(
 
-            id
+                id,
 
-        );
+                session
+
+            );
+
+            await this.repository.delete(
+
+                id,
+
+                session
+
+            );
+
+            await session.commitTransaction();
+
+        } catch (error) {
+
+            await session.abortTransaction();
+
+            throw error;
+
+        } finally {
+
+            await session.endSession();
+
+        }
 
     }
 

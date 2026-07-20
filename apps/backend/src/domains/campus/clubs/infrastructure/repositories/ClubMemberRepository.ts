@@ -1,5 +1,7 @@
 import { ClubMember } from "../../domain/entities/ClubMember.js";
 
+import { ClientSession } from "mongoose";
+
 import { ClubMemberModel } from "../persistence/ClubMemberModel.js";
 
 import { ClubMemberMapper } from "../mappers/ClubMemberMapper.js";
@@ -213,7 +215,9 @@ implements IClubMemberRepository {
 
     async deleteByClub(
 
-        clubId: string
+        clubId: string,
+
+        session?: ClientSession
 
     ): Promise<void> {
 
@@ -221,7 +225,11 @@ implements IClubMemberRepository {
 
             clubId
 
-        });
+        }).session(
+
+            session ?? null
+
+        );
 
     }
 

@@ -1,5 +1,7 @@
 import { EventRegistration } from "../../domain/entities/EventRegistration.js";
 
+import { ClientSession } from "mongoose";
+
 export interface IEventRegistrationRepository {
 
     create(
@@ -32,7 +34,8 @@ export interface IEventRegistrationRepository {
     ): Promise<EventRegistration>;
 
     deleteByEvent(
-        eventId: string
+        eventId: string,
+        session?: ClientSession
     ): Promise<void>;
 
 }

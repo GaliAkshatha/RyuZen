@@ -1,5 +1,7 @@
 import { Event } from "../../domain/entities/Event.js";
 
+import { ClientSession } from "mongoose";
+
 export interface EventFilters {
 
     clubId?: string;
@@ -28,7 +30,8 @@ export interface IEventRepository {
     ): Promise<Event>;
 
     delete(
-        id: string
+        id: string,
+        session?: ClientSession
     ): Promise<void>;
 
 }

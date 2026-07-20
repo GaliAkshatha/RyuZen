@@ -1,5 +1,7 @@
 import { Club } from "../../domain/entities/Club.js";
 
+import { ClientSession } from "mongoose";
+
 import { ClubModel } from "../persistence/ClubModel.js";
 
 import { ClubMapper } from "../mappers/ClubMapper.js";
@@ -167,13 +169,19 @@ implements IClubRepository {
 
     async delete(
 
-        id: string
+        id: string,
+
+        session?: ClientSession
 
     ): Promise<void> {
 
         await ClubModel.findByIdAndDelete(
 
             id
+
+        ).session(
+
+            session ?? null
 
         );
 
