@@ -9,6 +9,7 @@ import { RoleRoute } from "@/routes/RoleRoute";
 import { RouteStubPage } from "@/routes/pages/RouteStubPage";
 import { ForbiddenPage } from "@/routes/pages/ForbiddenPage";
 import { NotFoundPage } from "@/routes/pages/NotFoundPage";
+import { PlaygroundPage } from "@/routes/pages/PlaygroundPage";
 
 /**
  * "/" redirects based on auth state, per the approved route tree.
@@ -52,6 +53,11 @@ export function AppRoutes() {
       <Route path="/register" element={<RouteStubPage title="Register" />} />
       <Route path="/forgot-password" element={<RouteStubPage title="Forgot Password" />} />
       <Route path="/reset-password" element={<RouteStubPage title="Reset Password" />} />
+
+      {/* Dev-only: verifies all F6 primitives render correctly in both
+          themes. Not linked from any nav, not auth-gated — a
+          verification tool, not a feature page. */}
+      <Route path="/dev/playground" element={<PlaygroundPage />} />
 
       {/* Every nav section, generated directly from navRegistry so the
           route tree and the sidebar can never disagree about who can
