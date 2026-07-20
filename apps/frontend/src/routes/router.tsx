@@ -55,6 +55,9 @@ import { EventListPage } from "@/features/events/pages/EventListPage";
 import { EventDetailPage } from "@/features/events/pages/EventDetailPage";
 import { CreateEventPage } from "@/features/events/pages/CreateEventPage";
 
+import { LeaderboardPage } from "@/features/leaderboard/pages/LeaderboardPage";
+import { LeaderboardEntryDetailPage } from "@/features/leaderboard/pages/LeaderboardEntryDetailPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -128,6 +131,7 @@ export function AppRoutes() {
                 "/app/submissions",
                 "/app/clubs",
                 "/app/events",
+                "/app/leaderboard",
               ].includes(item.path),
           )
           .map((item) => (
@@ -347,6 +351,16 @@ export function AppRoutes() {
             </RoleRoute>
           }
         />
+
+        {/* Leaderboard (C4) — real pages. GET / and GET /:studentId
+            (browse) require only authentication on the backend (no role
+            restriction), matching navRegistry's ALL_ROLES. Recalculate
+            and Adjust Points are gated to [SUPER_ADMIN, ORG_ADMIN] —
+            confirmed this milestone, enforced inside the components via
+            canAdjustLeaderboard(). No create route: leaderboard entries
+            are created implicitly, not via a POST endpoint. */}
+        <Route path="/app/leaderboard" element={<LeaderboardPage />} />
+        <Route path="/app/leaderboard/:studentId" element={<LeaderboardEntryDetailPage />} />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />

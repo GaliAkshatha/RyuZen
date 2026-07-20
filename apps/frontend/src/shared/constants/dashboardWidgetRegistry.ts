@@ -25,8 +25,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "student-xp-points",
     label: "XP / Points",
     dashboard: UserRole.STUDENT,
-    wired: false,
-    milestone: "C4",
+    wired: true,
   },
   {
     id: "student-recent-activities",
@@ -44,8 +43,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "student-leaderboard-snippet",
     label: "Leaderboard",
     dashboard: UserRole.STUDENT,
-    wired: false,
-    milestone: "C4",
+    wired: true,
   },
   {
     id: "student-attendance",
