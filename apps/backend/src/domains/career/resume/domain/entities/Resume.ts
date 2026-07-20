@@ -104,4 +104,16 @@ export class Resume {
 
     }
 
+    updateAtsScore(
+
+        atsScore: number
+
+    ): void {
+
+        this.props.atsScore =
+
+            atsScore;
+
+    }
+
 }
