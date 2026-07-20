@@ -57,3 +57,52 @@ export interface ProfileResponseDto {
   createdAt?: string;
   updatedAt?: string;
 }
+
+/** Mirrors RegisterUserDto (request body for POST /auth/register) */
+export interface RegisterPayload {
+  organizationCode: string;
+  name: string;
+  email: string;
+  password: string;
+}
+
+/**
+ * Mirrors RegisterUserResponseDto. Deliberately does NOT include tokens
+ * — confirmed against the backend, registration does not log the user
+ * in; they must separately POST /auth/login afterward.
+ */
+export interface RegisterUserResponseDto {
+  id: string;
+  organizationId: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  status: UserStatus;
+}
+
+/** Mirrors ForgotPasswordDto */
+export interface ForgotPasswordPayload {
+  email: string;
+}
+
+/**
+ * Mirrors ForgotPasswordResponseDto exactly. `resetToken` is only
+ * present when the account exists (an empty object is returned
+ * otherwise, deliberately, to avoid revealing account existence — see
+ * ForgotPasswordUseCase.ts). The backend's own source comments confirm
+ * this is returned directly in the response only because no email
+ * delivery infrastructure exists yet ("TODO: deliver via the
+ * Notifications/Email module once available") — not a permanent design,
+ * and the UI must present it as a temporary development convenience,
+ * not as if it were delivered by email.
+ */
+export interface ForgotPasswordResponseDto {
+  resetToken?: string;
+}
+
+/** Mirrors ResetPasswordDto */
+export interface ResetPasswordPayload {
+  email: string;
+  token: string;
+  newPassword: string;
+}

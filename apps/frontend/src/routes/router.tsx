@@ -15,6 +15,11 @@ import { CompositePlaygroundPage } from "@/routes/pages/CompositePlaygroundPage"
 
 import { AuthLayout } from "@/layouts/AuthLayout";
 
+import { LoginPage } from "@/features/auth/pages/LoginPage";
+import { RegisterPage } from "@/features/auth/pages/RegisterPage";
+import { ForgotPasswordPage } from "@/features/auth/pages/ForgotPasswordPage";
+import { ResetPasswordPage } from "@/features/auth/pages/ResetPasswordPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -52,13 +57,13 @@ export function AppRoutes() {
     <Routes>
       <Route path="/" element={<RootRedirect />} />
 
-      {/* Public routes, wrapped in the real AuthLayout (F8) — the
-          forms inside are still RouteStubPage placeholders until P1. */}
+      {/* Public routes, wrapped in the real AuthLayout (F8), now with
+          real forms (P1). */}
       <Route element={<AuthLayout />}>
-        <Route path="/login" element={<RouteStubPage title="Login" />} />
-        <Route path="/register" element={<RouteStubPage title="Register" />} />
-        <Route path="/forgot-password" element={<RouteStubPage title="Forgot Password" />} />
-        <Route path="/reset-password" element={<RouteStubPage title="Reset Password" />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
       </Route>
 
       {/* Dev-only: verifies primitives/composites render correctly in
