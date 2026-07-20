@@ -97,6 +97,38 @@ implements IClubMemberRepository {
 
     }
 
+    async findByStudent(
+
+        studentId: string
+
+    ): Promise<ClubMember[]> {
+
+        const documents =
+
+            await ClubMemberModel.find({
+
+                studentId
+
+            })
+
+                .sort({
+
+                    joinedAt: -1
+
+                });
+
+        return documents.map(
+
+            document =>
+
+                ClubMemberMapper.toDomain(
+                    document
+                )
+
+        );
+
+    }
+
     async existsByClubAndStudent(
 
         clubId: string,

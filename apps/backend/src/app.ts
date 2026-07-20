@@ -38,6 +38,7 @@ import messageRoutes from "./domains/communication/chat/presentation/routes/mess
 import aiChatRoutes from "./domains/ai/chat/presentation/routes/ai-chat.routes.js";
 import resumeReviewRoutes from "./domains/ai/resume-review/presentation/routes/resume-review.routes.js";
 import careerScoreRoutes from "./domains/ai/career-score/presentation/routes/career-score.routes.js";
+import recommendationsRoutes from "./domains/ai/recommendations/presentation/routes/recommendations.routes.js";
 
 const app: Express = express();
 
@@ -77,6 +78,7 @@ app.use("/api/v1/messages", messageRoutes);
 app.use("/api/v1/ai/chat", aiChatRoutes);
 app.use("/api/v1/ai/resume-review", resumeReviewRoutes);
 app.use("/api/v1/ai/career-score", careerScoreRoutes);
+app.use("/api/v1/ai/recommendations", recommendationsRoutes);
 app.use(notFound);
 
 app.use(errorHandler);

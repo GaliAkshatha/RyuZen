@@ -14,6 +14,10 @@ export interface IClubMemberRepository {
         clubId: string
     ): Promise<ClubMember[]>;
 
+    findByStudent(
+        studentId: string
+    ): Promise<ClubMember[]>;
+
     existsByClubAndStudent(
         clubId: string,
         studentId: string
