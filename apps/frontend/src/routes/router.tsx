@@ -30,6 +30,9 @@ import { DepartmentDetailPage } from "@/features/departments/pages/DepartmentDet
 import { FacultyListPage } from "@/features/faculty/pages/FacultyListPage";
 import { FacultyDetailPage } from "@/features/faculty/pages/FacultyDetailPage";
 
+import { StudentListPage } from "@/features/students/pages/StudentListPage";
+import { StudentDetailPage } from "@/features/students/pages/StudentDetailPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -101,6 +104,7 @@ export function AppRoutes() {
                 "/app/dashboard",
                 "/app/admin/departments",
                 "/app/admin/faculty",
+                "/app/admin/students",
               ].includes(item.path),
           )
           .map((item) => (
@@ -153,6 +157,29 @@ export function AppRoutes() {
           element={
             <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
               <FacultyDetailPage />
+            </RoleRoute>
+          }
+        />
+
+        {/* Students (A2) — real pages, [SUPER_ADMIN, ORG_ADMIN] only.
+            The roadmap's own A2 text assumed Faculty read-access, but
+            student.routes.ts is confirmed SUPER_ADMIN/ORG_ADMIN-only on
+            every route including GET — the same finding F5 already
+            made and encoded in navRegistry.ts. Followed backend truth
+            here rather than the roadmap's assumption. */}
+        <Route
+          path="/app/admin/students"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
+              <StudentListPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/app/admin/students/:id"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
+              <StudentDetailPage />
             </RoleRoute>
           }
         />

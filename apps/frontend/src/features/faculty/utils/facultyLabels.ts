@@ -18,3 +18,19 @@ export function resolveFacultyByUserId(
   if (!userId || !facultyList) return undefined;
   return facultyList.find((f) => f.userId === userId);
 }
+
+/**
+ * Student.mentorId (and AssignMentorDto.facultyId) reference a Faculty
+ * entity's own `id` directly — confirmed against AssignMentorUseCase,
+ * which stores `dto.facultyId` as-is, unlike Department's
+ * headOfDepartmentId which references a userId instead. Two distinct
+ * resolvers since the two backend modules genuinely use different
+ * reference conventions.
+ */
+export function resolveFacultyById(
+  facultyList: FacultyResponseDto[] | undefined,
+  facultyId: string | undefined,
+): FacultyResponseDto | undefined {
+  if (!facultyId || !facultyList) return undefined;
+  return facultyList.find((f) => f.id === facultyId);
+}
