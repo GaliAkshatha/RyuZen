@@ -37,6 +37,9 @@ import { AlumniListPage } from "@/features/alumni/pages/AlumniListPage";
 import { AlumniDetailPage } from "@/features/alumni/pages/AlumniDetailPage";
 import { InviteAlumniPage } from "@/features/alumni/pages/InviteAlumniPage";
 
+import { MentorshipListPage } from "@/features/mentorship/pages/MentorshipListPage";
+import { MentorshipDetailPage } from "@/features/mentorship/pages/MentorshipDetailPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -110,6 +113,7 @@ export function AppRoutes() {
                 "/app/admin/faculty",
                 "/app/admin/students",
                 "/app/admin/alumni",
+                "/app/mentorship",
               ].includes(item.path),
           )
           .map((item) => (
@@ -222,6 +226,29 @@ export function AppRoutes() {
           element={
             <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
               <AlumniDetailPage />
+            </RoleRoute>
+          }
+        />
+
+        {/* Mentorship (A4) — real pages, [SUPER_ADMIN, ORG_ADMIN,
+            FACULTY] matching navRegistry exactly (re-verified this
+            milestone: mentorship.routes.ts has no STUDENT-accessible
+            route anywhere, and no POST endpoint at all — mentorships
+            are created implicitly via Student's assign-mentor action,
+            A2 — so there is no "/app/mentorship/new" route here). */}
+        <Route
+          path="/app/mentorship"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.FACULTY]}>
+              <MentorshipListPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/app/mentorship/:id"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.FACULTY]}>
+              <MentorshipDetailPage />
             </RoleRoute>
           }
         />

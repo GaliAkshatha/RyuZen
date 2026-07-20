@@ -93,7 +93,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     label: "Student Progress",
     dashboard: UserRole.FACULTY,
     wired: false,
-    milestone: "A4",
+    milestone: "A4*",
   },
   {
     id: "faculty-pending-reviews",
