@@ -6,11 +6,14 @@ import { navRegistry } from "@/shared/constants/navRegistry";
 
 import { ProtectedRoute } from "@/routes/ProtectedRoute";
 import { RoleRoute } from "@/routes/RoleRoute";
+import { RoleLayoutSwitch } from "@/routes/RoleLayoutSwitch";
 import { RouteStubPage } from "@/routes/pages/RouteStubPage";
 import { ForbiddenPage } from "@/routes/pages/ForbiddenPage";
 import { NotFoundPage } from "@/routes/pages/NotFoundPage";
 import { PlaygroundPage } from "@/routes/pages/PlaygroundPage";
 import { CompositePlaygroundPage } from "@/routes/pages/CompositePlaygroundPage";
+
+import { AuthLayout } from "@/layouts/AuthLayout";
 
 /**
  * "/" redirects based on auth state, per the approved route tree.
@@ -49,46 +52,48 @@ export function AppRoutes() {
     <Routes>
       <Route path="/" element={<RootRedirect />} />
 
-      {/* Public routes — stubs for now, replaced with real pages in P1 */}
-      <Route path="/login" element={<RouteStubPage title="Login" />} />
-      <Route path="/register" element={<RouteStubPage title="Register" />} />
-      <Route path="/forgot-password" element={<RouteStubPage title="Forgot Password" />} />
-      <Route path="/reset-password" element={<RouteStubPage title="Reset Password" />} />
+      {/* Public routes, wrapped in the real AuthLayout (F8) — the
+          forms inside are still RouteStubPage placeholders until P1. */}
+      <Route element={<AuthLayout />}>
+        <Route path="/login" element={<RouteStubPage title="Login" />} />
+        <Route path="/register" element={<RouteStubPage title="Register" />} />
+        <Route path="/forgot-password" element={<RouteStubPage title="Forgot Password" />} />
+        <Route path="/reset-password" element={<RouteStubPage title="Reset Password" />} />
+      </Route>
 
-      {/* Dev-only: verifies all F6 primitives render correctly in both
-          themes. Not linked from any nav, not auth-gated — a
-          verification tool, not a feature page. */}
+      {/* Dev-only: verifies primitives/composites render correctly in
+          both themes. Not linked from any nav, not auth-gated. */}
       <Route path="/dev/playground" element={<PlaygroundPage />} />
       <Route path="/dev/playground-composites" element={<CompositePlaygroundPage />} />
 
-      {/* Every nav section, generated directly from navRegistry so the
-          route tree and the sidebar can never disagree about who can
-          access what. */}
-      {navRegistry.map((item) => (
-        <Route
-          key={item.path}
-          path={item.path}
-          element={
-            <ProtectedRoute>
+      {/* Every authenticated route: ProtectedRoute gates on auth,
+          RoleLayoutSwitch (F8) picks the layout for the user's role,
+          and every child route below is generated directly from
+          navRegistry so the route tree and the sidebar can never
+          disagree about who can access what. */}
+      <Route
+        element={
+          <ProtectedRoute>
+            <RoleLayoutSwitch />
+          </ProtectedRoute>
+        }
+      >
+        {navRegistry.map((item) => (
+          <Route
+            key={item.path}
+            path={item.path}
+            element={
               <RoleRoute allowedRoles={item.roles}>
                 <RouteStubPage title={item.label} />
               </RoleRoute>
-            </ProtectedRoute>
-          }
-        />
-      ))}
+            }
+          />
+        ))}
 
-      {detailStubRoutes.map(({ path, title }) => (
-        <Route
-          key={path}
-          path={path}
-          element={
-            <ProtectedRoute>
-              <RouteStubPage title={title} />
-            </ProtectedRoute>
-          }
-        />
-      ))}
+        {detailStubRoutes.map(({ path, title }) => (
+          <Route key={path} path={path} element={<RouteStubPage title={title} />} />
+        ))}
+      </Route>
 
       <Route path="/403" element={<ForbiddenPage />} />
       <Route path="*" element={<NotFoundPage />} />
