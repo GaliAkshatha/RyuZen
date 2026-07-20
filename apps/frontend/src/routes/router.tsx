@@ -73,6 +73,8 @@ import { AchievementListPage } from "@/features/achievements/pages/AchievementLi
 import { MyResumePage } from "@/features/resume/pages/MyResumePage";
 import { ResumeTemplateListPage } from "@/features/resume/pages/ResumeTemplateListPage";
 
+import { MyPortfolioPage } from "@/features/portfolio/pages/MyPortfolioPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -156,6 +158,7 @@ export function AppRoutes() {
                 "/app/career/achievements",
                 "/app/career/resume",
                 "/app/admin/resume-templates",
+                "/app/career/portfolio",
               ].includes(item.path),
           )
           .map((item) => (
@@ -486,6 +489,20 @@ export function AppRoutes() {
             </RoleRoute>
           }
         />
+
+        {/* Portfolio (CE7) — real page, open to ALL_ROLES matching
+            navRegistry's "My Portfolio" entry. Combines settings
+            (PATCH /portfolio/me) and individual project CRUD
+            (mounted at /api/v1/projects, confirmed via app.ts — same
+            open-route/ownership-enforced pattern as CE1-CE4) into one
+            page, since GET /portfolio/me already returns the full
+            aggregate (skills/projects/experience/education/
+            certifications/achievements combined) — confirmed this
+            milestone. No standalone public-portfolio-view page was
+            built (GET /portfolio/:userId exists with a real visibility
+            gate, but no nav entry was provisioned for browsing other
+            users' portfolios). */}
+        <Route path="/app/career/portfolio" element={<MyPortfolioPage />} />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />
