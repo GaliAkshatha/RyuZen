@@ -8,6 +8,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import { requestLogger } from "../shared/infrastructure/logger/index.js";
 import { requestId } from "../shared/core/middleware/requestId.js";
+import { globalRateLimiter } from "../shared/core/middleware/rateLimiter.js";
 
 export function bootstrapMiddleware(app: Express): void {
     app.use(helmet());
@@ -25,6 +26,8 @@ export function bootstrapMiddleware(app: Express): void {
     app.use(requestLogger);
 
     app.use(requestId);
+
+    app.use(globalRateLimiter);
 
     app.use(
         express.urlencoded({

@@ -36,4 +36,19 @@ export const env = {
         process.env.AI_PROVIDER_API_KEY ??
         "",
 
+    RATE_LIMIT_WINDOW_MS:
+        Number(
+            process.env.RATE_LIMIT_WINDOW_MS ?? 15 * 60 * 1000
+        ),
+
+    RATE_LIMIT_MAX:
+        Number(
+            process.env.RATE_LIMIT_MAX ?? 300
+        ),
+
+    AUTH_RATE_LIMIT_MAX:
+        Number(
+            process.env.AUTH_RATE_LIMIT_MAX ?? 10
+        ),
+
 };
