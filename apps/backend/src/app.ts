@@ -32,6 +32,7 @@ import companyRoutes from "./domains/placements/companies/presentation/routes/co
 import placementDriveRoutes from "./domains/placements/drives/presentation/routes/placement-drive.routes.js";
 import jobApplicationRoutes from "./domains/placements/applications/presentation/routes/job-application.routes.js";
 import placementAnalyticsRoutes from "./domains/placements/analytics/presentation/routes/placement-analytics.routes.js";
+import notificationRoutes from "./domains/communication/notifications/presentation/routes/notification.routes.js";
 
 const app: Express = express();
 
@@ -65,6 +66,7 @@ app.use("/api/v1/companies", companyRoutes);
 app.use("/api/v1/placements", placementDriveRoutes);
 app.use("/api/v1/applications", jobApplicationRoutes);
 app.use("/api/v1/placement-analytics", placementAnalyticsRoutes);
+app.use("/api/v1/notifications", notificationRoutes);
 app.use(notFound);
 
 app.use(errorHandler);
