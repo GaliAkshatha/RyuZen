@@ -33,6 +33,10 @@ import { FacultyDetailPage } from "@/features/faculty/pages/FacultyDetailPage";
 import { StudentListPage } from "@/features/students/pages/StudentListPage";
 import { StudentDetailPage } from "@/features/students/pages/StudentDetailPage";
 
+import { AlumniListPage } from "@/features/alumni/pages/AlumniListPage";
+import { AlumniDetailPage } from "@/features/alumni/pages/AlumniDetailPage";
+import { InviteAlumniPage } from "@/features/alumni/pages/InviteAlumniPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -105,6 +109,7 @@ export function AppRoutes() {
                 "/app/admin/departments",
                 "/app/admin/faculty",
                 "/app/admin/students",
+                "/app/admin/alumni",
               ].includes(item.path),
           )
           .map((item) => (
@@ -180,6 +185,43 @@ export function AppRoutes() {
           element={
             <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
               <StudentDetailPage />
+            </RoleRoute>
+          }
+        />
+
+        {/* Alumni (A3) — real pages, [SUPER_ADMIN, ORG_ADMIN] only. The
+            roadmap's own A3 text assumed a public/cross-role directory
+            ("also read-visible under AlumniLayout/StudentLayout/
+            FacultyLayout"), but alumni.routes.ts is confirmed
+            SUPER_ADMIN/ORG_ADMIN-only on every route including GET —
+            re-verified against the backend this milestone, the same
+            finding F5 already made and encoded in navRegistry.ts. No
+            "/app/alumni" browsing route exists, since no backend
+            endpoint would back it. Verify itself is further restricted
+            to ORG_ADMIN alone (excluding SUPER_ADMIN) inside
+            VerifyAlumniAction.tsx, matching the one route-level
+            asymmetry that genuinely exists. */}
+        <Route
+          path="/app/admin/alumni"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
+              <AlumniListPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/app/admin/alumni/invite"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
+              <InviteAlumniPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/app/admin/alumni/:id"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
+              <AlumniDetailPage />
             </RoleRoute>
           }
         />
