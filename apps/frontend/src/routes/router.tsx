@@ -68,6 +68,7 @@ import { SkillListPage } from "@/features/skills/pages/SkillListPage";
 import { EducationListPage } from "@/features/education/pages/EducationListPage";
 import { ExperienceListPage } from "@/features/experience/pages/ExperienceListPage";
 import { CertificationListPage } from "@/features/certifications/pages/CertificationListPage";
+import { AchievementListPage } from "@/features/achievements/pages/AchievementListPage";
 
 /**
  * "/" redirects based on auth state, per the approved route tree.
@@ -149,6 +150,7 @@ export function AppRoutes() {
                 "/app/career/education",
                 "/app/career/experience",
                 "/app/career/certifications",
+                "/app/career/achievements",
               ].includes(item.path),
           )
           .map((item) => (
@@ -443,6 +445,22 @@ export function AppRoutes() {
             navRegistry. Same open-route/ownership-enforced pattern as
             Skills/Education/Experience, confirmed this milestone. */}
         <Route path="/app/career/certifications" element={<CertificationListPage />} />
+
+        {/* Achievements (CE5) — real page. Genuinely different pattern
+            from CE1-CE4: Submit/Update/Delete/GetMy are STUDENT-ONLY
+            (not open to every role), confirmed this milestone and
+            matching navRegistry's pre-existing [STUDENT] restriction
+            (documented back in F5). Verify/Reject are gated to
+            [SUPER_ADMIN, ORG_ADMIN, FACULTY], embedded in
+            StudentDetailPage via StudentAchievementsSection. */}
+        <Route
+          path="/app/career/achievements"
+          element={
+            <RoleRoute allowedRoles={[UserRole.STUDENT]}>
+              <AchievementListPage />
+            </RoleRoute>
+          }
+        />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />
