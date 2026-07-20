@@ -36,6 +36,10 @@ import {
     GetPlacementAnalyticsUseCase,
 } from "../../../../placements/analytics/application/use-cases/GetPlacementAnalyticsUseCase.js";
 
+import { ICacheService } from "../../../../../shared/core/cache/ICacheService.js";
+
+const DASHBOARD_CACHE_TTL_SECONDS = 60;
+
 export class GetDashboardUseCase {
 
     constructor(
@@ -52,7 +56,9 @@ export class GetDashboardUseCase {
 
         private readonly eventRepository: IEventRepository,
 
-        private readonly placementAnalyticsUseCase: GetPlacementAnalyticsUseCase
+        private readonly placementAnalyticsUseCase: GetPlacementAnalyticsUseCase,
+
+        private readonly cacheService: ICacheService
 
     ) {}
 
@@ -61,6 +67,22 @@ export class GetDashboardUseCase {
         organizationId: string
 
     ): Promise<DashboardResponseDto> {
+
+        const cacheKey =
+
+            `dashboard:${organizationId}`;
+
+        const cached =
+
+            await this.cacheService.get<DashboardResponseDto>(
+                cacheKey
+            );
+
+        if (cached) {
+
+            return cached;
+
+        }
 
         const [
 
@@ -118,7 +140,7 @@ export class GetDashboardUseCase {
 
         ]);
 
-        return {
+        const dashboard: DashboardResponseDto = {
 
             users: {
 
@@ -190,6 +212,18 @@ export class GetDashboardUseCase {
             placements
 
         };
+
+        await this.cacheService.set(
+
+            cacheKey,
+
+            dashboard,
+
+            DASHBOARD_CACHE_TTL_SECONDS
+
+        );
+
+        return dashboard;
 
     }
 

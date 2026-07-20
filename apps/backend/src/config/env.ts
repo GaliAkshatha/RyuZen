@@ -51,4 +51,9 @@ export const env = {
             process.env.AUTH_RATE_LIMIT_MAX ?? 10
         ),
 
+    CACHE_DEFAULT_TTL_SECONDS:
+        Number(
+            process.env.CACHE_DEFAULT_TTL_SECONDS ?? 60
+        ),
+
 };

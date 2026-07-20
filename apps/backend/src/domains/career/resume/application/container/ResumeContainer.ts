@@ -32,6 +32,8 @@ import { GetMyResumeUseCase } from "../use-cases/GetMyResumeUseCase.js";
 import { DownloadResumeUseCase } from "../use-cases/DownloadResumeUseCase.js";
 import { UpdateResumeVisibilityUseCase } from "../use-cases/UpdateResumeVisibilityUseCase.js";
 
+import { cacheService } from "../../../../../shared/infrastructure/cache/InMemoryCacheService.js";
+
 const resumeRepository = new ResumeRepository();
 
 const resumeTemplateRepository = new ResumeTemplateRepository();
@@ -51,7 +53,11 @@ export const resumeContainer = {
     createResumeTemplate:
 
         new CreateResumeTemplateUseCase(
-            resumeTemplateRepository
+
+            resumeTemplateRepository,
+
+            cacheService
+
         ),
 
     getResumeTemplate:
@@ -63,19 +69,31 @@ export const resumeContainer = {
     getResumeTemplates:
 
         new GetResumeTemplatesUseCase(
-            resumeTemplateRepository
+
+            resumeTemplateRepository,
+
+            cacheService
+
         ),
 
     updateResumeTemplate:
 
         new UpdateResumeTemplateUseCase(
-            resumeTemplateRepository
+
+            resumeTemplateRepository,
+
+            cacheService
+
         ),
 
     deleteResumeTemplate:
 
         new DeleteResumeTemplateUseCase(
-            resumeTemplateRepository
+
+            resumeTemplateRepository,
+
+            cacheService
+
         ),
 
     generateResume:

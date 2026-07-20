@@ -40,6 +40,8 @@ import {
 
 import { GetDashboardUseCase } from "../use-cases/GetDashboardUseCase.js";
 
+import { cacheService } from "../../../../../shared/infrastructure/cache/InMemoryCacheService.js";
+
 const userRepository = new UserRepository();
 
 const departmentRepository = new DepartmentRepository();
@@ -88,7 +90,9 @@ export const dashboardContainer = {
 
             eventRepository,
 
-            placementAnalyticsUseCase
+            placementAnalyticsUseCase,
+
+            cacheService
 
         )
 

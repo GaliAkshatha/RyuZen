@@ -10,11 +10,17 @@ import { BadgeResponseDto } from "../dto/BadgeResponseDto.js";
 import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
+import { ICacheService } from "../../../../../shared/core/cache/ICacheService.js";
+
+import { BADGES_CACHE_KEY } from "./GetBadgesUseCase.js";
+
 export class CreateBadgeUseCase {
 
     constructor(
 
-        private readonly repository: IBadgeRepository
+        private readonly repository: IBadgeRepository,
+
+        private readonly cacheService: ICacheService
 
     ) {}
 
@@ -68,6 +74,12 @@ export class CreateBadgeUseCase {
                 badge
 
             );
+
+        await this.cacheService.delete(
+
+            BADGES_CACHE_KEY
+
+        );
 
         return BadgeResponseMapper.toDto(
 

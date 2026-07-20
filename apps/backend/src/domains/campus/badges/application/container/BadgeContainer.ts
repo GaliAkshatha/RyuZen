@@ -14,6 +14,8 @@ import { DeleteBadgeUseCase } from "../use-cases/DeleteBadgeUseCase.js";
 import { AwardBadgeUseCase } from "../use-cases/AwardBadgeUseCase.js";
 import { GetStudentBadgesUseCase } from "../use-cases/GetStudentBadgesUseCase.js";
 
+import { cacheService } from "../../../../../shared/infrastructure/cache/InMemoryCacheService.js";
+
 const badgeRepository = new BadgeRepository();
 
 const studentBadgeRepository = new StudentBadgeRepository();
@@ -25,7 +27,11 @@ export const badgeContainer = {
     createBadge:
 
         new CreateBadgeUseCase(
-            badgeRepository
+
+            badgeRepository,
+
+            cacheService
+
         ),
 
     getBadge:
@@ -37,19 +43,31 @@ export const badgeContainer = {
     getBadges:
 
         new GetBadgesUseCase(
-            badgeRepository
+
+            badgeRepository,
+
+            cacheService
+
         ),
 
     updateBadge:
 
         new UpdateBadgeUseCase(
-            badgeRepository
+
+            badgeRepository,
+
+            cacheService
+
         ),
 
     deleteBadge:
 
         new DeleteBadgeUseCase(
-            badgeRepository
+
+            badgeRepository,
+
+            cacheService
+
         ),
 
     awardBadge:
