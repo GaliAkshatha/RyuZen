@@ -24,6 +24,7 @@ import skillRoutes from "./domains/career/skills/presentation/routes/skill.route
 import portfolioProjectRoutes from "./domains/career/portfolio/presentation/routes/portfolio-project.routes.js";
 import experienceRoutes from "./domains/career/experience/presentation/routes/experience.routes.js";
 import educationRoutes from "./domains/career/education/presentation/routes/education.routes.js";
+import certificationRoutes from "./domains/career/certifications/presentation/routes/certification.routes.js";
 
 const app: Express = express();
 
@@ -49,6 +50,7 @@ app.use("/api/v1/skills", skillRoutes);
 app.use("/api/v1/projects", portfolioProjectRoutes);
 app.use("/api/v1/experience", experienceRoutes);
 app.use("/api/v1/education", educationRoutes);
+app.use("/api/v1/certifications", certificationRoutes);
 app.use(notFound);
 
 app.use(errorHandler);
