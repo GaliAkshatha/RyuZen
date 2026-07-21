@@ -42,6 +42,8 @@ export const API_ENDPOINTS = {
   portfolio: "/portfolio",
   resume: "/resume",
   companies: "/companies",
+  /** Mounted at /api/v1/placements (not /drives) — confirmed via app.ts. */
+  placementDrives: "/placements",
   placements: "/placements",
   applications: "/applications",
   placementAnalytics: "/placement-analytics",

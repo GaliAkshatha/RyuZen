@@ -79,6 +79,10 @@ import { CompanyListPage } from "@/features/companies/pages/CompanyListPage";
 import { CompanyDetailPage } from "@/features/companies/pages/CompanyDetailPage";
 import { CreateCompanyPage } from "@/features/companies/pages/CreateCompanyPage";
 
+import { PlacementDriveListPage } from "@/features/placement-drives/pages/PlacementDriveListPage";
+import { PlacementDriveDetailPage } from "@/features/placement-drives/pages/PlacementDriveDetailPage";
+import { CreatePlacementDrivePage } from "@/features/placement-drives/pages/CreatePlacementDrivePage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -164,6 +168,7 @@ export function AppRoutes() {
                 "/app/admin/resume-templates",
                 "/app/career/portfolio",
                 "/app/placements/companies",
+                "/app/placements/drives",
               ].includes(item.path),
           )
           .map((item) => (
@@ -526,6 +531,23 @@ export function AppRoutes() {
           element={
             <RoleRoute allowedRoles={[UserRole.ORG_ADMIN]}>
               <CreateCompanyPage />
+            </RoleRoute>
+          }
+        />
+
+        {/* Placement Drives (PL2) — real pages, browse open to
+            ALL_ROLES matching navRegistry. Same ORG_ADMIN-only
+            (SUPER_ADMIN explicitly excluded) management pattern as
+            Companies (PL1), confirmed this milestone. companyId is
+            required on create but immutable after — no companyId field
+            in UpdatePlacementDriveSchema. */}
+        <Route path="/app/placements/drives" element={<PlacementDriveListPage />} />
+        <Route path="/app/placements/drives/:id" element={<PlacementDriveDetailPage />} />
+        <Route
+          path="/app/placements/drives/new"
+          element={
+            <RoleRoute allowedRoles={[UserRole.ORG_ADMIN]}>
+              <CreatePlacementDrivePage />
             </RoleRoute>
           }
         />

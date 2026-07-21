@@ -123,8 +123,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "alumni-placements",
     label: "Placements",
     dashboard: UserRole.ALUMNI,
-    wired: false,
-    milestone: "PL2",
+    wired: true,
   },
   {
     id: "alumni-announcements",
