@@ -110,6 +110,9 @@ import { CreateOrganizationPage } from "@/features/organizations/pages/CreateOrg
 
 import { OrganizationSettingsPage } from "@/features/organization-settings/pages/OrganizationSettingsPage";
 
+import { AuditLogListPage } from "@/features/audit-logs/pages/AuditLogListPage";
+import { AuditLogDetailPage } from "@/features/audit-logs/pages/AuditLogDetailPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -208,6 +211,7 @@ export function AppRoutes() {
                 "/app/admin/users",
                 "/app/admin/organizations",
                 "/app/admin/organization-settings",
+                "/app/admin/audit-logs",
               ].includes(item.path),
           )
           .map((item) => (
@@ -785,6 +789,30 @@ export function AppRoutes() {
           element={
             <RoleRoute allowedRoles={[UserRole.ORG_ADMIN]}>
               <OrganizationSettingsPage />
+            </RoleRoute>
+          }
+        />
+
+        {/* Audit Logs (AD4) — real pages, read-only. Confirmed this
+            milestone: both List and Get are SUPER_ADMIN + ORG_ADMIN,
+            matching navRegistry. Always scoped by the caller's own
+            organizationId — even SUPER_ADMIN does not get a cross-
+            tenant platform-wide view here, genuinely different from
+            AD2's Organizations. Single-record Get uses the same
+            404-obscuring ownership convention seen elsewhere. */}
+        <Route
+          path="/app/admin/audit-logs"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
+              <AuditLogListPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/app/admin/audit-logs/:id"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
+              <AuditLogDetailPage />
             </RoleRoute>
           }
         />

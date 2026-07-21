@@ -182,8 +182,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "super-admin-audit-logs",
     label: "Audit Logs",
     dashboard: UserRole.SUPER_ADMIN,
-    wired: false,
-    milestone: "AD4",
+    wired: true,
   },
   {
     id: "super-admin-platform-health",
