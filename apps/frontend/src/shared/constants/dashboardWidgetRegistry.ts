@@ -169,8 +169,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "super-admin-tenant-management",
     label: "Organizations",
     dashboard: UserRole.SUPER_ADMIN,
-    wired: false,
-    milestone: "AD2",
+    wired: true,
   },
   {
     id: "super-admin-global-analytics",

@@ -104,6 +104,10 @@ import { RecommendationsPage } from "@/features/recommendations/pages/Recommenda
 
 import { UserPermissionsPage } from "@/features/user-permissions/pages/UserPermissionsPage";
 
+import { OrganizationListPage } from "@/features/organizations/pages/OrganizationListPage";
+import { OrganizationDetailPage } from "@/features/organizations/pages/OrganizationDetailPage";
+import { CreateOrganizationPage } from "@/features/organizations/pages/CreateOrganizationPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -200,6 +204,7 @@ export function AppRoutes() {
                 "/app/ai/interview",
                 "/app/ai/recommendations",
                 "/app/admin/users",
+                "/app/admin/organizations",
               ].includes(item.path),
           )
           .map((item) => (
@@ -729,6 +734,37 @@ export function AppRoutes() {
           element={
             <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
               <UserPermissionsPage />
+            </RoleRoute>
+          }
+        />
+
+        {/* Organizations (AD2) — real pages. Confirmed against
+            organization.routes.ts: EVERY action (Create/Get/GetAll/
+            Update/UpdateStatus/CreateOrgAdmin) is SUPER_ADMIN ONLY,
+            no ORG_ADMIN access at all — the inverse scope of
+            Placements' ORG_ADMIN-only pattern, matching navRegistry's
+            "/app/admin/organizations" entry exactly. */}
+        <Route
+          path="/app/admin/organizations"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN]}>
+              <OrganizationListPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/app/admin/organizations/:id"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN]}>
+              <OrganizationDetailPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/app/admin/organizations/new"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN]}>
+              <CreateOrganizationPage />
             </RoleRoute>
           }
         />
