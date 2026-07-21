@@ -75,6 +75,10 @@ import { ResumeTemplateListPage } from "@/features/resume/pages/ResumeTemplateLi
 
 import { MyPortfolioPage } from "@/features/portfolio/pages/MyPortfolioPage";
 
+import { CompanyListPage } from "@/features/companies/pages/CompanyListPage";
+import { CompanyDetailPage } from "@/features/companies/pages/CompanyDetailPage";
+import { CreateCompanyPage } from "@/features/companies/pages/CreateCompanyPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -159,6 +163,7 @@ export function AppRoutes() {
                 "/app/career/resume",
                 "/app/admin/resume-templates",
                 "/app/career/portfolio",
+                "/app/placements/companies",
               ].includes(item.path),
           )
           .map((item) => (
@@ -503,6 +508,27 @@ export function AppRoutes() {
             gate, but no nav entry was provisioned for browsing other
             users' portfolios). */}
         <Route path="/app/career/portfolio" element={<MyPortfolioPage />} />
+
+        {/* Companies (PL1) — real pages. List/detail (browse) require
+            only authentication on the backend (no role restriction),
+            matching navRegistry's ALL_ROLES. Create/Update/UpdateStatus/
+            Delete are ORG_ADMIN ONLY, with SUPER_ADMIN explicitly
+            excluded — the backend's own route-file comment states this
+            outright ("Per the Role & Permission Matrix, company
+            management is ORG_ADMIN only"), confirmed this milestone.
+            The inverse of almost every other admin resource in this
+            app. Management controls are gated inside
+            CompanyDetailPage via canManageCompanies(). */}
+        <Route path="/app/placements/companies" element={<CompanyListPage />} />
+        <Route path="/app/placements/companies/:id" element={<CompanyDetailPage />} />
+        <Route
+          path="/app/placements/companies/new"
+          element={
+            <RoleRoute allowedRoles={[UserRole.ORG_ADMIN]}>
+              <CreateCompanyPage />
+            </RoleRoute>
+          }
+        />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />
