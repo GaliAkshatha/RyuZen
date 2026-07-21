@@ -164,8 +164,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "org-admin-placements-overview",
     label: "Placements Overview",
     dashboard: UserRole.ORG_ADMIN,
-    wired: false,
-    milestone: "PL4",
+    wired: true,
   },
 
   // --- Super Admin ---

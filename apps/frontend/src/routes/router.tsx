@@ -85,6 +85,8 @@ import { CreatePlacementDrivePage } from "@/features/placement-drives/pages/Crea
 
 import { MyApplicationsPage } from "@/features/job-applications/pages/MyApplicationsPage";
 
+import { PlacementAnalyticsPage } from "@/features/placement-analytics/pages/PlacementAnalyticsPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -172,6 +174,7 @@ export function AppRoutes() {
                 "/app/placements/companies",
                 "/app/placements/drives",
                 "/app/placements/applications",
+                "/app/admin/placement-analytics",
               ].includes(item.path),
           )
           .map((item) => (
@@ -568,6 +571,22 @@ export function AppRoutes() {
           element={
             <RoleRoute allowedRoles={[UserRole.STUDENT]}>
               <MyApplicationsPage />
+            </RoleRoute>
+          }
+        />
+
+        {/* Placement Analytics (PL4) — real page, single read-only
+            endpoint. ORG_ADMIN-only, mounted at its own base path
+            deliberately to avoid colliding with GET /placements/:id —
+            confirmed this milestone, matching navRegistry's
+            pre-existing "route-verified: ORG_ADMIN only, SUPER_ADMIN
+            explicitly excluded" note. placementRate is already a
+            rounded 0-100 percentage server-side, not a fraction. */}
+        <Route
+          path="/app/admin/placement-analytics"
+          element={
+            <RoleRoute allowedRoles={[UserRole.ORG_ADMIN]}>
+              <PlacementAnalyticsPage />
             </RoleRoute>
           }
         />
