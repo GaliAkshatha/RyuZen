@@ -10,8 +10,9 @@ import { RoleRoute } from "@/routes/RoleRoute";
 import { RoleLayoutSwitch } from "@/routes/RoleLayoutSwitch";
 import { DashboardRoleSwitch } from "@/routes/DashboardRoleSwitch";
 import { RouteStubPage } from "@/routes/pages/RouteStubPage";
-import { ForbiddenPage } from "@/routes/pages/ForbiddenPage";
-import { NotFoundPage } from "@/routes/pages/NotFoundPage";
+import { ForbiddenPage } from "@/features/errors/pages/ForbiddenPage";
+import { NotFoundPage } from "@/features/errors/pages/NotFoundPage";
+import { ServerErrorPage } from "@/features/errors/pages/ServerErrorPage";
 import { PlaygroundPage } from "@/routes/pages/PlaygroundPage";
 import { CompositePlaygroundPage } from "@/routes/pages/CompositePlaygroundPage";
 
@@ -845,6 +846,7 @@ export function AppRoutes() {
       </Route>
 
       <Route path="/403" element={<ForbiddenPage />} />
+      <Route path="/500" element={<ServerErrorPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

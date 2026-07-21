@@ -2,6 +2,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 
 import { queryClient } from "@/app/queryClient";
+import { ErrorBoundary } from "@/app/ErrorBoundary";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { UIProvider } from "@/contexts/UIContext";
@@ -24,6 +25,10 @@ import { AppRoutes } from "@/routes/router";
  * app root, rather than per-layout — a toast triggered from an Auth
  * page (before login) or a dev playground should work exactly the same
  * as one triggered from inside AppShell.
+ *
+ * ErrorBoundary (H2) is mounted inside BrowserRouter, not around it —
+ * its fallback (ServerErrorPage) uses <Link>, which needs Router
+ * context to render.
  */
 export default function App() {
   return (
@@ -33,7 +38,9 @@ export default function App() {
           <UIProvider>
             <TooltipProvider>
               <BrowserRouter>
-                <AppRoutes />
+                <ErrorBoundary>
+                  <AppRoutes />
+                </ErrorBoundary>
               </BrowserRouter>
               <Toaster />
             </TooltipProvider>

@@ -102,4 +102,9 @@ export class AppApiError extends Error {
   get isRateLimited(): boolean {
     return this.status === HttpStatusCode.TOO_MANY_REQUESTS;
   }
+
+  /** True for any 5xx backend response. Used by the global query/mutation error toast (H2) — a network failure or 5xx is unexpected enough to warrant a toast even when the failing component isn't in view, unlike a routine 404/validation error already handled inline. */
+  get isServerError(): boolean {
+    return this.status !== null && this.status >= 500;
+  }
 }
