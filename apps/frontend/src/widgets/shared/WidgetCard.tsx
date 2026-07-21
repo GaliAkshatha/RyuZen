@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 
 import { cn } from "@/utils/cn";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
@@ -8,14 +9,18 @@ export interface WidgetCardProps {
   title: string;
   icon?: LucideIcon;
   /**
-   * When false, renders a consistent "not wired yet" placeholder body
-   * instead of `children`, labeled with the milestone that will wire
-   * it. Every widget in this milestone renders through this one shell
-   * so H1 (Dashboard Widget Completion) has one obvious visual pattern
-   * to audit against, rather than 25 bespoke placeholder treatments.
+   * When false, renders a consistent placeholder body instead of
+   * `children`. As of H1 (Dashboard Widget Completion & Cross-Role
+   * QA), every scheduled milestone is complete, so the ONLY
+   * `wired={false}` widgets remaining are the 3 documented, permanent
+   * backend gaps (see AttendanceWidget.tsx, StudentProgressWidget.tsx,
+   * MentorshipOverviewWidget.tsx) — identified by a `milestone` value
+   * ending in "*". This shell renders those with a distinct amber
+   * "Backend Gap" treatment rather than the neutral "coming soon"
+   * badge, since they are not upcoming work.
    */
   wired: boolean;
-  /** Which future milestone wires this widget, e.g. "AC1". Required when wired is false. */
+  /** The milestone that wired this slot, or — for the 3 permanent gaps — the blocked milestone with a trailing "*", e.g. "A4*". Required when wired is false. */
   milestone?: string;
   placeholderMessage?: string;
   children?: React.ReactNode;
@@ -31,6 +36,8 @@ export function WidgetCard({
   children,
   className,
 }: WidgetCardProps) {
+  const isPermanentGap = !wired && milestone?.endsWith("*");
+
   return (
     <Card className={cn("flex flex-col", className)}>
       <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
@@ -39,8 +46,12 @@ export function WidgetCard({
           {title}
         </CardTitle>
         {!wired && milestone && (
-          <Badge variant="secondary" className="font-mono text-[10px]">
-            {milestone}
+          <Badge
+            variant={isPermanentGap ? "warning" : "secondary"}
+            className="flex items-center gap-1 font-mono text-[10px]"
+          >
+            {isPermanentGap && <AlertTriangle className="h-3 w-3" aria-hidden="true" />}
+            {isPermanentGap ? "Backend Gap" : milestone}
           </Badge>
         )}
       </CardHeader>
