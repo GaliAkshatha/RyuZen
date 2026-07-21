@@ -98,6 +98,8 @@ import { ResumeReviewPage } from "@/features/resume-review/pages/ResumeReviewPag
 
 import { CareerScorePage } from "@/features/career-score/pages/CareerScorePage";
 
+import { MockInterviewPage } from "@/features/mock-interview/pages/MockInterviewPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -191,6 +193,7 @@ export function AppRoutes() {
                 "/app/ai/chat",
                 "/app/ai/resume-review",
                 "/app/ai/career-score",
+                "/app/ai/interview",
               ].includes(item.path),
           )
           .map((item) => (
@@ -686,6 +689,16 @@ export function AppRoutes() {
             verified achievements) — same real-score/templated-
             narrative split as AI2. */}
         <Route path="/app/ai/career-score" element={<CareerScorePage />} />
+
+        {/* Mock Interview (AI4) — real page, open to ALL_ROLES matching
+            navRegistry. Confirmed this milestone: a session runs for
+            exactly MAX_QUESTIONS = 5 exchanges before auto-completing
+            with feedback + score. Same real-score/templated-feedback
+            split as AI2/AI3 — the score is a real heuristic based on
+            substantive-answer count, the feedback text is placeholder.
+            Ownership enforced (404, obscuring existence). Answering an
+            already-COMPLETED session is rejected (400). */}
+        <Route path="/app/ai/interview" element={<MockInterviewPage />} />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />
