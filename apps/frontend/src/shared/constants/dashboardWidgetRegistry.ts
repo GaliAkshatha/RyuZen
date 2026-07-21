@@ -57,8 +57,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "student-announcements",
     label: "Announcements",
     dashboard: UserRole.STUDENT,
-    wired: false,
-    milestone: "CM1",
+    wired: true,
   },
   {
     id: "student-career-score",
@@ -105,8 +104,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "faculty-announcements",
     label: "Announcements",
     dashboard: UserRole.FACULTY,
-    wired: false,
-    milestone: "CM1",
+    wired: true,
   },
 
   // --- Alumni ---
@@ -128,8 +126,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "alumni-announcements",
     label: "Announcements",
     dashboard: UserRole.ALUMNI,
-    wired: false,
-    milestone: "CM1",
+    wired: true,
   },
   { id: "alumni-ai-launcher", label: "AI Assistant", dashboard: UserRole.ALUMNI, wired: true },
 

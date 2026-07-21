@@ -87,6 +87,8 @@ import { MyApplicationsPage } from "@/features/job-applications/pages/MyApplicat
 
 import { PlacementAnalyticsPage } from "@/features/placement-analytics/pages/PlacementAnalyticsPage";
 
+import { NotificationsPage } from "@/features/notifications/pages/NotificationsPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -175,6 +177,7 @@ export function AppRoutes() {
                 "/app/placements/drives",
                 "/app/placements/applications",
                 "/app/admin/placement-analytics",
+                "/app/notifications",
               ].includes(item.path),
           )
           .map((item) => (
@@ -590,6 +593,16 @@ export function AppRoutes() {
             </RoleRoute>
           }
         />
+
+        {/* Notifications (CM1) — real page, open to ALL_ROLES matching
+            navRegistry. List and Mark Read are self-scoped with no
+            role restriction. Send is ORG_ADMIN + FACULTY, SUPER_ADMIN
+            explicitly excluded — confirmed this milestone, same
+            recurring pattern as Placements (PL1-PL4). Notifications
+            are broadcast records shared by everyone matching
+            targetAudience, with isRead computed per-viewer from a
+            readBy array — not a per-recipient copy. */}
+        <Route path="/app/notifications" element={<NotificationsPage />} />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />
