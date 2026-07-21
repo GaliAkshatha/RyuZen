@@ -113,6 +113,8 @@ import { OrganizationSettingsPage } from "@/features/organization-settings/pages
 import { AuditLogListPage } from "@/features/audit-logs/pages/AuditLogListPage";
 import { AuditLogDetailPage } from "@/features/audit-logs/pages/AuditLogDetailPage";
 
+import { AdminDashboardPage } from "@/features/admin-dashboard/pages/AdminDashboardPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -212,6 +214,7 @@ export function AppRoutes() {
                 "/app/admin/organizations",
                 "/app/admin/organization-settings",
                 "/app/admin/audit-logs",
+                "/app/admin/dashboard",
               ].includes(item.path),
           )
           .map((item) => (
@@ -813,6 +816,25 @@ export function AppRoutes() {
           element={
             <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
               <AuditLogDetailPage />
+            </RoleRoute>
+          }
+        />
+
+        {/* Dashboard (AD5) — real page, the final Administration
+            milestone. Confirmed this milestone: SUPER_ADMIN + ORG_ADMIN
+            only, matching navRegistry. Reuses PL4's exact
+            PlacementAnalyticsResponseDto (confirmed against
+            GetDashboardUseCase), and is org-scoped the same way as
+            AD4's Audit Logs — no cross-tenant aggregate exists. The
+            backend's own route comment notes FACULTY/STUDENT have only
+            "Limited" access per the Role & Permission Matrix, and a
+            reduced role-scoped view for them was explicitly not built
+            in this milestone. */}
+        <Route
+          path="/app/admin/dashboard"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
+              <AdminDashboardPage />
             </RoleRoute>
           }
         />

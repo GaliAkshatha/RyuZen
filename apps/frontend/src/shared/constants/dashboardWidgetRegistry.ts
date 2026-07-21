@@ -135,8 +135,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "org-admin-analytics",
     label: "Analytics",
     dashboard: UserRole.ORG_ADMIN,
-    wired: false,
-    milestone: "AD5",
+    wired: true,
   },
   {
     id: "org-admin-department-statistics",
@@ -175,8 +174,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "super-admin-global-analytics",
     label: "Global Analytics",
     dashboard: UserRole.SUPER_ADMIN,
-    wired: false,
-    milestone: "AD5",
+    wired: true,
   },
   {
     id: "super-admin-audit-logs",
@@ -188,8 +186,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "super-admin-platform-health",
     label: "Platform Health",
     dashboard: UserRole.SUPER_ADMIN,
-    wired: false,
-    milestone: "AD5",
+    wired: true,
   },
 ];
 
