@@ -83,6 +83,8 @@ import { PlacementDriveListPage } from "@/features/placement-drives/pages/Placem
 import { PlacementDriveDetailPage } from "@/features/placement-drives/pages/PlacementDriveDetailPage";
 import { CreatePlacementDrivePage } from "@/features/placement-drives/pages/CreatePlacementDrivePage";
 
+import { MyApplicationsPage } from "@/features/job-applications/pages/MyApplicationsPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -169,6 +171,7 @@ export function AppRoutes() {
                 "/app/career/portfolio",
                 "/app/placements/companies",
                 "/app/placements/drives",
+                "/app/placements/applications",
               ].includes(item.path),
           )
           .map((item) => (
@@ -548,6 +551,23 @@ export function AppRoutes() {
           element={
             <RoleRoute allowedRoles={[UserRole.ORG_ADMIN]}>
               <CreatePlacementDrivePage />
+            </RoleRoute>
+          }
+        />
+
+        {/* Job Applications (PL3) — real page. Applying and GET /me are
+            both STUDENT-only, confirmed this milestone and matching
+            navRegistry's pre-existing [STUDENT] restriction. Applying
+            itself happens from PlacementDriveDetailPage via
+            ApplyToPlacementSection; this page is purely "my
+            applications" self-service. Reviewing applications for a
+            drive is ORG_ADMIN-only, embedded in
+            PlacementDriveDetailPage via JobApplicationReviewSection. */}
+        <Route
+          path="/app/placements/applications"
+          element={
+            <RoleRoute allowedRoles={[UserRole.STUDENT]}>
+              <MyApplicationsPage />
             </RoleRoute>
           }
         />

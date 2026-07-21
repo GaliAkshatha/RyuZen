@@ -71,8 +71,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "student-my-applications",
     label: "My Applications",
     dashboard: UserRole.STUDENT,
-    wired: false,
-    milestone: "PL3",
+    wired: true,
   },
 
   // --- Faculty ---

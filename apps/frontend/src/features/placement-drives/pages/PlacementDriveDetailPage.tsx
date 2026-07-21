@@ -1,6 +1,8 @@
 import { useParams } from "react-router-dom";
 import { Briefcase, MapPin, Wallet, Calendar } from "lucide-react";
 
+import { PlacementDriveStatus } from "@/types/enums";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { SkeletonCard } from "@/shared/components/SkeletonLoader";
@@ -19,15 +21,25 @@ import { canManagePlacementDrives } from "@/features/placement-drives/utils/plac
 import { useCompany } from "@/features/companies/hooks/useCompany";
 import { useCompanies } from "@/features/companies/hooks/useCompanies";
 
+import { ApplyToPlacementSection } from "@/features/job-applications/components/ApplyToPlacementSection";
+import { JobApplicationReviewSection } from "@/features/job-applications/components/JobApplicationReviewSection";
+import { useMyJobApplications } from "@/features/job-applications/hooks/useMyJobApplications";
+import {
+  canApplyToPlacements,
+  canReviewJobApplications,
+} from "@/features/job-applications/utils/jobApplicationPermissions";
+
 export function PlacementDriveDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const { toast } = useToast();
+  const canApply = canApplyToPlacements(user?.role);
 
   const { data: drive, isLoading, isError, error, refetch } = usePlacementDrive(id ?? "");
   const { data: company } = useCompany(drive?.companyId ?? "");
   const { data: companies } = useCompanies();
   const { mutate: updateDrive, isPending, error: updateError } = useUpdatePlacementDrive(id ?? "");
+  const { data: myApplications } = useMyJobApplications(canApply);
 
   if (isLoading) {
     return <SkeletonCard className="max-w-xl" />;
@@ -38,6 +50,8 @@ export function PlacementDriveDetailPage() {
   }
 
   const canManage = canManagePlacementDrives(user?.role);
+  const canReview = canReviewJobApplications(user?.role);
+  const existingApplication = myApplications?.find((a) => a.placementId === drive.id);
 
   return (
     <div className="flex max-w-xl flex-col gap-6">
@@ -97,6 +111,35 @@ export function PlacementDriveDetailPage() {
           )}
         </CardContent>
       </Card>
+
+      {canApply && drive.status === PlacementDriveStatus.PUBLISHED && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Apply</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {existingApplication ? (
+              <p className="flex items-center gap-2 font-body text-sm text-foreground">
+                You've applied to this drive.
+                <StatusBadge status={existingApplication.status} />
+              </p>
+            ) : (
+              <ApplyToPlacementSection placementId={drive.id} />
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {canReview && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Applications</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <JobApplicationReviewSection placementId={drive.id} />
+          </CardContent>
+        </Card>
+      )}
 
       {canManage && (
         <Card>
