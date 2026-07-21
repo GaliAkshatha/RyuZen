@@ -1,0 +1,110 @@
+import { useState } from "react";
+import { Bot, Info, Plus } from "lucide-react";
+
+import { Card, CardContent } from "@/shared/components/Card";
+import { Button } from "@/shared/ui/Button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/Select";
+import { cn } from "@/utils/cn";
+import { AIChatRole } from "@/types/enums";
+
+import { useMyAIChats } from "@/features/ai-chat/hooks/useMyAIChats";
+import { useAIChat } from "@/features/ai-chat/hooks/useAIChat";
+import { useSendAIChatMessage } from "@/features/ai-chat/hooks/useSendAIChatMessage";
+import { AIChatComposer } from "@/features/ai-chat/components/AIChatComposer";
+
+export function AIChatPage() {
+  const [activeChatId, setActiveChatId] = useState<string | undefined>(undefined);
+
+  const { data: sessions } = useMyAIChats();
+  const { data: activeChat, isLoading: isLoadingChat } = useAIChat(activeChatId);
+  const { mutate: sendMessage, isPending, error } = useSendAIChatMessage();
+
+  const messages = activeChat?.messages ?? [];
+
+  return (
+    <div className="flex max-w-2xl flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <h1 className="flex items-center gap-2 font-display text-2xl font-semibold text-foreground">
+          <Bot className="h-6 w-6 text-primary" aria-hidden="true" />
+          AI Assistant
+        </h1>
+        <div className="flex items-center gap-2">
+          {sessions && sessions.length > 0 && (
+            <Select
+              value={activeChatId ?? "__new__"}
+              onValueChange={(value) => setActiveChatId(value === "__new__" ? undefined : value)}
+            >
+              <SelectTrigger className="w-48" aria-label="Select conversation">
+                <SelectValue placeholder="Select a conversation" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__new__">New conversation</SelectItem>
+                {sessions.map((session) => (
+                  <SelectItem key={session.id} value={session.id}>
+                    {session.context || `Chat ${session.id.slice(0, 6)}`}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+          <Button variant="outline" size="sm" onClick={() => setActiveChatId(undefined)}>
+            <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
+            New
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex items-start gap-2 rounded-md border border-warning/40 bg-warning/10 p-3 font-body text-xs text-muted-foreground">
+        <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+        <span>
+          This assistant currently uses a placeholder response generator — no live language-model
+          provider is configured yet. Replies will acknowledge your message but won&apos;t be
+          genuinely intelligent.
+        </span>
+      </div>
+
+      <Card>
+        <CardContent className="flex min-h-[20rem] flex-col gap-2 overflow-y-auto p-4">
+          {isLoadingChat ? (
+            <p className="font-body text-sm text-muted-foreground">Loading conversation…</p>
+          ) : messages.length === 0 ? (
+            <p className="font-body text-sm text-muted-foreground">
+              Ask a question to start a new conversation.
+            </p>
+          ) : (
+            messages.map((message, index) => {
+              const isUser = message.role === AIChatRole.USER;
+              return (
+                <div
+                  key={`${message.timestamp}-${index}`}
+                  className={cn("flex flex-col gap-0.5", isUser ? "items-end" : "items-start")}
+                >
+                  <div
+                    className={cn(
+                      "max-w-[85%] rounded-lg px-3 py-2 font-body text-sm",
+                      isUser ? "bg-primary text-primary-foreground" : "bg-muted text-foreground",
+                    )}
+                  >
+                    {message.content}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </CardContent>
+      </Card>
+
+      <AIChatComposer
+        isSubmitting={isPending}
+        error={error}
+        showContextField={!activeChatId}
+        onSubmit={(values) =>
+          sendMessage(
+            { chatId: activeChatId, message: values.message, context: values.context },
+            { onSuccess: (chat) => setActiveChatId(chat.id) },
+          )
+        }
+      />
+    </div>
+  );
+}

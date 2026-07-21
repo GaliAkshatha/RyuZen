@@ -92,6 +92,8 @@ import { NotificationsPage } from "@/features/notifications/pages/NotificationsP
 import { ChatListPage } from "@/features/chat/pages/ChatListPage";
 import { ChatDetailPage } from "@/features/chat/pages/ChatDetailPage";
 
+import { AIChatPage } from "@/features/ai-chat/pages/AIChatPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -182,6 +184,7 @@ export function AppRoutes() {
                 "/app/admin/placement-analytics",
                 "/app/notifications",
                 "/app/chat",
+                "/app/ai/chat",
               ].includes(item.path),
           )
           .map((item) => (
@@ -648,6 +651,17 @@ export function AppRoutes() {
             </RoleRoute>
           }
         />
+
+        {/* AI Chat (AI1) — real page, open to ALL_ROLES matching
+            navRegistry, including SUPER_ADMIN (a rare exception to
+            this app's recurring exclusion pattern). Confirmed this
+            milestone: the backend's AI provider is StubAIProvider, a
+            deterministic placeholder — "No live language-model
+            credentials exist in this environment," per its own doc
+            comment. The UI surfaces this honestly with a disclaimer
+            rather than implying real intelligence. Omitting chatId on
+            send starts a new session; providing one continues it. */}
+        <Route path="/app/ai/chat" element={<AIChatPage />} />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />
