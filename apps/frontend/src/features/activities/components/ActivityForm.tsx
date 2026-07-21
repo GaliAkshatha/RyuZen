@@ -100,7 +100,7 @@ export function ActivityForm({ activity, isSubmitting, error, onSubmit }: Activi
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="type" className="font-body text-sm font-medium text-foreground">
             Type
@@ -150,7 +150,7 @@ export function ActivityForm({ activity, isSubmitting, error, onSubmit }: Activi
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="points" className="font-body text-sm font-medium text-foreground">
             Points
@@ -165,7 +165,7 @@ export function ActivityForm({ activity, isSubmitting, error, onSubmit }: Activi
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="startDate" className="font-body text-sm font-medium text-foreground">
             Start Date

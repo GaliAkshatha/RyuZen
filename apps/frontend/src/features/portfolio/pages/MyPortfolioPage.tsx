@@ -115,7 +115,7 @@ export function MyPortfolioPage() {
           <CardHeader>
             <CardTitle>Summary</CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-3 gap-4 font-body text-sm">
+          <CardContent className="grid grid-cols-1 gap-4 font-body text-sm sm:grid-cols-3">
             <div>
               <p className="text-muted-foreground">Skills</p>
               <p className="font-display text-lg font-semibold text-foreground">

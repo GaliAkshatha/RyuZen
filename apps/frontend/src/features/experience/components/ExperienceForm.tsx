@@ -99,7 +99,7 @@ export function ExperienceForm({
         <FormErrorSummary errors={[...fieldErrors, ...apiErrors]} />
       )}
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="company" className="font-body text-sm font-medium text-foreground">
             Company
@@ -114,7 +114,7 @@ export function ExperienceForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label className="font-body text-sm font-medium text-foreground">Employment Type</label>
           <Controller
@@ -144,7 +144,7 @@ export function ExperienceForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="startDate" className="font-body text-sm font-medium text-foreground">
             Start Date

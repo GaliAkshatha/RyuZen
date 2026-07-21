@@ -71,7 +71,7 @@ export function CompanyForm({ company, isSubmitting, error, onSubmit }: CompanyF
         <Input id="name" aria-invalid={Boolean(errors.name)} {...register("name")} />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="website" className="font-body text-sm font-medium text-foreground">
             Website (optional)
@@ -93,7 +93,7 @@ export function CompanyForm({ company, isSubmitting, error, onSubmit }: CompanyF
         <Textarea id="description" rows={3} {...register("description")} />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="hrName" className="font-body text-sm font-medium text-foreground">
             HR Contact Name (optional)

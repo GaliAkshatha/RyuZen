@@ -60,7 +60,7 @@ export function SkillForm({ skill, isSubmitting, error, onSubmit, onCancel }: Sk
         <FormErrorSummary errors={[...fieldErrors, ...apiErrors]} />
       )}
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <div className="col-span-1 flex flex-col gap-1.5">
           <label htmlFor="name" className="font-body text-sm font-medium text-foreground">
             Name

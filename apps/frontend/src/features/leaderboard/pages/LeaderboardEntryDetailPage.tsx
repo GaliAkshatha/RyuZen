@@ -54,7 +54,7 @@ export function LeaderboardEntryDetailPage() {
           <CardTitle>Point Breakdown</CardTitle>
         </CardHeader>
         <CardContent>
-          <dl className="grid grid-cols-2 gap-4 font-body text-sm">
+          <dl className="grid grid-cols-1 gap-4 font-body text-sm sm:grid-cols-2">
             <div>
               <dt className="text-muted-foreground">Activity Points</dt>
               <dd className="font-display text-lg font-semibold text-foreground">

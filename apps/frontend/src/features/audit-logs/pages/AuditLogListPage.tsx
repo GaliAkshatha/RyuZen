@@ -95,8 +95,16 @@ export function AuditLogListPage() {
               {data.logs.map((log) => (
                 <TableRow
                   key={log.id}
-                  className="cursor-pointer"
+                  className="cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+                  role="button"
+                  tabIndex={0}
                   onClick={() => navigate(`/app/admin/audit-logs/${log.id}`)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      navigate(`/app/admin/audit-logs/${log.id}`);
+                    }
+                  }}
                 >
                   <TableCell className="font-medium">{log.action}</TableCell>
                   <TableCell>{log.entityType ?? "—"}</TableCell>

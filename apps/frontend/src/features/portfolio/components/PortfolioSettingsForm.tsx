@@ -102,7 +102,7 @@ export function PortfolioSettingsForm({
         <Textarea id="summary" rows={3} {...register("summary")} />
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="github" className="font-body text-sm font-medium text-foreground">
             GitHub (optional)
@@ -153,7 +153,7 @@ export function PortfolioSettingsForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label className="font-body text-sm font-medium text-foreground">Visibility</label>
           <Controller

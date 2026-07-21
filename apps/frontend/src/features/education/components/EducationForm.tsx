@@ -59,7 +59,7 @@ export function EducationForm({
         <FormErrorSummary errors={[...fieldErrors, ...apiErrors]} />
       )}
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="institution" className="font-body text-sm font-medium text-foreground">
             Institution
@@ -78,7 +78,7 @@ export function EducationForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="branch" className="font-body text-sm font-medium text-foreground">
             Branch (optional)
@@ -93,7 +93,7 @@ export function EducationForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="startYear" className="font-body text-sm font-medium text-foreground">
             Start Year
