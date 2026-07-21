@@ -94,6 +94,8 @@ import { ChatDetailPage } from "@/features/chat/pages/ChatDetailPage";
 
 import { AIChatPage } from "@/features/ai-chat/pages/AIChatPage";
 
+import { ResumeReviewPage } from "@/features/resume-review/pages/ResumeReviewPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -185,6 +187,7 @@ export function AppRoutes() {
                 "/app/notifications",
                 "/app/chat",
                 "/app/ai/chat",
+                "/app/ai/resume-review",
               ].includes(item.path),
           )
           .map((item) => (
@@ -662,6 +665,16 @@ export function AppRoutes() {
             rather than implying real intelligence. Omitting chatId on
             send starts a new session; providing one continues it. */}
         <Route path="/app/ai/chat" element={<AIChatPage />} />
+
+        {/* Resume Review (AI2) — real page, open to ALL_ROLES matching
+            navRegistry. Confirmed this milestone: unlike AI1's fully-
+            placeholder reply, StubResumeReviewProvider's numeric score
+            is a REAL deterministic completeness heuristic (the same
+            logic GenerateResumeUseCase/CE6 uses) — only the
+            strengths/improvements/summary TEXT is templated
+            boilerplate. A successful review also updates the caller's
+            CE6 Resume.atsScore server-side if one exists. */}
+        <Route path="/app/ai/resume-review" element={<ResumeReviewPage />} />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />
