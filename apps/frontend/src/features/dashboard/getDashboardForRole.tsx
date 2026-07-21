@@ -1,11 +1,39 @@
-import type { ComponentType } from "react";
+import { lazy, type ComponentType } from "react";
 
 import { UserRole } from "@/types/enums";
-import { StudentDashboardPage } from "@/features/dashboard/pages/StudentDashboardPage";
-import { FacultyDashboardPage } from "@/features/dashboard/pages/FacultyDashboardPage";
-import { AlumniDashboardPage } from "@/features/dashboard/pages/AlumniDashboardPage";
-import { OrganizationAdminDashboardPage } from "@/features/dashboard/pages/OrganizationAdminDashboardPage";
-import { SuperAdminDashboardPage } from "@/features/dashboard/pages/SuperAdminDashboardPage";
+
+/**
+ * Lazy per role (H4) — each dashboard eagerly imports several
+ * feature-specific widgets, so splitting these means a Student never
+ * downloads the Super Admin dashboard's widget code (and vice versa).
+ * Already covered by the single <Suspense> boundary in router.tsx,
+ * since DashboardRoleSwitch renders inside the routed tree.
+ */
+const StudentDashboardPage = lazy(() =>
+  import("@/features/dashboard/pages/StudentDashboardPage").then((m) => ({
+    default: m.StudentDashboardPage,
+  })),
+);
+const FacultyDashboardPage = lazy(() =>
+  import("@/features/dashboard/pages/FacultyDashboardPage").then((m) => ({
+    default: m.FacultyDashboardPage,
+  })),
+);
+const AlumniDashboardPage = lazy(() =>
+  import("@/features/dashboard/pages/AlumniDashboardPage").then((m) => ({
+    default: m.AlumniDashboardPage,
+  })),
+);
+const OrganizationAdminDashboardPage = lazy(() =>
+  import("@/features/dashboard/pages/OrganizationAdminDashboardPage").then((m) => ({
+    default: m.OrganizationAdminDashboardPage,
+  })),
+);
+const SuperAdminDashboardPage = lazy(() =>
+  import("@/features/dashboard/pages/SuperAdminDashboardPage").then((m) => ({
+    default: m.SuperAdminDashboardPage,
+  })),
+);
 
 const DASHBOARD_BY_ROLE: Record<UserRole, ComponentType> = {
   [UserRole.STUDENT]: StudentDashboardPage,
