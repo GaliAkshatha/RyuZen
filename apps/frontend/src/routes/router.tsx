@@ -100,6 +100,8 @@ import { CareerScorePage } from "@/features/career-score/pages/CareerScorePage";
 
 import { MockInterviewPage } from "@/features/mock-interview/pages/MockInterviewPage";
 
+import { RecommendationsPage } from "@/features/recommendations/pages/RecommendationsPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -194,6 +196,7 @@ export function AppRoutes() {
                 "/app/ai/resume-review",
                 "/app/ai/career-score",
                 "/app/ai/interview",
+                "/app/ai/recommendations",
               ].includes(item.path),
           )
           .map((item) => (
@@ -699,6 +702,18 @@ export function AppRoutes() {
             Ownership enforced (404, obscuring existence). Answering an
             already-COMPLETED session is rejected (400). */}
         <Route path="/app/ai/interview" element={<MockInterviewPage />} />
+
+        {/* Recommendations (AI5) — real page, open to ALL_ROLES matching
+            navRegistry. The final AI Platform milestone. Confirmed this
+            milestone: unlike AI2-AI4, there's no numeric score at all
+            here — the CANDIDATES themselves (which Activities/Events/
+            Clubs to suggest) are 100% real, genuinely filtered against
+            the caller's own submissions/registrations/memberships (up
+            to 5 per category). Only the per-item "reason" string is
+            templated. Events/Clubs recommendations require the caller
+            to resolve to a Student record; non-students silently get
+            zero Events/Clubs suggestions (not an error). */}
+        <Route path="/app/ai/recommendations" element={<RecommendationsPage />} />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />
