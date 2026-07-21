@@ -89,6 +89,9 @@ import { PlacementAnalyticsPage } from "@/features/placement-analytics/pages/Pla
 
 import { NotificationsPage } from "@/features/notifications/pages/NotificationsPage";
 
+import { ChatListPage } from "@/features/chat/pages/ChatListPage";
+import { ChatDetailPage } from "@/features/chat/pages/ChatDetailPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -178,6 +181,7 @@ export function AppRoutes() {
                 "/app/placements/applications",
                 "/app/admin/placement-analytics",
                 "/app/notifications",
+                "/app/chat",
               ].includes(item.path),
           )
           .map((item) => (
@@ -603,6 +607,47 @@ export function AppRoutes() {
             targetAudience, with isRead computed per-viewer from a
             readBy array — not a per-recipient copy. */}
         <Route path="/app/notifications" element={<NotificationsPage />} />
+
+        {/* Chat (CM2) — real pages. Confirmed this milestone: SUPER_ADMIN
+            is excluded from the ENTIRE feature (create/list/get/send/
+            list-messages/mark-read), stated outright in the backend's
+            own route comment ("Chat is available to every role except
+            SUPER_ADMIN"), matching navRegistry's pre-existing note.
+            GetChatUseCase enforces participant-only access (404, not
+            403, to avoid revealing existence to non-participants).
+            CreateChatUseCase is idempotent for DIRECT chats — reusing
+            an existing chat between the same two users rather than
+            duplicating. */}
+        <Route
+          path="/app/chat"
+          element={
+            <RoleRoute
+              allowedRoles={[
+                UserRole.ORG_ADMIN,
+                UserRole.FACULTY,
+                UserRole.STUDENT,
+                UserRole.ALUMNI,
+              ]}
+            >
+              <ChatListPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/app/chat/:id"
+          element={
+            <RoleRoute
+              allowedRoles={[
+                UserRole.ORG_ADMIN,
+                UserRole.FACULTY,
+                UserRole.STUDENT,
+                UserRole.ALUMNI,
+              ]}
+            >
+              <ChatDetailPage />
+            </RoleRoute>
+          }
+        />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />
