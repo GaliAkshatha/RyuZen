@@ -1,0 +1,122 @@
+import { Link } from "react-router-dom";
+import { Compass, Info, ClipboardList, Calendar, Users2 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
+import { EmptyState } from "@/shared/components/EmptyState";
+import { ErrorState } from "@/shared/components/ErrorState";
+import { SkeletonLoader } from "@/shared/components/SkeletonLoader";
+import { RecommendationType } from "@/types/enums";
+
+import { useRecommendations } from "@/features/recommendations/hooks/useRecommendations";
+import type { RecommendationItem } from "@/features/recommendations/types/recommendations.types";
+
+const SECTION_CONFIG: Record<
+  RecommendationType,
+  { label: string; icon: LucideIcon; path: string }
+> = {
+  [RecommendationType.ACTIVITY]: {
+    label: "Activities",
+    icon: ClipboardList,
+    path: "/app/activities",
+  },
+  [RecommendationType.EVENT]: { label: "Events", icon: Calendar, path: "/app/events" },
+  [RecommendationType.CLUB]: { label: "Clubs", icon: Users2, path: "/app/clubs" },
+};
+
+function RecommendationSection({
+  type,
+  items,
+}: {
+  type: RecommendationType;
+  items: RecommendationItem[];
+}) {
+  const config = SECTION_CONFIG[type];
+
+  if (items.length === 0) {
+    return null;
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <config.icon className="h-4 w-4" aria-hidden="true" />
+          {config.label}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ul className="flex flex-col gap-3">
+          {items.map((item) => (
+            <li key={item.id} className="flex flex-col gap-0.5">
+              <Link
+                to={`${config.path}/${item.id}`}
+                className="font-body text-sm font-medium text-foreground hover:underline"
+              >
+                {item.title}
+              </Link>
+              <p className="font-body text-xs text-muted-foreground">{item.reason}</p>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function RecommendationsPage() {
+  const { data, isLoading, isError, error, refetch } = useRecommendations();
+
+  if (isError) {
+    return <ErrorState error={error} onRetry={() => refetch()} />;
+  }
+
+  const recommendations = data?.recommendations ?? [];
+  const byType = (type: RecommendationType) => recommendations.filter((item) => item.type === type);
+
+  return (
+    <div className="flex max-w-xl flex-col gap-6">
+      <h1 className="flex items-center gap-2 font-display text-2xl font-semibold text-foreground">
+        <Compass className="h-6 w-6 text-primary" aria-hidden="true" />
+        Recommendations
+      </h1>
+
+      <div className="flex items-start gap-2 rounded-md border border-warning/40 bg-warning/10 p-3 font-body text-xs text-muted-foreground">
+        <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+        <span>
+          The suggestions below are genuinely selected based on published Activities and Events, and
+          active Clubs, that you haven&apos;t engaged with yet. Only the short explanation under
+          each one is placeholder text — no live language-model provider is configured yet.
+        </span>
+      </div>
+
+      {isLoading ? (
+        <div className="flex flex-col gap-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <SkeletonLoader key={i} className="h-32" />
+          ))}
+        </div>
+      ) : recommendations.length === 0 ? (
+        <EmptyState
+          title="No recommendations right now"
+          description="You're all caught up, or there's nothing new to suggest yet."
+        />
+      ) : (
+        <>
+          <RecommendationSection
+            type={RecommendationType.ACTIVITY}
+            items={byType(RecommendationType.ACTIVITY)}
+          />
+          <RecommendationSection
+            type={RecommendationType.EVENT}
+            items={byType(RecommendationType.EVENT)}
+          />
+          <RecommendationSection
+            type={RecommendationType.CLUB}
+            items={byType(RecommendationType.CLUB)}
+          />
+        </>
+      )}
+    </div>
+  );
+}

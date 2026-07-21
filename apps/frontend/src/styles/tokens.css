@@ -25,6 +25,21 @@
  * `.dark` class on first load unless a stored preference says otherwise.
  * This keeps `dark:` utilities meaningful for any component that wants
  * them, while preserving the product's dark-first brand identity.
+ *
+ * H3 (Accessibility & Responsive QA Pass) computed real WCAG AA
+ * contrast ratios for every foreground/background pair in both themes
+ * and found 2 genuine failures, both fixed here: Light Fantasy's
+ * `--warning-foreground` on `--warning` (3.48:1, needed 4.5:1 for
+ * normal text — `--warning` lightness lowered 40%->32%), and `--input`
+ * against `--background` in both themes (1.34:1 / 1.47:1, needed 3:1
+ * per WCAG 1.4.11 since `--input` is specifically the visible boundary
+ * of focusable form controls — Input/Select/Textarea/Toast/Button all
+ * use `border-input`, confirmed by grep before changing it).
+ * `--border` (the separate, purely decorative divider/card-boundary
+ * token) was deliberately left unchanged — WCAG 1.4.11 only applies to
+ * boundaries necessary to identify an interactive component, not
+ * generic dividers, and darkening it too would have been an
+ * unnecessary, unrequested visual change to hierarchy/emphasis.
  */
 
 :root {
@@ -56,14 +71,14 @@
   --success: 155 45% 30%;
   --success-foreground: 42 46% 97%;
 
-  --warning: 38 75% 40%;
+  --warning: 38 75% 32%;
   --warning-foreground: 42 46% 97%;
 
   --info: 205 65% 40%;
   --info-foreground: 42 46% 97%;
 
   --border: 42 25% 80%;
-  --input: 42 25% 80%;
+  --input: 42 25% 45%;
   --ring: 42 65% 34%;
 
   --radius: 0.625rem;
@@ -109,6 +124,6 @@
   --info-foreground: 258 32% 8%;
 
   --border: 258 18% 22%;
-  --input: 258 18% 22%;
+  --input: 258 18% 46%;
   --ring: 42 55% 55%;
 }

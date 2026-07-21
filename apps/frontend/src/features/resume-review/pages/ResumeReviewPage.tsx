@@ -1,0 +1,108 @@
+import { Link } from "react-router-dom";
+import { FileSearch, Info, CheckCircle2, AlertCircle } from "lucide-react";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
+import { Button } from "@/shared/ui/Button";
+import { ErrorState } from "@/shared/components/ErrorState";
+
+import { useReviewResume } from "@/features/resume-review/hooks/useReviewResume";
+
+export function ResumeReviewPage() {
+  const { mutate: review, data: result, isPending, error } = useReviewResume();
+
+  return (
+    <div className="flex max-w-xl flex-col gap-6">
+      <h1 className="flex items-center gap-2 font-display text-2xl font-semibold text-foreground">
+        <FileSearch className="h-6 w-6 text-primary" aria-hidden="true" />
+        Resume Review
+      </h1>
+
+      <div className="flex items-start gap-2 rounded-md border border-warning/40 bg-warning/10 p-3 font-body text-xs text-muted-foreground">
+        <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+        <span>
+          The score below is a real, deterministic completeness heuristic based on your Skills,
+          Experience, Projects, Education, and Certifications. The written commentary is placeholder
+          text, not AI-generated — no live language-model provider is configured yet.
+        </span>
+      </div>
+
+      <Card>
+        <CardContent className="flex flex-col items-start gap-3 p-6">
+          <p className="font-body text-sm text-muted-foreground">
+            Runs against your Skills, Experience, Portfolio Projects, Education, and Certifications.
+            If you have a saved{" "}
+            <Link to="/app/career/resume" className="text-primary underline underline-offset-4">
+              resume
+            </Link>
+            , its score will be updated too.
+          </p>
+          <Button onClick={() => review()} disabled={isPending}>
+            {isPending ? "Reviewing…" : "Review My Resume"}
+          </Button>
+        </CardContent>
+      </Card>
+
+      {error && <ErrorState error={error} onRetry={() => review()} />}
+
+      {result && (
+        <>
+          <Card>
+            <CardHeader>
+              <CardTitle>Completeness Score</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="font-display text-4xl font-semibold text-foreground">
+                {result.score}/100
+              </p>
+            </CardContent>
+          </Card>
+
+          {result.strengths.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-success" aria-hidden="true" />
+                  Strengths
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="flex flex-col gap-1 font-body text-sm text-foreground">
+                  {result.strengths.map((strength) => (
+                    <li key={strength}>• {strength}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
+
+          {result.improvements.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <AlertCircle className="h-4 w-4 text-warning" aria-hidden="true" />
+                  Suggested Improvements
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="flex flex-col gap-1 font-body text-sm text-foreground">
+                  {result.improvements.map((improvement) => (
+                    <li key={improvement}>• {improvement}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Summary</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="font-body text-sm text-muted-foreground">{result.summary}</p>
+            </CardContent>
+          </Card>
+        </>
+      )}
+    </div>
+  );
+}
