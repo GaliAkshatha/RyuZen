@@ -63,8 +63,7 @@ export const dashboardWidgetRegistry: DashboardWidgetEntry[] = [
     id: "student-career-score",
     label: "Career Score",
     dashboard: UserRole.STUDENT,
-    wired: false,
-    milestone: "AI3",
+    wired: true,
   },
   {
     id: "student-my-applications",

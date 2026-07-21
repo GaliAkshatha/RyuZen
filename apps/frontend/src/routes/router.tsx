@@ -96,6 +96,8 @@ import { AIChatPage } from "@/features/ai-chat/pages/AIChatPage";
 
 import { ResumeReviewPage } from "@/features/resume-review/pages/ResumeReviewPage";
 
+import { CareerScorePage } from "@/features/career-score/pages/CareerScorePage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -188,6 +190,7 @@ export function AppRoutes() {
                 "/app/chat",
                 "/app/ai/chat",
                 "/app/ai/resume-review",
+                "/app/ai/career-score",
               ].includes(item.path),
           )
           .map((item) => (
@@ -675,6 +678,14 @@ export function AppRoutes() {
             boilerplate. A successful review also updates the caller's
             CE6 Resume.atsScore server-side if one exists. */}
         <Route path="/app/ai/resume-review" element={<ResumeReviewPage />} />
+
+        {/* Career Score (AI3) — real page, open to ALL_ROLES matching
+            navRegistry. Confirmed this milestone: careerScore is a
+            real deterministic average of 4 real sub-scores
+            (Leaderboard, Resume ATS score, profile completeness,
+            verified achievements) — same real-score/templated-
+            narrative split as AI2. */}
+        <Route path="/app/ai/career-score" element={<CareerScorePage />} />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />
