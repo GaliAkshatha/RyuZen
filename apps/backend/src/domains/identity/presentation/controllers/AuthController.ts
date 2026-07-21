@@ -72,11 +72,23 @@ export class AuthController {
 
     ) {
 
+        const profile =
+
+            await identityContainer
+
+                .getProfile
+
+                .execute(
+
+                    req.user!.userId
+
+                );
+
         return ApiResponse.success(
 
             res,
 
-            req.user,
+            profile,
 
             "Profile fetched successfully."
 
