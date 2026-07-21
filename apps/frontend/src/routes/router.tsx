@@ -102,6 +102,8 @@ import { MockInterviewPage } from "@/features/mock-interview/pages/MockInterview
 
 import { RecommendationsPage } from "@/features/recommendations/pages/RecommendationsPage";
 
+import { UserPermissionsPage } from "@/features/user-permissions/pages/UserPermissionsPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -197,6 +199,7 @@ export function AppRoutes() {
                 "/app/ai/career-score",
                 "/app/ai/interview",
                 "/app/ai/recommendations",
+                "/app/admin/users",
               ].includes(item.path),
           )
           .map((item) => (
@@ -714,6 +717,21 @@ export function AppRoutes() {
             to resolve to a Student record; non-students silently get
             zero Events/Clubs suggestions (not an error). */}
         <Route path="/app/ai/recommendations" element={<RecommendationsPage />} />
+
+        {/* Users & Permissions (AD1) — real page. Confirmed this
+            milestone: Grant/Revoke Permission are SUPER_ADMIN +
+            ORG_ADMIN, matching navRegistry's "/app/admin/users" entry.
+            No generic cross-role user-search endpoint exists, so
+            target users are entered by raw ID, same established
+            precedent as NewChatForm (CM2). */}
+        <Route
+          path="/app/admin/users"
+          element={
+            <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN]}>
+              <UserPermissionsPage />
+            </RoleRoute>
+          }
+        />
 
         {detailStubRoutes.map(({ path, title }) => (
           <Route key={path} path={path} element={<RouteStubPage title={title} />} />
