@@ -5,16 +5,6 @@ import { queryClient } from "@/app/queryClient";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { ThemeToggle } from "@/shared/ui/ThemeToggle";
 
-/**
- * Temporary root page for Milestones F1–F2.
- *
- * Real routing, layouts, and pages are built in later milestones (F5
- * Routing Foundation, F8 Application Shell). This placeholder now also
- * demonstrates the F2 token system end-to-end: the toggle switches the
- * whole app between Dark Fantasy Academy and Light Fantasy instantly,
- * using only semantic Tailwind utilities (bg-background, text-foreground,
- * font-display, etc.) — never a hardcoded color.
- */
 function ScaffoldingPlaceholder() {
   return (
     <div className="min-h-screen bg-background px-6 py-12 text-foreground transition-colors">

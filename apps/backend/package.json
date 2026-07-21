@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "tsx watch src/server.ts",
     "type-check": "tsc --noEmit",
     "build": "tsc",
     "start": "node dist/server.js"
@@ -33,6 +34,7 @@
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.14.2",
     "@types/uuid": "^9.0.8",
+    "tsx": "^4.23.1",
     "typescript": "^5.4.5"
   }
 }
