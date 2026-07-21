@@ -1,8 +1,8 @@
 import { AuditLogRepository } from "../../infrastructure/repositories/AuditLogRepository.js";
 
 import { CreateAuditLogUseCase } from "../use-cases/CreateAuditLogUseCase.js";
-import { GetAuditLogUseCase } from "../use-cases/GetAuditLogUseCase.js";
 import { GetAuditLogsUseCase } from "../use-cases/GetAuditLogsUseCase.js";
+import { GetAuditLogUseCase } from "../use-cases/GetAuditLogUseCase.js";
 
 const auditLogRepository = new AuditLogRepository();
 

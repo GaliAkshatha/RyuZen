@@ -8,6 +8,8 @@ import { validate } from "../../../../shared/core/validation/index.js";
 
 import { authenticate } from "../../../../shared/core/middleware/index.js";
 
+import { authRateLimiter } from "../../../../shared/core/middleware/index.js";
+
 import {
 
     RegisterUserSchema,
@@ -60,6 +62,8 @@ router.post(
 
     "/register",
 
+    authRateLimiter,
+
     validate(RegisterUserSchema),
 
     asyncHandler(
@@ -73,6 +77,8 @@ router.post(
 router.post(
 
     "/login",
+
+    authRateLimiter,
 
     validate(LoginSchema),
 
@@ -118,6 +124,8 @@ router.post(
 
     "/refresh",
 
+    authRateLimiter,
+
     validate(RefreshTokenSchema),
 
     asyncHandler(
@@ -132,6 +140,8 @@ router.post(
 
     "/forgot-password",
 
+    authRateLimiter,
+
     validate(ForgotPasswordSchema),
 
     asyncHandler(
@@ -145,6 +155,8 @@ router.post(
 router.post(
 
     "/reset-password",
+
+    authRateLimiter,
 
     validate(ResetPasswordSchema),
 
