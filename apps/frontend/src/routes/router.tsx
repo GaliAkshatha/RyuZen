@@ -108,6 +108,8 @@ import { OrganizationListPage } from "@/features/organizations/pages/Organizatio
 import { OrganizationDetailPage } from "@/features/organizations/pages/OrganizationDetailPage";
 import { CreateOrganizationPage } from "@/features/organizations/pages/CreateOrganizationPage";
 
+import { OrganizationSettingsPage } from "@/features/organization-settings/pages/OrganizationSettingsPage";
+
 /**
  * "/" redirects based on auth state, per the approved route tree.
  * Waits out isInitializing the same way ProtectedRoute does, to avoid
@@ -205,6 +207,7 @@ export function AppRoutes() {
                 "/app/ai/recommendations",
                 "/app/admin/users",
                 "/app/admin/organizations",
+                "/app/admin/organization-settings",
               ].includes(item.path),
           )
           .map((item) => (
@@ -765,6 +768,23 @@ export function AppRoutes() {
           element={
             <RoleRoute allowedRoles={[UserRole.SUPER_ADMIN]}>
               <CreateOrganizationPage />
+            </RoleRoute>
+          }
+        />
+
+        {/* Organization Settings (AD3) — real page. Confirmed against
+            organization-settings.routes.ts: GET/PATCH are ORG_ADMIN-
+            only (SUPER_ADMIN explicitly excluded, matching
+            navRegistry's pre-existing note), self-scoped to the
+            caller's own org, no :id param. GET auto-creates default
+            settings if none exist yet — never a 404. A config-driven
+            generic renderer handles all 18 categories / ~70 leaf
+            fields rather than hand-written blocks. */}
+        <Route
+          path="/app/admin/organization-settings"
+          element={
+            <RoleRoute allowedRoles={[UserRole.ORG_ADMIN]}>
+              <OrganizationSettingsPage />
             </RoleRoute>
           }
         />

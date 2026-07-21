@@ -20,6 +20,8 @@ export const API_ENDPOINTS = {
   auth: "/auth",
   users: "/users",
   organizations: "/organizations",
+  /** Nested sub-router within organization.routes.ts, self-scoped to the caller's own org (no :id param). */
+  organizationSettings: "/organizations/settings",
   activities: "/activities",
   submissions: "/submissions",
   auditLogs: "/audit-logs",
