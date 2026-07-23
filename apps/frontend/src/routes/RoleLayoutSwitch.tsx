@@ -1,5 +1,5 @@
 import { useAuth } from "@/contexts/AuthContext";
-import { getLayoutForRole } from "@/layouts/getLayoutForRole";
+import { getLayoutForRole } from "@/shared/layout/getLayoutForRole";
 
 /**
  * Always mounts inside <ProtectedRoute>, which guarantees `user` is
