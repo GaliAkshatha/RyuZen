@@ -18,7 +18,7 @@ import { NotFoundPage } from "@/features/errors/pages/NotFoundPage";
 import { ServerErrorPage } from "@/features/errors/pages/ServerErrorPage";
 
 
-import { AuthLayout } from "@/layouts/AuthLayout";
+import { AuthLayout } from "@/portals/campus/layouts/AuthLayout";
 
 /**
  * "/" redirects based on auth state, per the approved route tree.
