@@ -17,6 +17,7 @@ import { ForbiddenPage } from "@/features/errors/pages/ForbiddenPage";
 import { NotFoundPage } from "@/features/errors/pages/NotFoundPage";
 import { ServerErrorPage } from "@/features/errors/pages/ServerErrorPage";
 
+
 import { AuthLayout } from "@/layouts/AuthLayout";
 
 /**
@@ -29,13 +30,17 @@ function RootRedirect() {
 
   if (isInitializing) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background text-muted-foreground">
-        Loading…
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <Spinner size="lg" />
       </div>
     );
   }
 
-  return <Navigate to={isAuthenticated ? "/app/dashboard" : "/login"} replace />;
+  if (isAuthenticated) {
+    return <Navigate to="/app/dashboard" replace />;
+  }
+
+  return <LandingPage />;
 }
 
 /**
@@ -44,6 +49,13 @@ function RootRedirect() {
  * pattern for any future `:id` route that isn't a top-level nav
  * section, even though it's currently empty.
  */
+
+const LandingPage = lazy(() =>
+  import("@/features/landing/pages/LandingPage").then((m) => ({
+    default: m.LandingPage,
+  })),
+);
+
 const detailStubRoutes: { path: string; title: string }[] = [];
 
 const LoginPage = lazy(() =>
@@ -355,12 +367,20 @@ export function AppRoutes() {
         {/* Public routes, wrapped in the real AuthLayout (F8), now with
           real forms (P1). */}
         <Route element={<AuthLayout />}>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/auth/login" element={<LoginPage />} />
+          <Route path="/auth/register" element={<RegisterPage />} />
+          <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
         </Route>
 
+        <Route path="/login" element={<Navigate to="/auth/login" replace />} />
+
+        <Route path="/register" element={<Navigate to="/auth/register" replace />} />
+
+        <Route path="/forgot-password" element={<Navigate to="/auth/forgot-password" replace />} />
+
+        <Route path="/reset-password" element={<Navigate to="/auth/reset-password" replace />} /> 
+  
         {/* Dev-only: verifies primitives/composites render correctly in
           both themes. Not linked from any nav, not auth-gated. */}
         <Route path="/dev/playground" element={<PlaygroundPage />} />
