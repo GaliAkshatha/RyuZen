@@ -8,6 +8,8 @@ import { ActivityCard } from "@/shared/components/ActivityCard";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { SkeletonLoader } from "@/shared/components/SkeletonLoader";
+import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
+import { ScrollReveal } from "@/shared/components/ScrollReveal";
 import { useAuth } from "@/contexts/AuthContext";
 
 import { useActivities } from "@/features/activities/hooks/useActivities";
@@ -28,7 +30,9 @@ export function ActivityListPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="relative flex flex-col gap-6">
+      <PageAtmosphere variant="particles" />
+
       <div className="flex items-center justify-between">
         <h1 className="font-display text-2xl font-semibold text-foreground">Activities</h1>
         {canManageActivities(user?.role) && (
@@ -63,16 +67,17 @@ export function ActivityListPage() {
         />
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {filtered.map((activity) => (
-            <ActivityCard
-              key={activity.id}
-              title={activity.title}
-              type={activity.type}
-              status={activity.status}
-              points={activity.points}
-              endDate={new Date(activity.endDate).toLocaleDateString()}
-              onClick={() => navigate(`/app/activities/${activity.id}`)}
-            />
+          {filtered.map((activity, i) => (
+            <ScrollReveal key={activity.id} delay={Math.min(i, 8) * 50}>
+              <ActivityCard
+                title={activity.title}
+                type={activity.type}
+                status={activity.status}
+                points={activity.points}
+                endDate={new Date(activity.endDate).toLocaleDateString()}
+                onClick={() => navigate(`/app/activities/${activity.id}`)}
+              />
+            </ScrollReveal>
           ))}
         </div>
       )}

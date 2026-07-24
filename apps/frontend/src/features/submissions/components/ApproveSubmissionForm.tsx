@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -30,7 +30,7 @@ export function ApproveSubmissionForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ApproveSubmissionFormValues>({
+  } = useAppForm<ApproveSubmissionFormValues>({
     resolver: zodResolver(approveSubmissionSchema),
     defaultValues: { feedback: "", pointsAwarded: suggestedPoints },
   });

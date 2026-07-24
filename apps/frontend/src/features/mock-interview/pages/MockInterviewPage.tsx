@@ -4,6 +4,9 @@ import { Mic, Info, CheckCircle2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/Select";
 import { StatusBadge } from "@/shared/components/StatusBadge";
+import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
+import { LevelProgressRing } from "@/shared/components/LevelProgressRing";
+import { Spinner } from "@/shared/components/Spinner";
 import { InterviewSessionStatus } from "@/types/enums";
 
 import { useMyMockInterviews } from "@/features/mock-interview/hooks/useMyMockInterviews";
@@ -36,7 +39,8 @@ export function MockInterviewPage() {
   const isAwaitingAnswer = currentExchange && !currentExchange.answer;
 
   return (
-    <div className="flex max-w-2xl flex-col gap-4">
+    <div className="relative flex max-w-2xl flex-col gap-4">
+      <PageAtmosphere variant="arcane-grid" />
       <div className="flex items-center justify-between">
         <h1 className="flex items-center gap-2 font-display text-2xl font-semibold text-foreground">
           <Mic className="h-6 w-6 text-primary" aria-hidden="true" />
@@ -92,8 +96,8 @@ export function MockInterviewPage() {
         </Card>
       ) : isLoadingSession || !session ? (
         <Card>
-          <CardContent className="p-6">
-            <p className="font-body text-sm text-muted-foreground">Loading session…</p>
+          <CardContent className="flex items-center justify-center p-6">
+            <Spinner size="sm" />
           </CardContent>
         </Card>
       ) : (
@@ -134,17 +138,20 @@ export function MockInterviewPage() {
           </Card>
 
           {isComplete && (
-            <Card>
+            <Card className="overflow-hidden border-success/30 bg-gradient-to-br from-success/10 via-card to-card">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-success" aria-hidden="true" />
                   Interview Complete
                 </CardTitle>
               </CardHeader>
-              <CardContent className="flex flex-col gap-3">
-                <p className="font-display text-4xl font-semibold text-foreground">
-                  {session.score}/100
-                </p>
+              <CardContent className="flex flex-col items-center gap-3 text-center">
+                <LevelProgressRing
+                  level={session.score ?? 0}
+                  progress={(session.score ?? 0) / 100}
+                  size={104}
+                  label="Score"
+                />
                 <p className="font-body text-sm text-muted-foreground">{session.feedback}</p>
               </CardContent>
             </Card>

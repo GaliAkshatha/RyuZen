@@ -61,16 +61,33 @@ export function AppSidebar({ role, collapsed = false, className }: AppSidebarPro
                   aria-label={item.label}
                   className={({ isActive }) =>
                     cn(
-                      "flex items-center gap-3 rounded-md px-3 py-2 font-body text-sm font-medium transition-colors",
+                      "group relative flex items-center gap-3 rounded-md px-3 py-2 font-body text-sm font-medium transition-all duration-200",
                       collapsed && "justify-center px-2",
                       isActive
-                        ? "bg-accent text-accent-foreground"
+                        ? "bg-gradient-to-r from-primary/15 to-transparent text-foreground"
                         : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
                     )
                   }
                 >
-                  <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-                  {!collapsed && <span className="truncate">{item.label}</span>}
+                  {({ isActive }) => (
+                    <>
+                      <span
+                        className={cn(
+                          "absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-r-full bg-primary transition-all duration-200",
+                          isActive ? "opacity-100" : "opacity-0",
+                        )}
+                        aria-hidden="true"
+                      />
+                      <Icon
+                        className={cn(
+                          "h-4 w-4 shrink-0 transition-colors duration-200",
+                          isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground",
+                        )}
+                        aria-hidden="true"
+                      />
+                      {!collapsed && <span className="truncate">{item.label}</span>}
+                    </>
+                  )}
                 </NavLink>
               );
             })}

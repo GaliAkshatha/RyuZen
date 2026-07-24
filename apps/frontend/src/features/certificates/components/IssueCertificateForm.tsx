@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -37,7 +37,7 @@ export function IssueCertificateForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IssueCertificateFormValues>({
+  } = useAppForm<IssueCertificateFormValues>({
     resolver: zodResolver(issueCertificateSchema),
     defaultValues: { studentId, eventId: "", activityId: "", certificateUrl: "" },
   });

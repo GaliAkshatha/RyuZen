@@ -1,4 +1,5 @@
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -44,7 +45,7 @@ export function FacultyForm({
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<CreateFacultyFormValues>({
+  } = useAppForm<CreateFacultyFormValues>({
     resolver: zodResolver(isEdit ? updateFacultySchema : createFacultySchema),
     defaultValues: {
       userId: "",

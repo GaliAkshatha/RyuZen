@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -31,7 +31,7 @@ export function ClubForm({ club, isSubmitting, error, onSubmit }: ClubFormProps)
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateClubFormValues>({
+  } = useAppForm<CreateClubFormValues>({
     resolver: zodResolver(isEdit ? updateClubSchema : createClubSchema),
     defaultValues: {
       name: club?.name ?? "",

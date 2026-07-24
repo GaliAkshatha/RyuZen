@@ -1,10 +1,11 @@
 import { useParams, Link } from "react-router-dom";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, PartyPopper } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { SkeletonCard } from "@/shared/components/SkeletonLoader";
 import { StatusBadge } from "@/shared/components/StatusBadge";
+import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/useToast";
 import { SubmissionStatus } from "@/types/enums";
@@ -58,7 +59,9 @@ export function SubmissionDetailPage() {
     submission.status === SubmissionStatus.RESUBMITTED;
 
   return (
-    <div className="flex max-w-xl flex-col gap-6">
+    <div className="relative flex max-w-xl flex-col gap-6">
+      <PageAtmosphere variant="particles" />
+
       <div>
         <h1 className="font-display text-2xl font-semibold text-foreground">
           {activity?.title ?? "Submission"}
@@ -91,7 +94,28 @@ export function SubmissionDetailPage() {
         </CardContent>
       </Card>
 
-      {submission.review.reviewedAt && (
+      {submission.review.reviewedAt && submission.status === SubmissionStatus.APPROVED && (
+        <Card className="overflow-hidden border-success/30 bg-gradient-to-br from-success/10 via-card to-card shadow-[0_0_32px_-12px_hsl(var(--success)/0.4)]">
+          <CardContent className="flex items-center gap-4 py-6">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-success/15 text-success ring-1 ring-success/30">
+              <PartyPopper className="h-6 w-6" aria-hidden="true" />
+            </span>
+            <div className="flex flex-col gap-0.5">
+              <p className="font-display text-lg font-bold text-foreground">Approved!</p>
+              <p className="font-body text-sm text-success">
+                +{submission.review.pointsAwarded} XP added to your total
+              </p>
+              {submission.review.feedback && (
+                <p className="mt-1 font-body text-sm text-muted-foreground">
+                  {submission.review.feedback}
+                </p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {submission.review.reviewedAt && submission.status !== SubmissionStatus.APPROVED && (
         <Card>
           <CardHeader>
             <CardTitle>Review</CardTitle>

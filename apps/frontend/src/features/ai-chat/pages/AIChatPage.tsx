@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Bot, Info, Plus } from "lucide-react";
 
 import { Card, CardContent } from "@/shared/components/Card";
+import { Spinner } from "@/shared/components/Spinner";
 import { Button } from "@/shared/ui/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/Select";
+import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
 import { cn } from "@/utils/cn";
 import { AIChatRole } from "@/types/enums";
 
@@ -22,7 +24,8 @@ export function AIChatPage() {
   const messages = activeChat?.messages ?? [];
 
   return (
-    <div className="flex max-w-2xl flex-col gap-4">
+    <div className="relative flex max-w-2xl flex-col gap-4">
+      <PageAtmosphere variant="arcane-grid" />
       <div className="flex items-center justify-between">
         <h1 className="flex items-center gap-2 font-display text-2xl font-semibold text-foreground">
           <Bot className="h-6 w-6 text-primary" aria-hidden="true" />
@@ -66,7 +69,9 @@ export function AIChatPage() {
       <Card>
         <CardContent className="flex min-h-[20rem] flex-col gap-2 overflow-y-auto p-4">
           {isLoadingChat ? (
-            <p className="font-body text-sm text-muted-foreground">Loading conversation…</p>
+            <div className="flex items-center justify-center py-6">
+              <Spinner size="sm" />
+            </div>
           ) : messages.length === 0 ? (
             <p className="font-body text-sm text-muted-foreground">
               Ask a question to start a new conversation.
@@ -77,8 +82,13 @@ export function AIChatPage() {
               return (
                 <div
                   key={`${message.timestamp}-${index}`}
-                  className={cn("flex flex-col gap-0.5", isUser ? "items-end" : "items-start")}
+                  className={cn("flex items-end gap-2", isUser ? "flex-row-reverse" : "flex-row")}
                 >
+                  {!isUser && (
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary ring-1 ring-primary/30">
+                      <Bot className="h-3.5 w-3.5" aria-hidden="true" />
+                    </span>
+                  )}
                   <div
                     className={cn(
                       "max-w-[85%] rounded-lg px-3 py-2 font-body text-sm",

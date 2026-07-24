@@ -21,12 +21,12 @@ export function RecentActivitiesWidget() {
       ) : recent.length === 0 ? (
         <p className="font-body text-sm text-muted-foreground">No published activities yet.</p>
       ) : (
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col gap-1">
           {recent.map((activity) => (
             <li key={activity.id}>
               <Link
                 to={`/app/activities/${activity.id}`}
-                className="flex items-center justify-between gap-2 font-body text-sm text-foreground hover:underline"
+                className="flex items-center justify-between gap-2 rounded-md px-2 py-1.5 font-body text-sm text-foreground transition-colors hover:bg-accent/50"
               >
                 <span className="truncate">{activity.title}</span>
                 <StatusBadge status={activity.status} />

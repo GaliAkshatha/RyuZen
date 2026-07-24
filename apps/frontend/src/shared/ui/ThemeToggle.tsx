@@ -11,9 +11,9 @@ import { useTheme } from "@/contexts/ThemeContext";
  * needs to be touched when that happens.
  */
 export function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme();
+  const { mode, toggleMode } = useTheme();
 
-  const isDark = theme === "dark";
+  const isDark = mode === "dark";
 
   return (
     <button
@@ -21,7 +21,7 @@ export function ThemeToggle() {
       role="switch"
       aria-checked={isDark}
       aria-label={isDark ? "Switch to Light Fantasy theme" : "Switch to Dark Fantasy Academy theme"}
-      onClick={toggleTheme}
+      onClick={toggleMode}
       className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-1.5 text-sm font-body text-card-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <span aria-hidden="true">{isDark ? "🌙" : "☀️"}</span>

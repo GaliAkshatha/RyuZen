@@ -4,6 +4,8 @@ import { FileSearch, Info, CheckCircle2, AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { Button } from "@/shared/ui/Button";
 import { ErrorState } from "@/shared/components/ErrorState";
+import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
+import { LevelProgressRing } from "@/shared/components/LevelProgressRing";
 
 import { useReviewResume } from "@/features/resume-review/hooks/useReviewResume";
 
@@ -11,7 +13,9 @@ export function ResumeReviewPage() {
   const { mutate: review, data: result, isPending, error } = useReviewResume();
 
   return (
-    <div className="flex max-w-xl flex-col gap-6">
+    <div className="relative flex max-w-xl flex-col gap-6">
+      <PageAtmosphere variant="arcane-grid" />
+
       <h1 className="flex items-center gap-2 font-display text-2xl font-semibold text-foreground">
         <FileSearch className="h-6 w-6 text-primary" aria-hidden="true" />
         Resume Review
@@ -46,14 +50,9 @@ export function ResumeReviewPage() {
 
       {result && (
         <>
-          <Card>
-            <CardHeader>
-              <CardTitle>Completeness Score</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="font-display text-4xl font-semibold text-foreground">
-                {result.score}/100
-              </p>
+          <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 via-card to-card">
+            <CardContent className="flex flex-col items-center gap-2 p-8">
+              <LevelProgressRing level={result.score} progress={result.score / 100} size={112} label="Score" />
             </CardContent>
           </Card>
 

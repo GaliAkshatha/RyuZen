@@ -44,6 +44,8 @@ export interface DataGridProps<T> {
   emptyTitle?: string;
   emptyDescription?: string;
   onRowClick?: (row: T) => void;
+  /** Optional per-row className, e.g. to highlight "your own" row on the Leaderboard. Additive and optional — every existing consumer is unaffected. */
+  getRowClassName?: (row: T) => string | undefined;
   className?: string;
 }
 
@@ -59,6 +61,7 @@ export function DataGrid<T>({
   emptyTitle = "No results",
   emptyDescription,
   onRowClick,
+  getRowClassName,
   className,
 }: DataGridProps<T>) {
   const [search, setSearch] = useState("");
@@ -183,6 +186,7 @@ export function DataGrid<T>({
                   className={cn(
                     onRowClick &&
                       "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
+                    getRowClassName?.(row),
                   )}
                 >
                   {columns.map((column) => (

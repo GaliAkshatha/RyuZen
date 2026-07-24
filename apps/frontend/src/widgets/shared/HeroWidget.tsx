@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { useAuth } from "@/contexts/AuthContext";
 import { HeroBanner } from "@/shared/components/HeroBanner";
 
@@ -15,8 +17,13 @@ const ROLE_SUBTITLES: Record<string, string> = {
  * AuthContext (F4). This isn't a new API integration, just reusing
  * data the app already has, so there's no reason to show it as
  * "coming later."
+ *
+ * `actions` is optional and additive — every existing `<DashboardHero />`
+ * call (Faculty/Alumni/Org Admin/Super Admin dashboards) renders
+ * exactly as before. Only StudentDashboardPage passes it, to surface
+ * the Level ring in the single most prominent spot on the page.
  */
-export function DashboardHero() {
+export function DashboardHero({ actions }: { actions?: ReactNode } = {}) {
   const { user } = useAuth();
 
   if (!user) return null;
@@ -25,6 +32,7 @@ export function DashboardHero() {
     <HeroBanner
       title={`Welcome back, ${user.name.split(" ")[0]}`}
       subtitle={ROLE_SUBTITLES[user.role] ?? "Here's your dashboard."}
+      actions={actions}
     />
   );
 }

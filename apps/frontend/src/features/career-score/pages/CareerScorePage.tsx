@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Ca
 import { StatCard } from "@/shared/components/StatCard";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { SkeletonLoader } from "@/shared/components/SkeletonLoader";
+import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
+import { LevelProgressRing } from "@/shared/components/LevelProgressRing";
 
 import { useCareerScore } from "@/features/career-score/hooks/useCareerScore";
 
@@ -15,7 +17,9 @@ export function CareerScorePage() {
   }
 
   return (
-    <div className="flex max-w-xl flex-col gap-6">
+    <div className="relative flex max-w-xl flex-col gap-6">
+      <PageAtmosphere variant="arcane-grid" />
+
       <h1 className="flex items-center gap-2 font-display text-2xl font-semibold text-foreground">
         <Gauge className="h-6 w-6 text-primary" aria-hidden="true" />
         Career Score
@@ -29,12 +33,9 @@ export function CareerScorePage() {
         </div>
       ) : (
         <>
-          <Card>
-            <CardContent className="flex flex-col items-center gap-2 p-8 text-center">
-              <p className="font-display text-6xl font-semibold text-foreground">
-                {score.careerScore}
-              </p>
-              <p className="font-body text-sm text-muted-foreground">out of 100</p>
+          <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 via-card to-card">
+            <CardContent className="flex flex-col items-center gap-3 p-8 text-center">
+              <LevelProgressRing level={score.careerScore} progress={score.careerScore / 100} size={128} label="Score" />
               <p className="font-display text-lg font-medium text-primary">{score.label}</p>
             </CardContent>
           </Card>

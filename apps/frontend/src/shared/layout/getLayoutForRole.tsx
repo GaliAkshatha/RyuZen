@@ -1,11 +1,11 @@
 import type { ComponentType } from "react";
 
 import { UserRole } from "@/types/enums";
-import { StudentLayout } from "@/portals/campus/layouts/StudentLayout";
-import { FacultyLayout } from "@/portals/campus/layouts/FacultyLayout";
-import { AlumniLayout } from "@/portals/campus/layouts/AlumniLayout";
-import { OrganizationAdminLayout } from "@/portals/organization/layouts/OrganizationAdminLayout";
-import { SuperAdminLayout } from "@/portals/platform/layouts/SuperAdminLayout";
+import { StudentLayout } from "@/layouts/StudentLayout";
+import { FacultyLayout } from "@/layouts/FacultyLayout";
+import { AlumniLayout } from "@/layouts/AlumniLayout";
+import { OrganizationAdminLayout } from "@/layouts/OrganizationAdminLayout";
+import { SuperAdminLayout } from "@/layouts/SuperAdminLayout";
 
 const LAYOUT_BY_ROLE: Record<UserRole, ComponentType> = {
   [UserRole.STUDENT]: StudentLayout,

@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -23,7 +23,7 @@ export function CreateOrgAdminForm({ isSubmitting, error, onSubmit }: CreateOrgA
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateOrgAdminFormValues>({
+  } = useAppForm<CreateOrgAdminFormValues>({
     resolver: zodResolver(createOrgAdminSchema),
     defaultValues: { name: "", email: "", password: "" },
   });

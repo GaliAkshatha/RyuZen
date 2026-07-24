@@ -15,6 +15,7 @@ import {
 import { NotificationBell } from "@/shared/components/NotificationBell";
 import { RoleBadge } from "@/shared/components/RoleBadge";
 import type { UserRole } from "@/types/enums";
+import { initialsOf } from "@/utils/initialsOf";
 
 export interface AppTopbarProps {
   userName: string;
@@ -28,14 +29,6 @@ export interface AppTopbarProps {
   className?: string;
 }
 
-function initialsOf(name: string): string {
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-}
 
 export function AppTopbar({
   userName,
@@ -50,7 +43,7 @@ export function AppTopbar({
   return (
     <header
       className={cn(
-        "flex h-16 items-center justify-between border-b border-border bg-background px-4",
+        "flex h-16 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur-sm",
         className,
       )}
     >
@@ -62,7 +55,7 @@ export function AppTopbar({
 
         <DropdownMenu>
           <DropdownMenuTrigger className="ml-1 flex items-center gap-2 rounded-md p-1 outline-none transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring">
-            <Avatar className="h-8 w-8">
+            <Avatar className="h-8 w-8 ring-1 ring-primary/30 ring-offset-1 ring-offset-background transition-shadow hover:ring-primary/50">
               <AvatarImage src={avatarUrl} alt={userName} />
               <AvatarFallback>{initialsOf(userName)}</AvatarFallback>
             </Avatar>

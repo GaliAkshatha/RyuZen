@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -20,7 +20,7 @@ export function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormValues>({
+  } = useAppForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   });
@@ -46,12 +46,12 @@ export function LoginPage() {
       description="Sign in to your RyuZen account"
       footer={
         <div className="flex flex-col gap-2">
-          <Link to="/forgot-password" className="text-primary underline underline-offset-4">
+          <Link to="/auth/forgot-password" className="text-primary underline underline-offset-4">
             Forgot your password?
           </Link>
           <p>
             Don&apos;t have an account?{" "}
-            <Link to="/register" className="text-primary underline underline-offset-4">
+            <Link to="/auth/register" className="text-primary underline underline-offset-4">
               Register
             </Link>
           </p>

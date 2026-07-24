@@ -39,10 +39,20 @@ export function WidgetCard({
   const isPermanentGap = !wired && milestone?.endsWith("*");
 
   return (
-    <Card className={cn("flex flex-col", className)}>
+    <Card
+      className={cn(
+        "group flex flex-col border-border/60 bg-card/80 backdrop-blur-sm transition-all duration-300",
+        "hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_0_24px_-8px_hsl(var(--primary)/0.35)]",
+        className,
+      )}
+    >
       <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="flex items-center gap-2 text-base">
-          {Icon && <Icon className="h-4 w-4 text-muted-foreground" aria-hidden="true" />}
+        <CardTitle className="flex items-center gap-2.5 text-base">
+          {Icon && (
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20 transition-colors duration-300 group-hover:bg-primary/15 group-hover:ring-primary/30">
+              <Icon className="h-4 w-4" aria-hidden="true" />
+            </span>
+          )}
           {title}
         </CardTitle>
         {!wired && milestone && (

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -52,7 +53,7 @@ export function CertificationForm({
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<CreateCertificationFormValues>({
+  } = useAppForm<CreateCertificationFormValues>({
     resolver: zodResolver(isEdit ? updateCertificationSchema : createCertificationSchema),
     defaultValues: {
       title: certification?.title ?? "",

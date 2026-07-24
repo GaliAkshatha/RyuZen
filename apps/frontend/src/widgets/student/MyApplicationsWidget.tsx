@@ -29,16 +29,18 @@ export function MyApplicationsWidget() {
           You haven't applied to any drives yet.
         </p>
       ) : (
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col gap-1">
           {recent.map((application) => (
-            <li key={application.id} className="flex items-center justify-between gap-2">
+            <li key={application.id}>
               <Link
                 to={`/app/placements/drives/${application.placementId}`}
-                className="truncate font-body text-sm text-foreground hover:underline"
+                className="flex items-center justify-between gap-2 rounded-md px-2 py-1.5 font-body text-sm text-foreground transition-colors hover:bg-accent/50"
               >
-                {driveById.get(application.placementId)?.title ?? application.placementId}
+                <span className="truncate">
+                  {driveById.get(application.placementId)?.title ?? application.placementId}
+                </span>
+                <StatusBadge status={application.status} />
               </Link>
-              <StatusBadge status={application.status} />
             </li>
           ))}
         </ul>

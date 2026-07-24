@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -21,7 +21,7 @@ export function RegisterPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegisterFormValues>({
+  } = useAppForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: { organizationCode: "", name: "", email: "", password: "", confirmPassword: "" },
   });
@@ -51,7 +51,7 @@ export function RegisterPage() {
       footer={
         <p>
           Already have an account?{" "}
-          <Link to="/login" className="text-primary underline underline-offset-4">
+          <Link to="/auth/login" className="text-primary underline underline-offset-4">
             Sign in
           </Link>
         </p>

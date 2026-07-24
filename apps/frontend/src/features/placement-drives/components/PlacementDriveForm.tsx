@@ -1,4 +1,5 @@
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -46,7 +47,7 @@ export function PlacementDriveForm({
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<CreatePlacementDriveFormValues>({
+  } = useAppForm<CreatePlacementDriveFormValues>({
     resolver: zodResolver(isEdit ? updatePlacementDriveSchema : createPlacementDriveSchema),
     defaultValues: {
       companyId: drive?.companyId ?? "",

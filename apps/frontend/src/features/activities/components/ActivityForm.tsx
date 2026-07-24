@@ -1,4 +1,5 @@
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -55,7 +56,7 @@ export function ActivityForm({ activity, isSubmitting, error, onSubmit }: Activi
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<CreateActivityFormValues>({
+  } = useAppForm<CreateActivityFormValues>({
     resolver: zodResolver(isEdit ? updateActivitySchema : createActivitySchema),
     defaultValues: {
       title: activity?.title ?? "",

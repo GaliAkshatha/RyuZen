@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Send } from "lucide-react";
 
@@ -25,7 +25,7 @@ export function MessageComposer({ isSubmitting, error, onSubmit }: MessageCompos
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<SendMessageFormValues>({
+  } = useAppForm<SendMessageFormValues>({
     resolver: zodResolver(sendMessageSchema),
     defaultValues: { message: "" },
   });

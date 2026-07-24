@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -30,7 +30,7 @@ export function BadgeForm({ badge, isSubmitting, error, onSubmit }: BadgeFormPro
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateBadgeFormValues>({
+  } = useAppForm<CreateBadgeFormValues>({
     resolver: zodResolver(isEdit ? updateBadgeSchema : createBadgeSchema),
     defaultValues: {
       name: badge?.name ?? "",

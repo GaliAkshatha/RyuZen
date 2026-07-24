@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -36,7 +36,7 @@ export function SubmitActivityForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateSubmissionFormValues>({
+  } = useAppForm<CreateSubmissionFormValues>({
     resolver: zodResolver(createSubmissionSchema),
     defaultValues: {
       activityId,

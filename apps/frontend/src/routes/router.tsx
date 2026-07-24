@@ -17,8 +17,8 @@ import { ForbiddenPage } from "@/features/errors/pages/ForbiddenPage";
 import { NotFoundPage } from "@/features/errors/pages/NotFoundPage";
 import { ServerErrorPage } from "@/features/errors/pages/ServerErrorPage";
 
-
-import { AuthLayout } from "@/portals/campus/layouts/AuthLayout";
+import { AuthLayout } from "@/layouts/AuthLayout";
+import { PublicLayout } from "@/layouts/PublicLayout";
 
 /**
  * "/" redirects based on auth state, per the approved route tree.
@@ -361,8 +361,35 @@ export function AppRoutes() {
         </div>
       }
     >
+      {/*
+        Route tree, logically grouped into the product's 3 experiences
+        (see 01_Frontend_Architecture.md) while staying ONE router, per
+        the explicit "no separate router trees" instruction:
+
+        1. PUBLIC   — "/" (landing) and "/auth/*", wrapped in
+                       PublicLayout / AuthLayout. No authentication.
+        2. PLATFORM + ORGANIZATION — everything under "/app/*". Both
+                       experiences share this single authenticated
+                       subtree; RoleLayoutSwitch picks the right chrome
+                       per role, and each Route's RoleRoute allowedRoles
+                       enforces who can reach it. SUPER_ADMIN-only
+                       routes (Platform) and the other four roles'
+                       routes (Organization) are NOT split by URL
+                       prefix — Organization Admin is explicitly NOT a
+                       separate portal from Student/Faculty/Alumni, so
+                       forcing a prefix split would misrepresent that.
+                       core/portal's `resolvePortal(role)` is the real
+                       seam if per-portal styling is ever needed
+                       (applied as `data-portal` on <html> today).
+        3. ERROR    — 403/404/500, kept as plain static imports (not
+                       lazy) so they render even if the network is too
+                       broken to fetch a lazy chunk.
+      */}
       <Routes>
-        <Route path="/" element={<RootRedirect />} />
+        {/* ---------- 1. PUBLIC ---------- */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<RootRedirect />} />
+        </Route>
 
         {/* Public routes, wrapped in the real AuthLayout (F8), now with
           real forms (P1). */}
@@ -379,13 +406,14 @@ export function AppRoutes() {
 
         <Route path="/forgot-password" element={<Navigate to="/auth/forgot-password" replace />} />
 
-        <Route path="/reset-password" element={<Navigate to="/auth/reset-password" replace />} /> 
-  
+        <Route path="/reset-password" element={<Navigate to="/auth/reset-password" replace />} />
+
         {/* Dev-only: verifies primitives/composites render correctly in
           both themes. Not linked from any nav, not auth-gated. */}
         <Route path="/dev/playground" element={<PlaygroundPage />} />
         <Route path="/dev/playground-composites" element={<CompositePlaygroundPage />} />
 
+        {/* ---------- 2. PLATFORM + ORGANIZATION (one authenticated subtree) ---------- */}
         {/* Every authenticated route: ProtectedRoute gates on auth,
           RoleLayoutSwitch (F8) picks the layout for the user's role,
           and every child route below is generated directly from
@@ -1075,6 +1103,7 @@ export function AppRoutes() {
           ))}
         </Route>
 
+        {/* ---------- 3. ERROR ---------- */}
         <Route path="/403" element={<ForbiddenPage />} />
         <Route path="/500" element={<ServerErrorPage />} />
         <Route path="*" element={<NotFoundPage />} />

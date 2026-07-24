@@ -1,4 +1,5 @@
 import { DashboardGrid } from "@/features/dashboard/components/DashboardGrid";
+import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
 
 import { DashboardHero } from "@/widgets/shared/HeroWidget";
 import { AnalyticsWidget } from "@/widgets/org-admin/AnalyticsWidget";
@@ -9,7 +10,8 @@ import { PlacementsOverviewWidget } from "@/widgets/org-admin/PlacementsOverview
 
 export function OrganizationAdminDashboardPage() {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="relative flex flex-col gap-6">
+      <PageAtmosphere variant="academy" />
       <DashboardHero />
       <DashboardGrid>
         <AnalyticsWidget />

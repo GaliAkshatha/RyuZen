@@ -1,5 +1,6 @@
 import { cn } from "@/utils/cn";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
+import { initialsOf } from "@/utils/initialsOf";
 
 export interface LeaderboardCardProps {
   rank: number;
@@ -11,14 +12,6 @@ export interface LeaderboardCardProps {
   className?: string;
 }
 
-function initialsOf(name: string): string {
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-}
 
 export function LeaderboardCard({
   rank,

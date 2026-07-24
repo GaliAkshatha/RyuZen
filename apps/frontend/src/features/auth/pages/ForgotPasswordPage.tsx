@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyRound } from "lucide-react";
 
@@ -26,7 +26,7 @@ export function ForgotPasswordPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ForgotPasswordFormValues>({
+  } = useAppForm<ForgotPasswordFormValues>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: { email: "" },
   });
@@ -49,7 +49,7 @@ export function ForgotPasswordPage() {
         title="Check your email"
         description={`If an account exists for ${submittedEmail}, password reset instructions have been generated.`}
         footer={
-          <Link to="/login" className="text-primary underline underline-offset-4">
+          <Link to="/auth/login" className="text-primary underline underline-offset-4">
             Back to sign in
           </Link>
         }
@@ -89,7 +89,7 @@ export function ForgotPasswordPage() {
       title="Forgot your password?"
       description="Enter your email and we'll help you reset it."
       footer={
-        <Link to="/login" className="text-primary underline underline-offset-4">
+        <Link to="/auth/login" className="text-primary underline underline-offset-4">
           Back to sign in
         </Link>
       }

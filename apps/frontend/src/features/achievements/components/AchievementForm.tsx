@@ -1,4 +1,5 @@
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -58,7 +59,7 @@ export function AchievementForm({
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<CreateAchievementFormValues>({
+  } = useAppForm<CreateAchievementFormValues>({
     resolver: zodResolver(isEdit ? updateAchievementSchema : createAchievementSchema),
     defaultValues: {
       title: achievement?.title ?? "",

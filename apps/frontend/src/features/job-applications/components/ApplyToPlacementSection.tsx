@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Send } from "lucide-react";
 
@@ -28,7 +28,7 @@ export function ApplyToPlacementSection({ placementId }: { placementId: string }
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ApplyToPlacementFormValues>({
+  } = useAppForm<ApplyToPlacementFormValues>({
     resolver: zodResolver(applyToPlacementSchema),
     defaultValues: { resume: "" },
   });

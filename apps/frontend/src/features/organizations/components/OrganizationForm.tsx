@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -39,7 +39,7 @@ export function OrganizationForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateOrganizationFormValues>({
+  } = useAppForm<CreateOrganizationFormValues>({
     resolver: zodResolver(isEdit ? updateOrganizationSchema : createOrganizationSchema),
     defaultValues: {
       name: organization?.name ?? "",

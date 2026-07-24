@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import { Inbox } from "lucide-react";
 
 import { cn } from "@/utils/cn";
@@ -6,6 +7,19 @@ import { Button } from "@/shared/ui/Button";
 
 export interface EmptyStateProps {
   icon?: LucideIcon;
+  /**
+   * Escape hatch for future original artwork (see the product brief's
+   * "empty pages should feel beautiful rather than unfinished" and
+   * "replace generic placeholders with original illustrations" —
+   * intentionally deferred, not built yet). When provided, this
+   * entirely replaces the icon — sized and positioned by the
+   * illustration itself, not constrained to the small icon's
+   * dimensions — so dropping in real artwork later is a one-line prop
+   * change per usage, never a layout rework. Every current call site
+   * keeps rendering the plain icon exactly as today until this is
+   * actually populated.
+   */
+  illustration?: ReactNode;
   title: string;
   description?: string;
   actionLabel?: string;
@@ -22,6 +36,7 @@ export interface EmptyStateProps {
  */
 export function EmptyState({
   icon: Icon = Inbox,
+  illustration,
   title,
   description,
   actionLabel,
@@ -35,7 +50,7 @@ export function EmptyState({
         className,
       )}
     >
-      <Icon className="h-10 w-10 text-muted-foreground" aria-hidden="true" />
+      {illustration ?? <Icon className="h-10 w-10 text-muted-foreground" aria-hidden="true" />}
       <div className="flex flex-col gap-1">
         <p className="font-display text-base font-medium text-foreground">{title}</p>
         {description && <p className="font-body text-sm text-muted-foreground">{description}</p>}

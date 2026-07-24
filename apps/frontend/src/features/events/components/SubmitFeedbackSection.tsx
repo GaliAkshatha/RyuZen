@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
@@ -32,7 +32,7 @@ export function SubmitFeedbackSection({ eventId }: { eventId: string }) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SubmitEventFeedbackFormValues>({
+  } = useAppForm<SubmitEventFeedbackFormValues>({
     resolver: zodResolver(submitEventFeedbackSchema),
     defaultValues: { feedback: "" },
   });

@@ -24,7 +24,7 @@ export function NotificationBell({ unreadCount, onClick, className }: Notificati
       <Bell className="h-5 w-5" aria-hidden="true" />
       {hasUnread && (
         <span
-          className="absolute right-1.5 top-1.5 flex h-2 w-2 rounded-full bg-destructive"
+          className="absolute right-1.5 top-1.5 flex h-2 w-2 rounded-full bg-destructive motion-safe:animate-glow-pulse"
           aria-hidden="true"
         />
       )}

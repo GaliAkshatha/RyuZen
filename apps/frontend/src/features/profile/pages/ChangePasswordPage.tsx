@@ -31,7 +31,7 @@ export function ChangePasswordPage() {
             error={error}
             onSubmit={(payload) =>
               mutate(payload, {
-                onSuccess: () => toast({ title: "Password changed successfully" }),
+                onSuccess: () => toast({ title: "Password changed" }),
               })
             }
           />

@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -30,7 +30,7 @@ export function CompanyForm({ company, isSubmitting, error, onSubmit }: CompanyF
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateCompanyFormValues>({
+  } = useAppForm<CreateCompanyFormValues>({
     resolver: zodResolver(isEdit ? updateCompanySchema : createCompanySchema),
     defaultValues: {
       name: company?.name ?? "",

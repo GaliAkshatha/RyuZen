@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -32,7 +32,7 @@ export function ResetPasswordPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ResetPasswordFormValues>({
+  } = useAppForm<ResetPasswordFormValues>({
     resolver: zodResolver(resetPasswordFormSchema),
     defaultValues: {
       email: prefill.email ?? "",
@@ -66,7 +66,7 @@ export function ResetPasswordPage() {
       title="Reset your password"
       description="Enter the reset token and choose a new password."
       footer={
-        <Link to="/login" className="text-primary underline underline-offset-4">
+        <Link to="/auth/login" className="text-primary underline underline-offset-4">
           Back to sign in
         </Link>
       }

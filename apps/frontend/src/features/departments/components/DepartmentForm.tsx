@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -36,7 +36,7 @@ export function DepartmentForm({ department, isSubmitting, error, onSubmit }: De
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateDepartmentFormValues>({
+  } = useAppForm<CreateDepartmentFormValues>({
     resolver: zodResolver(isEdit ? updateDepartmentSchema : createDepartmentSchema),
     defaultValues: {
       name: department?.name ?? "",

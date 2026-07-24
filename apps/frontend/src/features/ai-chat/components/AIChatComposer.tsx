@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Send } from "lucide-react";
 
@@ -31,7 +31,7 @@ export function AIChatComposer({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<{ message: string; context?: string }>({
+  } = useAppForm<{ message: string; context?: string }>({
     resolver: zodResolver(composerSchema),
     defaultValues: { message: "", context: "" },
   });

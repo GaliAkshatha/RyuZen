@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Ca
 import { ErrorState } from "@/shared/components/ErrorState";
 import { SkeletonCard } from "@/shared/components/SkeletonLoader";
 import { StatusBadge } from "@/shared/components/StatusBadge";
+import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
 import { Badge } from "@/shared/ui/Badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/useToast";
@@ -39,7 +40,9 @@ export function ActivityDetailPage() {
   const canManage = canManageActivities(user?.role);
 
   return (
-    <div className="flex max-w-xl flex-col gap-6">
+    <div className="relative flex max-w-xl flex-col gap-6">
+      <PageAtmosphere variant="particles" />
+
       <div className="flex items-start justify-between">
         <div className="flex flex-col gap-2">
           <h1 className="font-display text-2xl font-semibold text-foreground">{activity.title}</h1>
@@ -48,13 +51,17 @@ export function ActivityDetailPage() {
             <Badge variant="outline">{activity.type}</Badge>
             <Badge variant="outline">{activity.visibility}</Badge>
           </div>
-          <div className="flex items-center gap-4 font-body text-sm text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <Coins className="h-3.5 w-3.5" aria-hidden="true" />
-              {activity.points} pts
-              {activity.penaltyPoints > 0 ? ` (-${activity.penaltyPoints} penalty)` : ""}
+          <div className="flex items-center gap-4 font-body text-sm">
+            <span className="flex items-center gap-1.5 font-display text-base font-bold text-primary">
+              <Coins className="h-4 w-4" aria-hidden="true" />
+              {activity.points} XP
+              {activity.penaltyPoints > 0 && (
+                <span className="font-body text-xs font-normal text-destructive">
+                  (-{activity.penaltyPoints} penalty)
+                </span>
+              )}
             </span>
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1 text-muted-foreground">
               <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
               {new Date(activity.startDate).toLocaleDateString()} –{" "}
               {new Date(activity.endDate).toLocaleDateString()}

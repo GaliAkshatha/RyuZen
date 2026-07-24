@@ -1,4 +1,5 @@
 import { DashboardGrid } from "@/features/dashboard/components/DashboardGrid";
+import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
 
 import { DashboardHero } from "@/widgets/shared/HeroWidget";
 import { NotificationsWidget } from "@/widgets/shared/NotificationsWidget";
@@ -9,7 +10,8 @@ import { AttendanceSummaryWidget } from "@/widgets/faculty/AttendanceSummaryWidg
 
 export function FacultyDashboardPage() {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="relative flex flex-col gap-6">
+      <PageAtmosphere variant="glow" />
       <DashboardHero />
       <DashboardGrid>
         <AssignedActivitiesWidget />

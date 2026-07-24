@@ -1,4 +1,5 @@
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ShieldPlus, ShieldMinus } from "lucide-react";
 
@@ -43,7 +44,7 @@ export function ManagePermissionsForm({
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<GrantPermissionFormValues>({
+  } = useAppForm<GrantPermissionFormValues>({
     resolver: zodResolver(grantPermissionSchema),
     defaultValues: { userId: "", permission: undefined },
   });

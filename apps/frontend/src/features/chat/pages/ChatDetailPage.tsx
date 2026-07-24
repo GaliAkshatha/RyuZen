@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Users } from "lucide-react";
 
 import { Card, CardContent } from "@/shared/components/Card";
+import { Spinner } from "@/shared/components/Spinner";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { SkeletonCard } from "@/shared/components/SkeletonLoader";
 import { useAuth } from "@/contexts/AuthContext";
@@ -55,8 +56,8 @@ export function ChatDetailPage() {
       </Link>
 
       <div className="flex items-center gap-2">
-        <Users className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
-        <h1 className="font-display text-xl font-semibold text-foreground">
+        <Users className="h-6 w-6 text-primary" aria-hidden="true" />
+        <h1 className="font-display text-2xl font-semibold text-foreground">
           {chat.type === ChatType.DIRECT ? (otherParticipants[0] ?? "Conversation") : `Group Chat`}
         </h1>
       </div>
@@ -64,7 +65,9 @@ export function ChatDetailPage() {
       <Card>
         <CardContent className="flex max-h-[28rem] flex-col gap-2 overflow-y-auto p-4">
           {isLoadingMessages ? (
-            <p className="font-body text-sm text-muted-foreground">Loading messages…</p>
+            <div className="flex items-center justify-center py-6">
+              <Spinner size="sm" />
+            </div>
           ) : !messages || messages.length === 0 ? (
             <p className="font-body text-sm text-muted-foreground">No messages yet. Say hello!</p>
           ) : (

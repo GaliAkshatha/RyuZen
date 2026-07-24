@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -22,7 +22,7 @@ export function AlumniForm({ alumnus, isSubmitting, error, onSubmit }: AlumniFor
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<AlumniFormValues>({
+  } = useAppForm<AlumniFormValues>({
     resolver: zodResolver(alumniSchema),
     defaultValues: {
       name: alumnus.name ?? "",

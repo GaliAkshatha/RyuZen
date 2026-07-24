@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -36,7 +36,7 @@ export function EducationForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateEducationFormValues>({
+  } = useAppForm<CreateEducationFormValues>({
     resolver: zodResolver(isEdit ? updateEducationSchema : createEducationSchema),
     defaultValues: {
       institution: education?.institution ?? "",

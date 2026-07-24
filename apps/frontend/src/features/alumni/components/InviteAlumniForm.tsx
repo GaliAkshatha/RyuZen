@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyRound } from "lucide-react";
 
@@ -38,7 +38,7 @@ export function InviteAlumniForm({ isSubmitting, error, onSubmit }: InviteAlumni
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<InviteAlumniFormValues>({
+  } = useAppForm<InviteAlumniFormValues>({
     resolver: zodResolver(inviteAlumniSchema),
     defaultValues: { email: "", name: "", graduationYear: undefined },
   });

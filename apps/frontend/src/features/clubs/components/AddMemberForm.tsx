@@ -1,4 +1,5 @@
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -38,7 +39,7 @@ export function AddMemberForm({
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<AddClubMemberFormValues>({
+  } = useAppForm<AddClubMemberFormValues>({
     resolver: zodResolver(addClubMemberSchema),
     defaultValues: { studentId: "", role: ClubMemberRole.MEMBER },
   });

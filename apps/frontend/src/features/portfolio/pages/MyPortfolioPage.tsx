@@ -7,6 +7,7 @@ import { Button } from "@/shared/ui/Button";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { SkeletonCard, SkeletonLoader } from "@/shared/components/SkeletonLoader";
+import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
 import { useToast } from "@/hooks/useToast";
 
 import { useMyPortfolio } from "@/features/portfolio/hooks/useMyPortfolio";
@@ -104,7 +105,8 @@ export function MyPortfolioPage() {
   }
 
   return (
-    <div className="flex max-w-xl flex-col gap-6">
+    <div className="relative flex max-w-xl flex-col gap-6">
+      <PageAtmosphere variant="academy" />
       <h1 className="flex items-center gap-2 font-display text-2xl font-semibold text-foreground">
         <UserSquare className="h-6 w-6 text-primary" aria-hidden="true" />
         My Portfolio

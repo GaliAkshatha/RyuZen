@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -25,7 +25,7 @@ export function ChangePasswordForm({ onSubmit, isSubmitting, error }: ChangePass
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<ChangePasswordFormValues>({
+  } = useAppForm<ChangePasswordFormValues>({
     resolver: zodResolver(changePasswordFormSchema),
     defaultValues: { currentPassword: "", newPassword: "", confirmNewPassword: "" },
   });

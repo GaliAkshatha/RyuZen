@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Play } from "lucide-react";
 
@@ -24,7 +24,7 @@ export function StartInterviewForm({ isSubmitting, error, onSubmit }: StartInter
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<StartMockInterviewFormValues>({
+  } = useAppForm<StartMockInterviewFormValues>({
     resolver: zodResolver(startMockInterviewSchema),
     defaultValues: { role: "" },
   });

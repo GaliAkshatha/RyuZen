@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -29,7 +29,7 @@ export function MentorshipRemarksForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<UpdateMentorshipFormValues>({
+  } = useAppForm<UpdateMentorshipFormValues>({
     resolver: zodResolver(updateMentorshipSchema),
     defaultValues: { remarks: currentRemarks ?? "" },
   });

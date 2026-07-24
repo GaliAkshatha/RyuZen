@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -24,7 +24,7 @@ export function ResubmitForm({ isSubmitting, error, onSubmit }: ResubmitFormProp
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ResubmitSubmissionFormValues>({
+  } = useAppForm<ResubmitSubmissionFormValues>({
     resolver: zodResolver(resubmitSubmissionSchema),
     defaultValues: {
       remarks: "",

@@ -8,6 +8,7 @@ import { Button } from "@/shared/ui/Button";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { SkeletonLoader } from "@/shared/components/SkeletonLoader";
+import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/useToast";
 import { ChatType } from "@/types/enums";
@@ -29,7 +30,8 @@ export function ChatListPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="relative flex flex-col gap-6">
+      <PageAtmosphere variant="academy" />
       <div className="flex items-center justify-between">
         <h1 className="flex items-center gap-2 font-display text-2xl font-semibold text-foreground">
           <MessageCircle className="h-6 w-6 text-primary" aria-hidden="true" />

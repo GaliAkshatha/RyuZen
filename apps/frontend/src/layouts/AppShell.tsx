@@ -1,10 +1,11 @@
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 import { cn } from "@/utils/cn";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUI } from "@/contexts/UIContext";
 import { useLogout } from "@/features/auth/hooks/useLogout";
+import { useMyNotifications } from "@/features/notifications/hooks/useMyNotifications";
 
 import { Button } from "@/shared/ui/Button";
 import { Drawer, DrawerContent, DrawerTitle } from "@/shared/ui/Drawer";
@@ -19,9 +20,35 @@ import { EmptyState } from "@/shared/components/EmptyState";
  * component — see StudentLayout.tsx etc. for why those files exist at
  * all despite rendering nothing role-specific yet.
  */
+/**
+ * The only RyuZen brand mark inside the authenticated app — used in
+ * both the desktop sidebar and the mobile drawer below, so it's
+ * defined once here rather than duplicated in two places. Always
+ * links to "/" (the Landing Page), matching the same rule the public
+ * Header and AuthLayout already follow: clicking the logo always
+ * returns to the Landing Page, everywhere in the product, not just
+ * before login.
+ */
+function SidebarBrand({ collapsed = false }: { collapsed?: boolean }) {
+  return (
+    <Link
+      to="/"
+      aria-label="RyuZen — go to homepage"
+      className={cn(
+        "flex h-16 shrink-0 items-center border-b border-border font-display text-lg font-bold tracking-wide text-foreground transition-colors hover:text-primary",
+        collapsed ? "justify-center px-2" : "px-4",
+      )}
+    >
+      {collapsed ? "R" : "RyuZen"}
+    </Link>
+  );
+}
+
 export function AppShell() {
   const { user } = useAuth();
   const logout = useLogout();
+  const { data: notifications } = useMyNotifications();
+  const unreadNotificationCount = notifications?.filter((n) => !n.isRead).length;
   const {
     sidebarCollapsed,
     toggleSidebar,
@@ -36,18 +63,23 @@ export function AppShell() {
   if (!user) return null;
 
   return (
-    <div className="flex min-h-screen bg-background">
-      {/* Desktop sidebar */}
+    <div className="flex h-screen overflow-hidden bg-background">
+      {/* Desktop sidebar — h-full within the viewport-locked shell so
+        its own overflow-y-auto actually has a bounded height to
+        scroll against, independently of main content. The collapse
+        toggle sits in a separate, non-scrolling footer so it's always
+        reachable regardless of scroll position. */}
       <aside
         className={cn(
-          "hidden shrink-0 flex-col border-r border-border transition-[width] lg:flex",
+          "hidden h-full shrink-0 flex-col border-r border-border transition-[width] lg:flex",
           sidebarCollapsed ? "w-16" : "w-64",
         )}
       >
+        <SidebarBrand collapsed={sidebarCollapsed} />
         <div className="flex-1 overflow-y-auto">
           <AppSidebar role={user.role} collapsed={sidebarCollapsed} />
         </div>
-        <div className="border-t border-border p-2">
+        <div className="shrink-0 border-t border-border p-2">
           <Button
             variant="ghost"
             size="icon"
@@ -68,6 +100,7 @@ export function AppShell() {
       <Drawer open={mobileSidebarOpen} onOpenChange={setMobileSidebarOpen}>
         <DrawerContent side="left" className="w-72 p-0">
           <DrawerTitle className="sr-only">Navigation</DrawerTitle>
+          <SidebarBrand />
           <AppSidebar role={user.role} />
         </DrawerContent>
       </Drawer>
@@ -85,11 +118,12 @@ export function AppShell() {
         </DrawerContent>
       </Drawer>
 
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-h-0 flex-1 flex-col">
         <AppTopbar
           userName={user.name}
           userRole={user.role}
           avatarUrl={user.profile.image || undefined}
+          unreadNotificationCount={unreadNotificationCount}
           onLogout={logout}
           onNotificationClick={() => setNotificationDrawerOpen(true)}
           leadingSlot={

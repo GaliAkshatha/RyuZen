@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -46,7 +47,7 @@ export function AssignMentorForm({
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<AssignMentorFormValues>({
+  } = useAppForm<AssignMentorFormValues>({
     resolver: zodResolver(assignMentorSchema),
     defaultValues: { facultyId: currentMentorId ?? "" },
   });

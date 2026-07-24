@@ -1,4 +1,5 @@
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -37,7 +38,7 @@ export function EventForm({ event, isSubmitting, error, onSubmit }: EventFormPro
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<CreateEventFormValues>({
+  } = useAppForm<CreateEventFormValues>({
     resolver: zodResolver(isEdit ? updateEventSchema : createEventSchema),
     defaultValues: {
       title: event?.title ?? "",

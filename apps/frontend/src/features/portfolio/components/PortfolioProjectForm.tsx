@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -48,7 +49,7 @@ export function PortfolioProjectForm({
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<CreatePortfolioProjectFormValues>({
+  } = useAppForm<CreatePortfolioProjectFormValues>({
     resolver: zodResolver(isEdit ? updatePortfolioProjectSchema : createPortfolioProjectSchema),
     defaultValues: {
       title: project?.title ?? "",

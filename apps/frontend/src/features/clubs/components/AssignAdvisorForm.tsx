@@ -1,4 +1,5 @@
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -33,7 +34,7 @@ export function AssignAdvisorForm({
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<AssignAdvisorFormValues>({
+  } = useAppForm<AssignAdvisorFormValues>({
     resolver: zodResolver(assignAdvisorSchema),
     defaultValues: { facultyId: currentAdvisorId ?? "" },
   });

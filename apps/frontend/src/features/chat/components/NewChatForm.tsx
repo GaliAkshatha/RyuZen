@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
@@ -33,7 +33,7 @@ export function NewChatForm({ isSubmitting, error, onSubmit }: NewChatFormProps)
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<z.infer<typeof newChatFormSchema>>({
+  } = useAppForm<z.infer<typeof newChatFormSchema>>({
     resolver: zodResolver(newChatFormSchema),
     defaultValues: { participantId: "" },
   });

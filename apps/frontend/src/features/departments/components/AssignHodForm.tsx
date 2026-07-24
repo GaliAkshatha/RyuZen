@@ -1,4 +1,5 @@
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -41,7 +42,7 @@ export function AssignHodForm({
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<AssignHeadOfDepartmentFormValues>({
+  } = useAppForm<AssignHeadOfDepartmentFormValues>({
     resolver: zodResolver(assignHeadOfDepartmentSchema),
     defaultValues: { userId: currentHeadUserId ?? "" },
   });

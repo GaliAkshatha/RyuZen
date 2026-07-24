@@ -1,4 +1,5 @@
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -29,7 +30,7 @@ export function ProfileForm({ profile, onSubmit, isSubmitting, error }: ProfileF
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<UpdateProfileFormValues>({
+  } = useAppForm<UpdateProfileFormValues>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
       name: profile.name,

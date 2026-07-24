@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/shared/ui/Button";
@@ -31,7 +31,7 @@ export function AdjustPointsForm({ entry, isSubmitting, error, onSubmit }: Adjus
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<AdjustLeaderboardPointsFormValues>({
+  } = useAppForm<AdjustLeaderboardPointsFormValues>({
     resolver: zodResolver(adjustLeaderboardPointsSchema),
     defaultValues: { clubPoints: entry.clubPoints, placementPoints: entry.placementPoints },
   });

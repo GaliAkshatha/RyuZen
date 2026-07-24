@@ -7,6 +7,7 @@ import { Button } from "@/shared/ui/Button";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { SkeletonLoader } from "@/shared/components/SkeletonLoader";
+import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
 import { useToast } from "@/hooks/useToast";
 
 import { useMySkills } from "@/features/skills/hooks/useMySkills";
@@ -82,7 +83,8 @@ export function SkillListPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="relative flex flex-col gap-6">
+      <PageAtmosphere variant="particles" />
       <h1 className="flex items-center gap-2 font-display text-2xl font-semibold text-foreground">
         <Sparkles className="h-6 w-6 text-primary" aria-hidden="true" />
         My Skills

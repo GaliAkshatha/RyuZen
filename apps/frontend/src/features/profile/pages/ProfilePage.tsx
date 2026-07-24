@@ -7,20 +7,16 @@ import { Button } from "@/shared/ui/Button";
 import { RoleBadge } from "@/shared/components/RoleBadge";
 import { SkeletonCard } from "@/shared/components/SkeletonLoader";
 import { ErrorState } from "@/shared/components/ErrorState";
+import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
 import { useToast } from "@/hooks/useToast";
+import { UserRole } from "@/types/enums";
 
 import { useProfile } from "@/features/profile/hooks/useProfile";
 import { useUpdateProfile } from "@/features/profile/hooks/useUpdateProfile";
 import { ProfileForm } from "@/features/profile/components/ProfileForm";
+import { StudentProgressionSection } from "@/features/profile/components/StudentProgressionSection";
+import { initialsOf } from "@/utils/initialsOf";
 
-function initialsOf(name: string): string {
-  return name
-    .split(" ")
-    .map((part) => part[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-}
 
 export function ProfilePage() {
   const { data: profile, isLoading, isError, error, refetch } = useProfile();
@@ -35,53 +31,68 @@ export function ProfilePage() {
     return <ErrorState error={error} onRetry={() => refetch()} />;
   }
 
+  const isStudent = profile.role === UserRole.STUDENT;
+
   return (
-    <div className="flex max-w-xl flex-col gap-6">
-      <div className="flex items-center gap-4">
-        <Avatar className="h-16 w-16">
-          <AvatarImage src={profile.profile.image || undefined} alt={profile.name} />
-          <AvatarFallback className="text-lg">{initialsOf(profile.name)}</AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col gap-1">
-          <h1 className="font-display text-2xl font-semibold text-foreground">{profile.name}</h1>
-          <div className="flex items-center gap-2">
-            <RoleBadge role={profile.role} />
-            <span className="font-body text-sm text-muted-foreground">{profile.email}</span>
+    <div className={`relative flex flex-col gap-6 ${isStudent ? "" : "max-w-xl"}`}>
+      <PageAtmosphere variant="academy" />
+
+      {/* Cover + identity — same gradient language as HeroBanner, so the
+        profile reads as part of the same visual system rather than a
+        different page style. */}
+      <div className="relative overflow-hidden rounded-lg border border-border bg-gradient-to-br from-primary/15 via-card to-card p-8">
+        <div className="flex items-center gap-4">
+          <Avatar className="h-20 w-20 ring-2 ring-primary/30 ring-offset-2 ring-offset-background">
+            <AvatarImage src={profile.profile.image || undefined} alt={profile.name} />
+            <AvatarFallback className="text-xl">{initialsOf(profile.name)}</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col gap-1">
+            <h1 className="font-display text-2xl font-semibold text-foreground sm:text-3xl">
+              {profile.name}
+            </h1>
+            <div className="flex items-center gap-2">
+              <RoleBadge role={profile.role} />
+              <span className="font-body text-sm text-muted-foreground">{profile.email}</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Edit Profile</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ProfileForm
-            profile={profile}
-            isSubmitting={isPending}
-            error={updateError}
-            onSubmit={(payload) =>
-              mutate(payload, {
-                onSuccess: () => toast({ title: "Profile updated" }),
-              })
-            }
-          />
-        </CardContent>
-      </Card>
+      {isStudent && <StudentProgressionSection />}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Security</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Button variant="outline" asChild>
-            <Link to="/app/profile/change-password" className="flex items-center gap-2">
-              <KeyRound className="h-4 w-4" aria-hidden="true" />
-              Change Password
-            </Link>
-          </Button>
-        </CardContent>
-      </Card>
+      <div className={isStudent ? "grid grid-cols-1 gap-6 lg:grid-cols-2" : "flex flex-col gap-6"}>
+        <Card>
+          <CardHeader>
+            <CardTitle>Edit Profile</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ProfileForm
+              profile={profile}
+              isSubmitting={isPending}
+              error={updateError}
+              onSubmit={(payload) =>
+                mutate(payload, {
+                  onSuccess: () => toast({ title: "Profile updated" }),
+                })
+              }
+            />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Security</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Button variant="outline" asChild>
+              <Link to="/app/profile/change-password" className="flex items-center gap-2">
+                <KeyRound className="h-4 w-4" aria-hidden="true" />
+                Change Password
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
