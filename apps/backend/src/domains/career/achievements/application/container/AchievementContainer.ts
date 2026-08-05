@@ -12,7 +12,12 @@ import { GetAchievementsByStudentUseCase } from "../use-cases/GetAchievementsByS
 import { UpdateAchievementUseCase } from "../use-cases/UpdateAchievementUseCase.js";
 import { DeleteAchievementUseCase } from "../use-cases/DeleteAchievementUseCase.js";
 import { VerifyAchievementUseCase } from "../use-cases/VerifyAchievementUseCase.js";
+import {
+    notificationContainer,
+} from "../../../../communication/notifications/application/container/NotificationContainer.js";
 import { RejectAchievementUseCase } from "../use-cases/RejectAchievementUseCase.js";
+
+import { growthEventRecorder } from "../../../../../shared/infrastructure/growth/growthEventRecorder.js";
 
 const achievementRepository = new AchievementRepository();
 
@@ -85,7 +90,10 @@ export const achievementContainer = {
     verifyAchievement:
 
         new VerifyAchievementUseCase(
-            achievementRepository
+            achievementRepository,
+            studentRepository,
+            notificationContainer.recordSystemNotification,
+            growthEventRecorder
         ),
 
     rejectAchievement:

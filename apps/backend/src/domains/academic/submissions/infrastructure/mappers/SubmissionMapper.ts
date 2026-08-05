@@ -58,7 +58,7 @@ export class SubmissionMapper {
 
                 reviewedBy:
 
-                    document.review.reviewedBy?.toString() ?? "",
+                    document.review.reviewedBy?.toString(),
 
                 reviewedAt:
 

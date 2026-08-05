@@ -15,6 +15,7 @@ import { UserRole } from "../../../../identity/domain/constants/UserRole.js";
 import { CreateAlumniSchema } from "../validators/CreateAlumniSchema.js";
 import { InviteAlumniSchema } from "../validators/InviteAlumniSchema.js";
 import { UpdateAlumniSchema } from "../validators/UpdateAlumniSchema.js";
+import { ConvertStudentToAlumniSchema } from "../validators/ConvertStudentToAlumniSchema.js";
 
 const router = Router();
 
@@ -187,6 +188,34 @@ router.patch(
     asyncHandler(
 
         controller.verify.bind(controller)
+
+    )
+
+);
+
+/*
+ Convert Student To Alumni - "Student -> Placement -> Employee ->
+ Alumni". Real, admin-initiated (no honest automatic graduation
+ trigger exists anywhere in the system).
+*/
+
+router.post(
+
+    "/convert/:studentId",
+
+    authenticate,
+
+    authorizePermission(
+
+        UserRole.ORG_ADMIN
+
+    ),
+
+    validate(ConvertStudentToAlumniSchema),
+
+    asyncHandler(
+
+        controller.convertFromStudent.bind(controller)
 
     )
 

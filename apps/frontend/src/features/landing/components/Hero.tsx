@@ -64,10 +64,10 @@ export function Hero() {
           style={{ animationDelay: "600ms" }}
         >
           <Button size="lg" asChild>
-            <Link to="/auth/register" className="flex items-center gap-2">
+            <a href="#contact" className="flex items-center gap-2">
               Begin Your Journey
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-            </Link>
+            </a>
           </Button>
 
           <Button variant="outline" size="lg" asChild>

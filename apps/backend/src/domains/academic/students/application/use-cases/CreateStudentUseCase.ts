@@ -166,6 +166,24 @@ export class CreateStudentUseCase {
             cgpa:
                 dto.cgpa,
 
+            section:
+                dto.section,
+
+            admissionYear:
+                dto.admissionYear,
+
+            graduationYear:
+                dto.graduationYear,
+
+            tenthPercentage:
+                dto.tenthPercentage,
+
+            twelfthPercentage:
+                dto.twelfthPercentage,
+
+            entranceRank:
+                dto.entranceRank,
+
             status:
                 StudentStatus.ACTIVE,
 

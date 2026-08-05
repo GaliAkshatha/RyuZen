@@ -2,6 +2,18 @@ import { SubmissionRepository } from "../../infrastructure/repositories/Submissi
 
 import { ActivityRepository } from "../../../activities/infrastructure/repositories/ActivityRepository.js";
 
+import {
+    StudentRepository,
+} from "../../../students/infrastructure/repositories/StudentRepository.js";
+
+import {
+    pointLedgerContainer,
+} from "../../../../campus/point-ledger/application/container/PointLedgerContainer.js";
+
+import {
+    notificationContainer,
+} from "../../../../communication/notifications/application/container/NotificationContainer.js";
+
 import { SubmissionEligibilityService } from "../services/SubmissionEligibilityService.js";
 
 import { SubmitActivityUseCase } from "../use-cases/SubmitActivityUseCase.js";
@@ -10,11 +22,16 @@ import { GetSubmissionUseCase } from "../use-cases/GetSubmissionUseCase.js";
 import { ListSubmissionsUseCase } from "../use-cases/ListSubmissionsUseCase.js";
 import { ResubmitSubmissionUseCase } from "../use-cases/ResubmitSubmissionUseCase.js";
 
+import { growthEventRecorder } from "../../../../../shared/infrastructure/growth/growthEventRecorder.js";
+
 const submissionRepository =
     new SubmissionRepository();
 
 const activityRepository =
     new ActivityRepository();
+
+const studentRepository =
+    new StudentRepository();
 
 const submissionEligibilityService =
     new SubmissionEligibilityService(
@@ -41,7 +58,15 @@ export const submissionContainer = {
 
         new ReviewSubmissionUseCase(
 
-            submissionRepository
+            submissionRepository,
+
+            studentRepository,
+
+            pointLedgerContainer.recordPointTransaction,
+
+            notificationContainer.recordSystemNotification,
+
+            growthEventRecorder
 
         ),
 

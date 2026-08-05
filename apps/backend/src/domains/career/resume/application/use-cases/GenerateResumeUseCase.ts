@@ -116,13 +116,21 @@ export class GenerateResumeUseCase {
 
         ]);
 
+        // Unapproved AI-suggested skills are not yet real skills — see
+        // GetSkillsByUserUseCase for the same rule applied there. This
+        // use case calls the repository directly, so the filter has to
+        // be reapplied here too, or an unreviewed AI suggestion would
+        // silently inflate this resume's ATS score.
+        const approvedSkills =
+            skills.filter(skill => skill.approved);
+
         const atsScore =
 
             Math.min(
 
                 100,
 
-                skills.length * 5 +
+                approvedSkills.length * 5 +
                 projects.length * 10 +
                 experience.length * 15 +
                 education.length * 10 +

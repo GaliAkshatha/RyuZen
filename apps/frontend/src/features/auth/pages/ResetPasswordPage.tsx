@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -15,18 +15,23 @@ import {
   type ResetPasswordFormValues,
 } from "@/features/auth/schemas/auth.schemas";
 
-interface ResetPasswordLocationState {
-  email?: string;
-  token?: string;
-}
-
+/**
+ * The real reset link ForgotPasswordUseCase emails looks like
+ * `${FRONTEND_URL}/auth/reset-password?email=...&token=...` — a plain
+ * HTTP navigation from an email client, which never carries React
+ * Router state (state only survives in-app <Link state=.../navigate()
+ * calls). Reading from URL search params is what actually makes the
+ * emailed link pre-fill the form; router state alone would leave it
+ * empty for every real user arriving from their inbox.
+ */
 export function ResetPasswordPage() {
   const navigate = useNavigate();
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const { mutate, isPending, error } = useResetPassword();
 
-  const prefill = (location.state as ResetPasswordLocationState | null) ?? {};
+  const prefillEmail = searchParams.get("email") ?? "";
+  const prefillToken = searchParams.get("token") ?? "";
 
   const {
     register,
@@ -35,8 +40,8 @@ export function ResetPasswordPage() {
   } = useAppForm<ResetPasswordFormValues>({
     resolver: zodResolver(resetPasswordFormSchema),
     defaultValues: {
-      email: prefill.email ?? "",
-      token: prefill.token ?? "",
+      email: prefillEmail,
+      token: prefillToken,
       newPassword: "",
       confirmNewPassword: "",
     },

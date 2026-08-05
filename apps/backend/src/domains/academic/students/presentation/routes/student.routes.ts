@@ -10,6 +10,8 @@ import {
 
 import { validate } from "../../../../../shared/core/validation/index.js";
 
+import { csvUpload } from "../../../../../shared/core/upload/csvUpload.js";
+
 import { UserRole } from "../../../../identity/domain/constants/UserRole.js";
 
 import { CreateStudentSchema } from "../validators/CreateStudentSchema.js";
@@ -47,6 +49,40 @@ router.post(
     asyncHandler(
 
         controller.create.bind(controller)
+
+    )
+
+);
+
+/*
+ Bulk Import Students - CSV upload. Same role gate as Create Student
+ (SUPER_ADMIN, ORG_ADMIN), matching "ORG_ADMIN can bulk import
+ students" — this is the same real action at scale, not a separate
+ permission. csvUpload.single("file") parses the multipart upload into
+ req.file before the controller runs; no validate() schema here since
+ the body isn't JSON, the file itself is validated row-by-row inside
+ BulkImportStudentsUseCase.
+*/
+
+router.post(
+
+    "/bulk-import",
+
+    authenticate,
+
+    authorizePermission(
+
+        UserRole.SUPER_ADMIN,
+
+        UserRole.ORG_ADMIN
+
+    ),
+
+    csvUpload.single("file"),
+
+    asyncHandler(
+
+        controller.bulkImport.bind(controller)
 
     )
 

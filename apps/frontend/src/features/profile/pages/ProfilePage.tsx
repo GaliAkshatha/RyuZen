@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { KeyRound } from "lucide-react";
+import { KeyRound, Laptop } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
@@ -34,7 +34,7 @@ export function ProfilePage() {
   const isStudent = profile.role === UserRole.STUDENT;
 
   return (
-    <div className={`relative flex flex-col gap-6 ${isStudent ? "" : "max-w-xl"}`}>
+    <div className="relative flex flex-col gap-6">
       <PageAtmosphere variant="academy" />
 
       {/* Cover + identity — same gradient language as HeroBanner, so the
@@ -60,7 +60,7 @@ export function ProfilePage() {
 
       {isStudent && <StudentProgressionSection />}
 
-      <div className={isStudent ? "grid grid-cols-1 gap-6 lg:grid-cols-2" : "flex flex-col gap-6"}>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Edit Profile</CardTitle>
@@ -83,11 +83,17 @@ export function ProfilePage() {
           <CardHeader>
             <CardTitle>Security</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex flex-wrap gap-2">
             <Button variant="outline" asChild>
               <Link to="/app/profile/change-password" className="flex items-center gap-2">
                 <KeyRound className="h-4 w-4" aria-hidden="true" />
                 Change Password
+              </Link>
+            </Button>
+            <Button variant="outline" asChild>
+              <Link to="/app/profile/sessions" className="flex items-center gap-2">
+                <Laptop className="h-4 w-4" aria-hidden="true" />
+                Active Sessions
               </Link>
             </Button>
           </CardContent>

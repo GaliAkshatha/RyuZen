@@ -50,4 +50,24 @@ export const skillService = {
       .patch<SkillResponseDto>(`${API_ENDPOINTS.skills}/${id}/verify`, {})
       .then((response) => response.data);
   },
+
+  /** Gathers real evidence (Portfolio Projects, Certifications, Experience, approved Activities) and creates AI_SUGGESTED, unapproved skill suggestions. */
+  extract(): Promise<SkillResponseDto[]> {
+    return apiClient
+      .post<SkillResponseDto[]>(`${API_ENDPOINTS.skills}/extract`, {})
+      .then((response) => response.data);
+  },
+
+  /** AI-suggested skills the caller hasn't reviewed yet. */
+  listPending(): Promise<SkillResponseDto[]> {
+    return apiClient
+      .get<SkillResponseDto[]>(`${API_ENDPOINTS.skills}/suggestions/pending`)
+      .then((response) => response.data);
+  },
+
+  approve(id: string): Promise<SkillResponseDto> {
+    return apiClient
+      .patch<SkillResponseDto>(`${API_ENDPOINTS.skills}/${id}/approve`, {})
+      .then((response) => response.data);
+  },
 };

@@ -40,7 +40,7 @@ export function ActivityDetailPage() {
   const canManage = canManageActivities(user?.role);
 
   return (
-    <div className="relative flex max-w-xl flex-col gap-6">
+    <div className="relative mx-auto flex max-w-xl flex-col gap-6">
       <PageAtmosphere variant="particles" />
 
       <div className="flex items-start justify-between">

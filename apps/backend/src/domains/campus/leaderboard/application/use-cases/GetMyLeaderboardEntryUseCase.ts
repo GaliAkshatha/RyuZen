@@ -39,7 +39,7 @@ export class GetMyLeaderboardEntryUseCase {
 
             throw new ApiError(
 
-                "Only students have a leaderboard entry.",
+                "No student profile is linked to your account yet. Contact your administrator.",
 
                 HttpStatus.FORBIDDEN
 

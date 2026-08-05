@@ -16,6 +16,13 @@ export interface PlacementDriveDocument extends Document {
 
     eligibility?: string;
 
+    eligibilityCriteria?: {
+        departmentIds?: mongoose.Types.ObjectId[];
+        minCgpa?: number;
+        minSemester?: number;
+        batches?: string[];
+    };
+
     deadline?: Date;
 
     status: string;
@@ -93,6 +100,18 @@ const PlacementDriveSchema = new Schema<PlacementDriveDocument>(
             type: String,
 
             trim: true,
+
+        },
+
+        eligibilityCriteria: {
+
+            departmentIds: [{ type: Schema.Types.ObjectId, ref: "Department" }],
+
+            minCgpa: { type: Number },
+
+            minSemester: { type: Number },
+
+            batches: [{ type: String }],
 
         },
 

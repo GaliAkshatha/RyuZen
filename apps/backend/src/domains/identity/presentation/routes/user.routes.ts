@@ -3,6 +3,7 @@ import { Router } from "express";
 import { UserController } from "../controllers/UserController.js";
 
 import { asyncHandler } from "../../../../shared/core/middleware/asyncHandler.js";
+import { auditLogger } from "../../../../shared/core/middleware/auditLogger.js";
 import {
     authenticate,
     authorizePermission
@@ -15,6 +16,8 @@ import { UserRole } from "../../domain/constants/UserRole.js";
 import { GrantPermissionSchema } from "../validators/GrantPermissionSchema.js";
 
 import { RevokePermissionSchema } from "../validators/RevokePermissionSchema.js";
+
+import { UpdateUserStatusSchema } from "../validators/UpdateUserStatusSchema.js";
 
 const router = Router();
 
@@ -43,6 +46,8 @@ router.post(
         GrantPermissionSchema
 
     ),
+
+    auditLogger("PERMISSION_GRANTED", "User"),
 
     asyncHandler(
 
@@ -76,9 +81,69 @@ router.post(
 
     ),
 
+    auditLogger("PERMISSION_REVOKED", "User"),
+
     asyncHandler(
 
         controller.revokePermission.bind(controller)
+
+    )
+
+);
+
+/*
+ Unlock User - clears a lockout triggered by too many failed login
+ attempts. ORG_ADMIN only, matching "Admin Unlock" from the brief.
+*/
+
+router.post(
+
+    "/:userId/unlock",
+
+    authenticate,
+
+    authorizePermission(
+
+        UserRole.ORG_ADMIN
+
+    ),
+
+    auditLogger("ACCOUNT_UNLOCKED", "User"),
+
+    asyncHandler(
+
+        controller.unlockUser.bind(controller)
+
+    )
+
+);
+
+/*
+ Update User Status - suspend/reactivate/archive. ORG_ADMIN only,
+ matching "ORG_ADMIN can suspend users".
+*/
+
+router.patch(
+
+    "/:userId/status",
+
+    authenticate,
+
+    authorizePermission(
+
+        UserRole.ORG_ADMIN
+
+    ),
+
+    validate(
+
+        UpdateUserStatusSchema
+
+    ),
+
+    asyncHandler(
+
+        controller.updateStatus.bind(controller)
 
     )
 

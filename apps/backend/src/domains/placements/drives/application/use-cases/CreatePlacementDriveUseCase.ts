@@ -79,6 +79,9 @@ export class CreatePlacementDriveUseCase {
             eligibility:
                 dto.eligibility,
 
+            eligibilityCriteria:
+                dto.eligibilityCriteria,
+
             deadline:
                 dto.deadline,
 

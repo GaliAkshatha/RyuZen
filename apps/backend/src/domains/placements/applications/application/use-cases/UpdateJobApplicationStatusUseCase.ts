@@ -12,13 +12,38 @@ import {
 import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
+import {
+    IStudentRepository,
+} from "../../../../academic/students/infrastructure/repositories/IStudentRepository.js";
+
+import { RecordSystemNotificationUseCase } from "../../../../communication/notifications/application/use-cases/RecordSystemNotificationUseCase.js";
+
+import { RecordGrowthEventUseCase } from "../../../../../shared/infrastructure/growth/RecordGrowthEventUseCase.js";
+import { JobApplicationStatus } from "../../domain/constants/JobApplicationStatus.js";
+
+const STATUS_MESSAGES: Record<string, string> = {
+
+    SHORTLISTED: "You've been shortlisted",
+
+    SELECTED: "Congratulations — you've been selected!",
+
+    REJECTED: "Your application status has been updated"
+
+};
+
 export class UpdateJobApplicationStatusUseCase {
 
     constructor(
 
         private readonly repository: IJobApplicationRepository,
 
-        private readonly placementDriveRepository: IPlacementDriveRepository
+        private readonly placementDriveRepository: IPlacementDriveRepository,
+
+        private readonly studentRepository: IStudentRepository,
+
+        private readonly recordSystemNotification: RecordSystemNotificationUseCase,
+
+        private readonly recordGrowthEvent: RecordGrowthEventUseCase
 
     ) {}
 
@@ -28,7 +53,9 @@ export class UpdateJobApplicationStatusUseCase {
 
         organizationId: string,
 
-        dto: UpdateJobApplicationStatusDto
+        dto: UpdateJobApplicationStatusDto,
+
+        updatedBy: string
 
     ): Promise<JobApplicationResponseDto> {
 
@@ -86,6 +113,66 @@ export class UpdateJobApplicationStatusUseCase {
             await this.repository.save(
                 application
             );
+
+        const student =
+
+            await this.studentRepository.findById(
+                updated.studentId
+            );
+
+        if (student) {
+
+            await this.recordSystemNotification.execute({
+
+                organizationId,
+
+                recipientUserId:
+                    student.userId,
+
+                senderId:
+                    updatedBy,
+
+                title:
+                    `Application update: ${drive.title}`,
+
+                message:
+
+                    (STATUS_MESSAGES[dto.status] ?? "Your application status has been updated") +
+                    (dto.remarks ? ` — ${dto.remarks}` : ".")
+
+            });
+
+        }
+
+        if (
+
+            dto.status === JobApplicationStatus.SHORTLISTED ||
+            dto.status === JobApplicationStatus.SELECTED
+
+        ) {
+
+            await this.recordGrowthEvent.execute({
+
+                organizationId,
+
+                studentId: updated.studentId,
+
+                domain: "placements",
+
+                eventType:
+                    dto.status === JobApplicationStatus.SELECTED
+                        ? "PLACEMENT_OFFER_RECEIVED"
+                        : "PLACEMENT_SHORTLISTED",
+
+                evidence: { entityType: "JobApplication", entityId: updated.id! },
+
+                verifiedBy: updatedBy
+
+            }).catch(() => {
+                // Growth Profile recording must never break a real, already-persisted status update.
+            });
+
+        }
 
         return JobApplicationResponseMapper.toDto(
 

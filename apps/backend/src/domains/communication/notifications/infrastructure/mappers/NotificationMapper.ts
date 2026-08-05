@@ -38,6 +38,9 @@ export class NotificationMapper {
             targetAudience:
                 document.targetAudience as NotificationAudience,
 
+            recipientUserId:
+                document.recipientUserId?.toString(),
+
             readBy:
                 document.readBy.map(
 
@@ -80,6 +83,9 @@ export class NotificationMapper {
 
             targetAudience:
                 data.targetAudience,
+
+            recipientUserId:
+                data.recipientUserId,
 
             readBy:
                 data.readBy

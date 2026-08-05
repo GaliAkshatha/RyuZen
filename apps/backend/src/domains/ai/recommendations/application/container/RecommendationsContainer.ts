@@ -1,4 +1,4 @@
-import { StubRecommendationProvider } from "../../infrastructure/ai/StubRecommendationProvider.js";
+import { createRecommendationProvider } from "../../../../../shared/infrastructure/ai/AIProviderFactory.js";
 
 import {
     StudentRepository,
@@ -45,12 +45,12 @@ const clubRepository = new ClubRepository();
 const clubMemberRepository = new ClubMemberRepository();
 
 /*
- StubRecommendationProvider is a placeholder (see
- infrastructure/ai/StubRecommendationProvider.ts). Swap this
- single binding for a real IRecommendationProvider implementation
- to go live; no other file in this module needs to change.
+ Real Ollama-backed recommendation reasons (see
+ infrastructure/ai/OllamaRecommendationProvider.ts). Every use case
+ depends only on the IRecommendationProvider port, so this is the only
+ line that ever needed to change to go live.
 */
-const recommendationProvider = new StubRecommendationProvider();
+const recommendationProvider = createRecommendationProvider();
 
 export const recommendationsContainer = {
 

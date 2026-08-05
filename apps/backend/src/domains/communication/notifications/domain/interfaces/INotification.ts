@@ -17,6 +17,9 @@ export interface INotification {
 
     targetAudience: NotificationAudience;
 
+    /** Only set for system-generated, single-recipient notifications (targetAudience: TARGETED). */
+    recipientUserId?: string;
+
     readBy: string[];
 
     createdAt?: Date;

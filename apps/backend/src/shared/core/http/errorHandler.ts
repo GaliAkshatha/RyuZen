@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { MulterError } from "multer";
 
 import { ApiError } from "./ApiError.js";
 import { ApiResponse } from "./ApiResponse.js";
@@ -19,6 +20,16 @@ export const errorHandler = (
             res,
             error.message,
             error.statusCode
+        );
+
+    }
+
+    if (error instanceof MulterError) {
+
+        return ApiResponse.error(
+            res,
+            error.message,
+            HttpStatus.BAD_REQUEST
         );
 
     }

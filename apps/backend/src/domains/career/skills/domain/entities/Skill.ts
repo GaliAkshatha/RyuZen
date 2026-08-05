@@ -44,6 +44,22 @@ export class Skill {
         return this.props.verified;
     }
 
+    get source() {
+        return this.props.source;
+    }
+
+    get confidence(): number | undefined {
+        return this.props.confidence;
+    }
+
+    get evidence(): string | undefined {
+        return this.props.evidence;
+    }
+
+    get approved(): boolean {
+        return this.props.approved;
+    }
+
     get createdAt() {
         return this.props.createdAt;
     }
@@ -99,6 +115,14 @@ export class Skill {
     verify(): void {
 
         this.props.verified =
+
+            true;
+
+    }
+
+    approve(): void {
+
+        this.props.approved =
 
             true;
 

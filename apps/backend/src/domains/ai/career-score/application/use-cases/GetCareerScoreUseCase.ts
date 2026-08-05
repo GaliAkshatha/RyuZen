@@ -122,6 +122,13 @@ export class GetCareerScoreUseCase {
 
         ]);
 
+        // Unapproved AI-suggested skills are not yet real skills — see
+        // GetSkillsByUserUseCase for the same rule applied there. This
+        // use case calls the repository directly (not through that use
+        // case), so the filter has to be reapplied here too.
+        const approvedSkills =
+            skills.filter(skill => skill.approved);
+
         let leaderboardScore = 0;
 
         let achievementsScore = 0;
@@ -184,7 +191,7 @@ export class GetCareerScoreUseCase {
 
                 100,
 
-                skills.length * 5 +
+                approvedSkills.length * 5 +
                 projects.length * 10 +
                 experience.length * 15 +
                 education.length * 10 +
@@ -239,7 +246,13 @@ export class GetCareerScoreUseCase {
                 insight.label,
 
             narrative:
-                insight.narrative
+                insight.narrative,
+
+            recommendations:
+                insight.recommendations,
+
+            roadmap:
+                insight.roadmap
 
         };
 

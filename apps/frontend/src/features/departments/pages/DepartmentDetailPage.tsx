@@ -45,7 +45,7 @@ export function DepartmentDetailPage() {
   const currentHod = resolveFacultyByUserId(facultyList, department.headOfDepartmentId);
 
   return (
-    <div className="flex max-w-xl flex-col gap-6">
+    <div className="mx-auto flex max-w-xl flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-2xl font-semibold text-foreground">{department.name}</h1>

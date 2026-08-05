@@ -14,13 +14,25 @@ import {
 import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
+import { RecordPointTransactionUseCase } from "../../../point-ledger/application/use-cases/RecordPointTransactionUseCase.js";
+
+/**
+ * Records the real DELTA, not the new absolute total — this use case
+ * sets clubPoints/placementPoints to whatever value the admin
+ * provides, so the actual transaction is the difference from what was
+ * there before (RecordPointTransactionUseCase already skips
+ * zero-point transactions, so a no-op adjustment correctly records
+ * nothing).
+ */
 export class AdjustLeaderboardPointsUseCase {
 
     constructor(
 
         private readonly repository: ILeaderboardRepository,
 
-        private readonly studentRepository: IStudentRepository
+        private readonly studentRepository: IStudentRepository,
+
+        private readonly recordPointTransaction: RecordPointTransactionUseCase
 
     ) {}
 
@@ -75,13 +87,19 @@ export class AdjustLeaderboardPointsUseCase {
 
             existing?.eventPoints ?? 0;
 
+        const previousClubPoints =
+            existing?.clubPoints ?? 0;
+
+        const previousPlacementPoints =
+            existing?.placementPoints ?? 0;
+
         const clubPoints =
 
-            dto.clubPoints ?? existing?.clubPoints ?? 0;
+            dto.clubPoints ?? previousClubPoints;
 
         const placementPoints =
 
-            dto.placementPoints ?? existing?.placementPoints ?? 0;
+            dto.placementPoints ?? previousPlacementPoints;
 
         const entry = LeaderboardEntry.create({
 
@@ -113,6 +131,31 @@ export class AdjustLeaderboardPointsUseCase {
             entry
 
         );
+
+        const clubDelta = clubPoints - previousClubPoints;
+        const placementDelta = placementPoints - previousPlacementPoints;
+
+        if (clubDelta !== 0) {
+
+            await this.recordPointTransaction.execute({
+                organizationId,
+                studentId,
+                points: clubDelta,
+                reason: `Manual club points adjustment by admin (${clubDelta > 0 ? "+" : ""}${clubDelta})`
+            });
+
+        }
+
+        if (placementDelta !== 0) {
+
+            await this.recordPointTransaction.execute({
+                organizationId,
+                studentId,
+                points: placementDelta,
+                reason: `Manual placement points adjustment by admin (${placementDelta > 0 ? "+" : ""}${placementDelta})`
+            });
+
+        }
 
         const ranked =
 

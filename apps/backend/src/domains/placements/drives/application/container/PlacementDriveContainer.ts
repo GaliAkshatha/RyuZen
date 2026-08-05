@@ -11,10 +11,17 @@ import { UpdatePlacementDriveUseCase } from "../use-cases/UpdatePlacementDriveUs
 import { DeletePlacementDriveUseCase } from "../use-cases/DeletePlacementDriveUseCase.js";
 import { PublishPlacementDriveUseCase } from "../use-cases/PublishPlacementDriveUseCase.js";
 import { ClosePlacementDriveUseCase } from "../use-cases/ClosePlacementDriveUseCase.js";
+import { GetEligibleStudentsUseCase } from "../use-cases/GetEligibleStudentsUseCase.js";
+
+import {
+    StudentRepository,
+} from "../../../../academic/students/infrastructure/repositories/StudentRepository.js";
 
 const placementDriveRepository = new PlacementDriveRepository();
 
 const companyRepository = new CompanyRepository();
+
+const studentRepository = new StudentRepository();
 
 export const placementDriveContainer = {
 
@@ -62,6 +69,16 @@ export const placementDriveContainer = {
 
         new ClosePlacementDriveUseCase(
             placementDriveRepository
+        ),
+
+    getEligibleStudents:
+
+        new GetEligibleStudentsUseCase(
+
+            placementDriveRepository,
+
+            studentRepository
+
         )
 
 };

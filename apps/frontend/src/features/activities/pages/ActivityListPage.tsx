@@ -12,6 +12,7 @@ import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
 import { ScrollReveal } from "@/shared/components/ScrollReveal";
 import { useAuth } from "@/contexts/AuthContext";
 
+import { AcademicLayout } from "@/features/academic-hub/components/AcademicLayout";
 import { useActivities } from "@/features/activities/hooks/useActivities";
 import { canManageActivities } from "@/features/activities/utils/activityPermissions";
 
@@ -26,18 +27,23 @@ export function ActivityListPage() {
   );
 
   if (isError) {
-    return <ErrorState error={error} onRetry={() => refetch()} />;
+    return (
+      <AcademicLayout>
+        <ErrorState error={error} onRetry={() => refetch()} />
+      </AcademicLayout>
+    );
   }
 
   return (
-    <div className="relative flex flex-col gap-6">
-      <PageAtmosphere variant="particles" />
+    <AcademicLayout>
+      <div className="relative flex flex-col gap-6">
+        <PageAtmosphere variant="particles" />
 
-      <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-semibold text-foreground">Activities</h1>
-        {canManageActivities(user?.role) && (
-          <Button onClick={() => navigate("/app/activities/new")}>
-            <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
+        <div className="flex items-center justify-between">
+          <h1 className="font-display text-2xl font-semibold text-foreground">Activities</h1>
+          {canManageActivities(user?.role) && (
+            <Button onClick={() => navigate("/app/activities/new")}>
+              <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
             New Activity
           </Button>
         )}
@@ -81,6 +87,7 @@ export function ActivityListPage() {
           ))}
         </div>
       )}
-    </div>
+      </div>
+    </AcademicLayout>
   );
 }

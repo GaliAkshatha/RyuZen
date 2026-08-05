@@ -40,7 +40,7 @@ export function EventDetailPage() {
   }
 
   return (
-    <div className="flex max-w-xl flex-col gap-6">
+    <div className="mx-auto flex max-w-xl flex-col gap-6">
       <div className="flex items-start justify-between">
         <div className="flex flex-col gap-2">
           <h1 className="font-display text-2xl font-semibold text-foreground">{event.title}</h1>

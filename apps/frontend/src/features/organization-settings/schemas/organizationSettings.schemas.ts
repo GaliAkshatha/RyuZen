@@ -28,6 +28,7 @@ export const updateOrganizationSettingsSchema = z.object({
       sessionTimeoutMinutes: z.number().min(1).optional(),
       loginAttemptLimit: z.number().min(1).optional(),
       accountLockDurationMinutes: z.number().min(1).optional(),
+      invitationExpiryDays: z.number().min(1).max(30).optional(),
       ipWhitelist: z.array(z.string()).optional(),
     })
     .optional(),

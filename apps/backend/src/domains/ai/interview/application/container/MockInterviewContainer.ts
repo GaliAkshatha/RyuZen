@@ -1,6 +1,6 @@
 import { MockInterviewSessionRepository } from "../../infrastructure/repositories/MockInterviewSessionRepository.js";
 
-import { StubMockInterviewProvider } from "../../infrastructure/ai/StubMockInterviewProvider.js";
+import { createMockInterviewProvider } from "../../../../../shared/infrastructure/ai/AIProviderFactory.js";
 
 import { StartMockInterviewUseCase } from "../use-cases/StartMockInterviewUseCase.js";
 import { AnswerMockInterviewUseCase } from "../use-cases/AnswerMockInterviewUseCase.js";
@@ -10,12 +10,12 @@ import { GetMyMockInterviewsUseCase } from "../use-cases/GetMyMockInterviewsUseC
 const mockInterviewSessionRepository = new MockInterviewSessionRepository();
 
 /*
- StubMockInterviewProvider is a placeholder (see
- infrastructure/ai/StubMockInterviewProvider.ts). Swap this
- single binding for a real IMockInterviewProvider implementation
- to go live; no other file in this module needs to change.
+ Real Ollama-backed mock interview (see
+ infrastructure/ai/OllamaMockInterviewProvider.ts). Every use case
+ depends only on the IMockInterviewProvider port, so this is the only
+ line that ever needed to change to go live.
 */
-const mockInterviewProvider = new StubMockInterviewProvider();
+const mockInterviewProvider = createMockInterviewProvider();
 
 export const mockInterviewContainer = {
 

@@ -12,6 +12,14 @@ export interface SkillDocument extends Document {
 
     verified: boolean;
 
+    source: string;
+
+    confidence?: number;
+
+    evidence?: string;
+
+    approved: boolean;
+
     createdAt: Date;
 
     updatedAt: Date;
@@ -65,6 +73,42 @@ const SkillSchema = new Schema<SkillDocument>(
             type: Boolean,
 
             default: false,
+
+        },
+
+        source: {
+
+            type: String,
+
+            enum: ["MANUAL", "AI_SUGGESTED"],
+
+            default: "MANUAL",
+
+        },
+
+        confidence: {
+
+            type: Number,
+
+            min: 0,
+
+            max: 100,
+
+        },
+
+        evidence: {
+
+            type: String,
+
+            trim: true,
+
+        },
+
+        approved: {
+
+            type: Boolean,
+
+            default: true,
 
         },
 

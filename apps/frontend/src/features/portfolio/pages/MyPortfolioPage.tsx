@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { UserSquare } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
@@ -105,7 +106,7 @@ export function MyPortfolioPage() {
   }
 
   return (
-    <div className="relative flex max-w-xl flex-col gap-6">
+    <div className="relative mx-auto flex max-w-xl flex-col gap-6">
       <PageAtmosphere variant="academy" />
       <h1 className="flex items-center gap-2 font-display text-2xl font-semibold text-foreground">
         <UserSquare className="h-6 w-6 text-primary" aria-hidden="true" />
@@ -118,42 +119,42 @@ export function MyPortfolioPage() {
             <CardTitle>Summary</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 gap-4 font-body text-sm sm:grid-cols-3">
-            <div>
-              <p className="text-muted-foreground">Skills</p>
-              <p className="font-display text-lg font-semibold text-foreground">
+            <Link to="/app/career/skills" className="group">
+              <p className="text-muted-foreground group-hover:text-primary">Skills</p>
+              <p className="font-display text-lg font-semibold text-foreground group-hover:text-primary">
                 {portfolio.skills.length}
               </p>
-            </div>
-            <div>
-              <p className="text-muted-foreground">Experience</p>
-              <p className="font-display text-lg font-semibold text-foreground">
+            </Link>
+            <Link to="/app/career/experience" className="group">
+              <p className="text-muted-foreground group-hover:text-primary">Experience</p>
+              <p className="font-display text-lg font-semibold text-foreground group-hover:text-primary">
                 {portfolio.experience.length}
               </p>
-            </div>
-            <div>
-              <p className="text-muted-foreground">Education</p>
-              <p className="font-display text-lg font-semibold text-foreground">
+            </Link>
+            <Link to="/app/career/education" className="group">
+              <p className="text-muted-foreground group-hover:text-primary">Education</p>
+              <p className="font-display text-lg font-semibold text-foreground group-hover:text-primary">
                 {portfolio.education.length}
               </p>
-            </div>
-            <div>
-              <p className="text-muted-foreground">Certifications</p>
-              <p className="font-display text-lg font-semibold text-foreground">
+            </Link>
+            <Link to="/app/career/certifications" className="group">
+              <p className="text-muted-foreground group-hover:text-primary">Certifications</p>
+              <p className="font-display text-lg font-semibold text-foreground group-hover:text-primary">
                 {portfolio.certifications.length}
               </p>
-            </div>
-            <div>
-              <p className="text-muted-foreground">Achievements</p>
-              <p className="font-display text-lg font-semibold text-foreground">
+            </Link>
+            <Link to="/app/career/achievements" className="group">
+              <p className="text-muted-foreground group-hover:text-primary">Achievements</p>
+              <p className="font-display text-lg font-semibold text-foreground group-hover:text-primary">
                 {portfolio.achievements.length}
               </p>
-            </div>
-            <div>
-              <p className="text-muted-foreground">Projects</p>
-              <p className="font-display text-lg font-semibold text-foreground">
+            </Link>
+            <a href="#my-projects" className="group">
+              <p className="text-muted-foreground group-hover:text-primary">Projects</p>
+              <p className="font-display text-lg font-semibold text-foreground group-hover:text-primary">
                 {portfolio.projects.length}
               </p>
-            </div>
+            </a>
           </CardContent>
         </Card>
       )}
@@ -201,6 +202,7 @@ export function MyPortfolioPage() {
         </CardContent>
       </Card>
 
+      <div id="my-projects">
       {isLoadingProjects ? (
         <div className="flex flex-col gap-2">
           {Array.from({ length: 2 }).map((_, i) => (
@@ -216,6 +218,7 @@ export function MyPortfolioPage() {
           ))}
         </ul>
       )}
+      </div>
     </div>
   );
 }

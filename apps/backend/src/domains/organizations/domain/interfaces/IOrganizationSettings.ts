@@ -48,6 +48,9 @@ export interface IOrganizationSettings {
 
         ipWhitelist: string[];
 
+        /** New - how many days an invitation link stays valid before expiring. InviteUserUseCase/ResendInvitationUseCase fall back to 7 if no settings exist yet for this org. */
+        invitationExpiryDays: number;
+
     };
 
     academic: {

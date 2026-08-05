@@ -1,4 +1,4 @@
-import { StubResumeReviewProvider } from "../../infrastructure/ai/StubResumeReviewProvider.js";
+import { createResumeReviewProvider } from "../../../../../shared/infrastructure/ai/AIProviderFactory.js";
 
 import {
     ResumeRepository,
@@ -39,12 +39,13 @@ const educationRepository = new EducationRepository();
 const certificationRepository = new CertificationRepository();
 
 /*
- StubResumeReviewProvider is a placeholder (see
- infrastructure/ai/StubResumeReviewProvider.ts). Swap this single
- binding for a real IResumeReviewProvider implementation to go
- live; no other file in this module needs to change.
+ Real Ollama-backed implementation (see
+ infrastructure/ai/OllamaResumeReviewProvider.ts). Configured via
+ OLLAMA_BASE_URL / OLLAMA_MODEL in env.ts — no other file in this
+ module needs to change if the provider is ever swapped again, since
+ ReviewResumeUseCase depends only on the IResumeReviewProvider port.
 */
-const resumeReviewProvider = new StubResumeReviewProvider();
+const resumeReviewProvider = createResumeReviewProvider();
 
 export const resumeReviewContainer = {
 

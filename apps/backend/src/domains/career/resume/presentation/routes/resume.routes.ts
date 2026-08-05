@@ -34,6 +34,12 @@ router.get(
 
     authenticate,
 
+    authorizePermission(
+
+        UserRole.STUDENT
+
+    ),
+
     asyncHandler(
 
         controller.getMyResume.bind(controller)
@@ -51,6 +57,12 @@ router.patch(
     "/",
 
     authenticate,
+
+    authorizePermission(
+
+        UserRole.STUDENT
+
+    ),
 
     validate(
 
@@ -76,6 +88,12 @@ router.post(
 
     authenticate,
 
+    authorizePermission(
+
+        UserRole.STUDENT
+
+    ),
+
     validate(
 
         GenerateResumeSchema
@@ -99,6 +117,12 @@ router.get(
     "/download",
 
     authenticate,
+
+    authorizePermission(
+
+        UserRole.STUDENT
+
+    ),
 
     asyncHandler(
 

@@ -1,26 +1,46 @@
 import { CheckCircle2 } from "lucide-react";
 
 import { WidgetCard } from "@/widgets/shared/WidgetCard";
+import { Spinner } from "@/shared/components/Spinner";
+
+import { useMyAttendanceRecords } from "@/features/attendance/hooks/useMyAttendanceRecords";
 
 /**
- * C3 (Event Attendance) was built, but discovered a real backend gap
- * that keeps this widget from being wireable: GET /events/:id/
- * registrations explicitly excludes STUDENT (confirmed this milestone,
- * see RegisterForEventSection.tsx and SubmitFeedbackSection.tsx for the
- * same finding). A student has no backend-supported way to look up
- * their own attendance record across events. Marked with the same "*"
- * convention as Mentorship's and Alumni's unresolved gaps — not
- * scheduled against a concrete future milestone, since none currently
- * owns closing this backend gap.
+ * Genuinely wired now, using the real GET /attendance/records/me
+ * endpoint - the earlier placeholder here predates the real
+ * Attendance domain (rotating signed QR + GPS) entirely and was never
+ * updated when that was built. Shows a real, recent-first summary:
+ * how many sessions marked present/late out of the total real records
+ * this student has.
  */
 export function AttendanceWidget() {
+  const { data: records, isLoading } = useMyAttendanceRecords();
+
+  const total = records?.length ?? 0;
+  const presentOrLate = (records ?? []).filter(
+    (r) => r.status === "PRESENT" || r.status === "LATE",
+  ).length;
+
   return (
-    <WidgetCard
-      title="Attendance"
-      icon={CheckCircle2}
-      wired={false}
-      milestone="C3*"
-      placeholderMessage="No backend-supported way exists yet for a student to look up their own attendance record (see the C3 milestone notes) — this slot is reserved pending a backend change, not scheduled against a concrete milestone."
-    />
+    <WidgetCard title="Attendance" icon={CheckCircle2} wired>
+      {isLoading ? (
+        <Spinner size="sm" />
+      ) : total === 0 ? (
+        <p className="font-body text-sm text-muted-foreground">
+          No attendance records yet — they'll appear here once you mark attendance for a real
+          session.
+        </p>
+      ) : (
+        <div className="flex flex-col gap-1">
+          <p className="font-display text-2xl font-bold leading-none text-foreground">
+            {presentOrLate}
+            <span className="ml-1 font-body text-sm font-normal text-muted-foreground">
+              / {total} sessions
+            </span>
+          </p>
+          <p className="font-body text-xs text-muted-foreground">Present or late, all-time</p>
+        </div>
+      )}
+    </WidgetCard>
   );
 }

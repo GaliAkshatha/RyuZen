@@ -1,5 +1,6 @@
 import { User } from "../../domain/entities/User.js";
 import { UserStatus } from "../../domain/constants/UserStatus.js";
+import { UserRole } from "../../domain/constants/UserRole.js";
 
 export interface IUserRepository {
 
@@ -25,17 +26,30 @@ export interface IUserRepository {
         userId: string
     ): Promise<void>;
 
+    /** Returns the new count after incrementing, so the caller can compare against env.ACCOUNT_LOCK_THRESHOLD without a separate read. */
     incrementFailedAttempts(
+        userId: string
+    ): Promise<number>;
+
+    /** Also clears lockedUntil - a successful login (or an admin unlock) means the account is no longer a live brute-force target. */
+    resetFailedAttempts(
         userId: string
     ): Promise<void>;
 
-    resetFailedAttempts(
-        userId: string
+    lockAccount(
+        userId: string,
+        lockedUntil: Date
     ): Promise<void>;
 
     updateStatus(
         userId: string,
         status: UserStatus
+    ): Promise<void>;
+
+    /** A real, administrative role change - e.g. converting a placed student to an alumnus. Never used for self-service role changes. */
+    updateRole(
+        userId: string,
+        role: UserRole
     ): Promise<void>;
 
     updatePassword(

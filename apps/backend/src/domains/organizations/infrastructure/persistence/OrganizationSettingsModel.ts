@@ -28,6 +28,7 @@ export interface OrganizationSettingsDocument extends Document {
         loginAttemptLimit: number;
         accountLockDurationMinutes: number;
         ipWhitelist: string[];
+        invitationExpiryDays: number;
     };
 
     academic: {
@@ -202,6 +203,8 @@ const SecuritySchema = new Schema(
         accountLockDurationMinutes: { type: Number, default: 30 },
 
         ipWhitelist: [{ type: String }],
+
+        invitationExpiryDays: { type: Number, default: 7 },
 
     },
 

@@ -94,6 +94,14 @@ export class ReviewResumeUseCase {
 
         ]);
 
+        // Unapproved AI-suggested skills are not yet real skills — see
+        // GetSkillsByUserUseCase for the same rule applied there. This
+        // use case calls the repository directly, so the filter has to
+        // be reapplied here too, or an unreviewed AI suggestion would
+        // be fed to the AI reviewer as if it were a confirmed skill.
+        const approvedSkills =
+            skills.filter(skill => skill.approved);
+
         const result =
 
             await this.provider.review({
@@ -102,7 +110,7 @@ export class ReviewResumeUseCase {
                     resume?.resumeUrl,
 
                 skills:
-                    skills.map(
+                    approvedSkills.map(
 
                         skill => skill.name
 

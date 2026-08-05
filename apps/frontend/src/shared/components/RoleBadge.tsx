@@ -4,17 +4,21 @@ import { UserRole } from "@/types/enums";
 const ROLE_VARIANT_MAP: Record<UserRole, BadgeProps["variant"]> = {
   [UserRole.SUPER_ADMIN]: "default",
   [UserRole.ORG_ADMIN]: "secondary",
+  [UserRole.PLACEMENT_ADMIN]: "secondary",
   [UserRole.FACULTY]: "info",
   [UserRole.STUDENT]: "outline",
   [UserRole.ALUMNI]: "warning",
+  [UserRole.RECRUITER]: "success",
 };
 
 const ROLE_LABEL_MAP: Record<UserRole, string> = {
   [UserRole.SUPER_ADMIN]: "Super Admin",
   [UserRole.ORG_ADMIN]: "Org Admin",
+  [UserRole.PLACEMENT_ADMIN]: "Placement Admin",
   [UserRole.FACULTY]: "Faculty",
   [UserRole.STUDENT]: "Student",
   [UserRole.ALUMNI]: "Alumni",
+  [UserRole.RECRUITER]: "Recruiter",
 };
 
 export function RoleBadge({ role, className }: { role: UserRole; className?: string }) {

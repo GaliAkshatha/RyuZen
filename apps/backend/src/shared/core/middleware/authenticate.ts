@@ -87,7 +87,9 @@ export async function authenticate(
 
             role: user.role,
 
-            permissions: user.permissions
+            permissions: user.permissions,
+
+            sessionId: payload.sessionId
 
         };
 

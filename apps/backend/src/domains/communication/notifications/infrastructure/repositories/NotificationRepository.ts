@@ -67,7 +67,9 @@ implements INotificationRepository {
 
         organizationId: string,
 
-        audience: string
+        audience: string,
+
+        userId: string
 
     ): Promise<Notification[]> {
 
@@ -77,11 +79,10 @@ implements INotificationRepository {
 
                 organizationId,
 
-                targetAudience: {
-
-                    $in: ["ALL", audience]
-
-                }
+                $or: [
+                    { targetAudience: { $in: ["ALL", audience] } },
+                    { recipientUserId: userId }
+                ]
 
             })
 

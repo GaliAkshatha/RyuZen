@@ -17,6 +17,12 @@ import { GetCertificateUseCase } from "../use-cases/GetCertificateUseCase.js";
 import { GetStudentCertificatesUseCase } from "../use-cases/GetStudentCertificatesUseCase.js";
 import { GetMyCertificatesUseCase } from "../use-cases/GetMyCertificatesUseCase.js";
 
+import {
+    notificationContainer,
+} from "../../../../communication/notifications/application/container/NotificationContainer.js";
+
+import { growthEventRecorder } from "../../../../../shared/infrastructure/growth/growthEventRecorder.js";
+
 const certificateRepository = new CertificateRepository();
 
 const studentRepository = new StudentRepository();
@@ -37,7 +43,11 @@ export const certificateContainer = {
 
             eventRepository,
 
-            activityRepository
+            activityRepository,
+
+            notificationContainer.recordSystemNotification,
+
+            growthEventRecorder
 
         ),
 

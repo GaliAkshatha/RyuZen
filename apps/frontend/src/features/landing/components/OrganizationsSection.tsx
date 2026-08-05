@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { ArrowRight, Palette, ShieldCheck, Users2 } from "lucide-react";
 
 import { Button } from "@/shared/ui/Button";
@@ -48,10 +47,10 @@ export function OrganizationsSection() {
 
       <ScrollReveal delay={300} className="mt-12 flex justify-center">
         <Button size="lg" asChild>
-          <Link to="/auth/register" className="flex items-center gap-2">
-            Register Your Organization
+          <a href="#contact" className="flex items-center gap-2">
+            Bring Your Organization to RyuZen
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
+          </a>
         </Button>
       </ScrollReveal>
     </LandingSection>

@@ -2,11 +2,17 @@ import { UserRepository } from "../../infrastructure/repositories/UserRepository
 
 import { OrganizationRepository } from "../../../organizations/infrastructure/repositories/OrganizationRepository.js";
 
+import {
+    OrganizationSettingsRepository,
+} from "../../../organizations/infrastructure/repositories/OrganizationSettingsRepository.js";
+
+import { InvitationRepository } from "../../infrastructure/repositories/InvitationRepository.js";
+
+import { SessionRepository } from "../../infrastructure/repositories/SessionRepository.js";
+
 import { BCryptPasswordHasher } from "../../infrastructure/security/BCryptPasswordHasher.js";
 
 import { JwtTokenProvider } from "../../infrastructure/security/JwtTokenProvider.js";
-
-import { RegisterUserUseCase } from "../use-cases/RegisterUserUseCase.js";
 
 import { LoginUserUseCase } from "../use-cases/LoginUserUseCase.js";
 
@@ -26,6 +32,34 @@ import { GrantPermissionUseCase } from "../use-cases/GrantPermissionUseCase.js";
 
 import { RevokePermissionUseCase } from "../use-cases/RevokePermissionUseCase.js";
 
+import { InviteUserUseCase } from "../use-cases/InviteUserUseCase.js";
+
+import { VerifyInvitationUseCase } from "../use-cases/VerifyInvitationUseCase.js";
+
+import { AcceptInvitationUseCase } from "../use-cases/AcceptInvitationUseCase.js";
+
+import { ResendInvitationUseCase } from "../use-cases/ResendInvitationUseCase.js";
+
+import { RevokeInvitationUseCase } from "../use-cases/RevokeInvitationUseCase.js";
+
+import { GetOrganizationInvitationsUseCase } from "../use-cases/GetOrganizationInvitationsUseCase.js";
+
+import { AdminUnlockUserUseCase } from "../use-cases/AdminUnlockUserUseCase.js";
+
+import { UpdateUserStatusUseCase } from "../use-cases/UpdateUserStatusUseCase.js";
+
+import { GetMySessionsUseCase } from "../use-cases/GetMySessionsUseCase.js";
+
+import { RevokeSessionUseCase } from "../use-cases/RevokeSessionUseCase.js";
+
+import { LogoutUseCase } from "../use-cases/LogoutUseCase.js";
+
+import { LogoutAllDevicesUseCase } from "../use-cases/LogoutAllDevicesUseCase.js";
+
+import { NodemailerEmailService } from "../../../../shared/infrastructure/email/NodemailerEmailService.js";
+
+import { auditContainer } from "../../../platform/audit/application/container/AuditContainer.js";
+
 const userRepository =
 
     new UserRepository();
@@ -33,6 +67,18 @@ const userRepository =
 const organizationRepository =
 
     new OrganizationRepository();
+
+const organizationSettingsRepository =
+
+    new OrganizationSettingsRepository();
+
+const invitationRepository =
+
+    new InvitationRepository();
+
+const sessionRepository =
+
+    new SessionRepository();
 
 const passwordHasher =
 
@@ -42,19 +88,11 @@ const tokenProvider =
 
     new JwtTokenProvider();
 
+const emailService =
+
+    new NodemailerEmailService();
+
 export const identityContainer = {
-
-    registerUser:
-
-        new RegisterUserUseCase(
-
-            userRepository,
-
-            organizationRepository,
-
-            passwordHasher
-
-        ),
 
     loginUser:
 
@@ -62,9 +100,15 @@ export const identityContainer = {
 
             userRepository,
 
+            sessionRepository,
+
             passwordHasher,
 
-            tokenProvider
+            tokenProvider,
+
+            auditContainer.createAuditLog,
+
+            organizationSettingsRepository
 
         ),
 
@@ -90,7 +134,9 @@ export const identityContainer = {
 
             userRepository,
 
-            passwordHasher
+            passwordHasher,
+
+            organizationSettingsRepository
 
         ),
 
@@ -100,7 +146,7 @@ export const identityContainer = {
 
             userRepository,
 
-            passwordHasher
+            emailService
 
         ),
 
@@ -110,7 +156,11 @@ export const identityContainer = {
 
             userRepository,
 
-            passwordHasher
+            passwordHasher,
+
+            auditContainer.createAuditLog,
+
+            organizationSettingsRepository
 
         ),
 
@@ -119,6 +169,8 @@ export const identityContainer = {
         new RefreshTokenUseCase(
 
             userRepository,
+
+            sessionRepository,
 
             tokenProvider
 
@@ -137,6 +189,132 @@ export const identityContainer = {
         new RevokePermissionUseCase(
 
             userRepository
+
+        ),
+
+    inviteUser:
+
+        new InviteUserUseCase(
+
+            userRepository,
+
+            invitationRepository,
+
+            organizationRepository,
+
+            passwordHasher,
+
+            emailService,
+
+            organizationSettingsRepository
+
+        ),
+
+    verifyInvitation:
+
+        new VerifyInvitationUseCase(
+
+            invitationRepository,
+
+            userRepository,
+
+            organizationRepository,
+
+            auditContainer.createAuditLog
+
+        ),
+
+    acceptInvitation:
+
+        new AcceptInvitationUseCase(
+
+            invitationRepository,
+
+            userRepository,
+
+            passwordHasher,
+
+            auditContainer.createAuditLog,
+
+            organizationSettingsRepository
+
+        ),
+
+    resendInvitation:
+
+        new ResendInvitationUseCase(
+
+            invitationRepository,
+
+            organizationRepository,
+
+            emailService,
+
+            organizationSettingsRepository
+
+        ),
+
+    revokeInvitation:
+
+        new RevokeInvitationUseCase(
+
+            invitationRepository
+
+        ),
+
+    getOrganizationInvitations:
+
+        new GetOrganizationInvitationsUseCase(
+
+            invitationRepository
+
+        ),
+
+    adminUnlockUser:
+
+        new AdminUnlockUserUseCase(
+
+            userRepository
+
+        ),
+
+    updateUserStatus:
+
+        new UpdateUserStatusUseCase(
+
+            userRepository
+
+        ),
+
+    getMySessions:
+
+        new GetMySessionsUseCase(
+
+            sessionRepository
+
+        ),
+
+    revokeSession:
+
+        new RevokeSessionUseCase(
+
+            sessionRepository
+
+        ),
+
+    logout:
+
+        new LogoutUseCase(
+
+            sessionRepository
+
+        ),
+
+    logoutAllDevices:
+
+        new LogoutAllDevicesUseCase(
+
+            sessionRepository
 
         )
 

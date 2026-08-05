@@ -19,6 +19,7 @@ export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const API_ENDPOINTS = {
   auth: "/auth",
   users: "/users",
+  invitations: "/invitations",
   organizations: "/organizations",
   /** Nested sub-router within organization.routes.ts, self-scoped to the caller's own org (no :id param). */
   organizationSettings: "/organizations/settings",
@@ -33,6 +34,7 @@ export const API_ENDPOINTS = {
   clubs: "/clubs",
   events: "/events",
   leaderboard: "/leaderboard",
+  pointLedger: "/point-ledger",
   badges: "/badges",
   certificates: "/certificates",
   skills: "/skills",
@@ -48,6 +50,12 @@ export const API_ENDPOINTS = {
   placementDrives: "/placements",
   placements: "/placements",
   applications: "/applications",
+  recruiters: "/recruiters",
+  interviewRounds: "/interview-rounds",
+  attendance: "/attendance",
+  assessments: "/assessments",
+  codingProfiles: "/coding-profiles",
+  connections: "/connections",
   placementAnalytics: "/placement-analytics",
   notifications: "/notifications",
   chats: "/chats",

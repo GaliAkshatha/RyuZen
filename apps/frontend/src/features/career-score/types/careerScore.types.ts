@@ -1,8 +1,8 @@
 /**
  * Mirrors CareerScoreResponseDto exactly. Single GET endpoint, open to
  * every authenticated role with no restriction. Genuinely aggregates
- * FOUR real sub-scores, confirmed this milestone by reading
- * GetCareerScoreUseCase directly:
+ * FOUR real sub-scores, confirmed by reading GetCareerScoreUseCase
+ * directly:
  *
  * - `leaderboardScore` = min(100, totalPoints) from the C4 Leaderboard
  *   entry — 0 for non-students (no Student record resolves).
@@ -16,10 +16,13 @@
  *   only VERIFIED (CE5) achievements count; 0 for non-students.
  * - `careerScore` = round(average of the four scores above).
  *
- * Same real-score/templated-narrative split as AI2: `label` is a real
- * deterministic threshold mapping on `careerScore` (>=80 "Excellent",
- * >=60 "Strong Profile", >=35 "Building Momentum", else "Getting
- * Started"), but `narrative` is placeholder text, not AI-generated.
+ * `label` is a real deterministic threshold mapping on `careerScore`
+ * (>=80 "Excellent", >=60 "Strong Profile", >=35 "Building Momentum",
+ * else "Getting Started") — unchanged. As of the Ollama migration,
+ * `narrative`, `recommendations`, and `roadmap` are genuinely
+ * AI-generated from the real scores above (OllamaCareerScoreProvider),
+ * no longer placeholder text — confirmed by reading the real backend
+ * provider directly, not assumed from the type name.
  */
 export interface CareerScoreResponseDto {
   careerScore: number;
@@ -29,4 +32,6 @@ export interface CareerScoreResponseDto {
   achievementsScore: number;
   label: string;
   narrative: string;
+  recommendations: string[];
+  roadmap: string[];
 }

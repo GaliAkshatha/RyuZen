@@ -312,4 +312,122 @@ export class SkillController {
 
     }
 
+    async extract(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const skills =
+
+            await skillContainer
+
+                .extractSkills
+
+                .execute(
+
+                    req.user!.organizationId,
+
+                    req.user!.userId
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            skills,
+
+            skills.length > 0
+                ? "New skill suggestions generated."
+                : "No new skills could be inferred from your current profile.",
+
+            201
+
+        );
+
+    }
+
+    async listPending(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const skills =
+
+            await skillContainer
+
+                .getPendingSkillSuggestions
+
+                .execute(
+
+                    req.user!.userId
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            skills,
+
+            "Pending skill suggestions fetched successfully."
+
+        );
+
+    }
+
+    async approve(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const { id } = req.params;
+
+        if (!id || Array.isArray(id)) {
+
+            throw new ApiError(
+
+                "Invalid skill id.",
+
+                HttpStatus.BAD_REQUEST
+
+            );
+
+        }
+
+        const skill =
+
+            await skillContainer
+
+                .approveSkillSuggestion
+
+                .execute(
+
+                    id,
+
+                    req.user!.userId
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            skill,
+
+            "Skill suggestion approved."
+
+        );
+
+    }
+
 }

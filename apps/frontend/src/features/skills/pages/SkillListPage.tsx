@@ -14,6 +14,7 @@ import { useMySkills } from "@/features/skills/hooks/useMySkills";
 import { useCreateSkill } from "@/features/skills/hooks/useCreateSkill";
 import { useUpdateSkill } from "@/features/skills/hooks/useUpdateSkill";
 import { SkillForm } from "@/features/skills/components/SkillForm";
+import { SkillSuggestionsSection } from "@/features/skills/components/SkillSuggestionsSection";
 import { DeleteSkillAction } from "@/features/skills/components/DeleteSkillAction";
 import type { SkillResponseDto } from "@/features/skills/types/skill.types";
 import type {
@@ -89,6 +90,8 @@ export function SkillListPage() {
         <Sparkles className="h-6 w-6 text-primary" aria-hidden="true" />
         My Skills
       </h1>
+
+      <SkillSuggestionsSection />
 
       <Card>
         <CardHeader>

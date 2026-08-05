@@ -21,6 +21,9 @@ import { GetLeaderboardUseCase } from "../use-cases/GetLeaderboardUseCase.js";
 import { GetLeaderboardEntryUseCase } from "../use-cases/GetLeaderboardEntryUseCase.js";
 import { GetMyLeaderboardEntryUseCase } from "../use-cases/GetMyLeaderboardEntryUseCase.js";
 import { AdjustLeaderboardPointsUseCase } from "../use-cases/AdjustLeaderboardPointsUseCase.js";
+import {
+    pointLedgerContainer,
+} from "../../../point-ledger/application/container/PointLedgerContainer.js";
 
 const leaderboardRepository = new LeaderboardRepository();
 
@@ -78,7 +81,9 @@ export const leaderboardContainer = {
 
             leaderboardRepository,
 
-            studentRepository
+            studentRepository,
+
+            pointLedgerContainer.recordPointTransaction
 
         )
 

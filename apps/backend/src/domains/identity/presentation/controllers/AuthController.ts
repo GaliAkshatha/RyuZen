@@ -1,40 +1,12 @@
 import { Request, Response } from "express";
 
 import { ApiResponse } from "../../../../shared/core/http/index.js";
+import { ApiError } from "../../../../shared/core/http/ApiError.js";
+import { HttpStatus } from "../../../../shared/core/http/HttpStatus.js";
 
 import { identityContainer } from "../../application/container/IdentityContainer.js";
 
 export class AuthController {
-
-    async register(
-
-        req: Request,
-
-        res: Response
-
-    ) {
-
-        const user =
-
-            await identityContainer
-
-                .registerUser
-
-                .execute(req.body);
-
-        return ApiResponse.success(
-
-            res,
-
-            user,
-
-            "User registered successfully.",
-
-            201
-
-        );
-
-    }
 
     async login(
 
@@ -50,7 +22,15 @@ export class AuthController {
 
                 .loginUser
 
-                .execute(req.body);
+                .execute(
+
+                    req.body,
+
+                    req.ip ?? "Unknown",
+
+                    req.headers["user-agent"] ?? "Unknown"
+
+                );
 
         return ApiResponse.success(
 
@@ -251,6 +231,212 @@ export class AuthController {
             result,
 
             "Token refreshed successfully."
+
+        );
+
+    }
+
+    async verifyInvitation(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const result =
+
+            await identityContainer
+
+                .verifyInvitation
+
+                .execute(
+
+                    req.body
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            result,
+
+            "Invitation verified successfully."
+
+        );
+
+    }
+
+    async acceptInvitation(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        await identityContainer
+
+            .acceptInvitation
+
+            .execute(
+
+                req.body
+
+            );
+
+        return ApiResponse.success(
+
+            res,
+
+            {},
+
+            "Account activated successfully. You can now sign in."
+
+        );
+
+    }
+
+    async logout(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        if (req.user!.sessionId) {
+
+            await identityContainer
+
+                .logout
+
+                .execute(
+
+                    req.user!.sessionId
+
+                );
+
+        }
+
+        return ApiResponse.success(
+
+            res,
+
+            {},
+
+            "Logged out successfully."
+
+        );
+
+    }
+
+    async logoutAllDevices(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        await identityContainer
+
+            .logoutAllDevices
+
+            .execute(
+
+                req.user!.userId
+
+            );
+
+        return ApiResponse.success(
+
+            res,
+
+            {},
+
+            "Logged out of all devices successfully."
+
+        );
+
+    }
+
+    async getSessions(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const sessions =
+
+            await identityContainer
+
+                .getMySessions
+
+                .execute(
+
+                    req.user!.userId,
+
+                    req.user!.sessionId ?? ""
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            sessions,
+
+            "Sessions fetched successfully."
+
+        );
+
+    }
+
+    async revokeSession(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const { id } = req.params;
+
+        if (!id || Array.isArray(id)) {
+
+            throw new ApiError(
+
+                "Invalid session id.",
+
+                HttpStatus.BAD_REQUEST
+
+            );
+
+        }
+
+        await identityContainer
+
+            .revokeSession
+
+            .execute(
+
+                id,
+
+                req.user!.userId
+
+            );
+
+        return ApiResponse.success(
+
+            res,
+
+            {},
+
+            "Session revoked successfully."
 
         );
 

@@ -56,7 +56,7 @@ export class SubmitActivityUseCase {
 
             review: {
 
-                reviewedBy: "",
+                reviewedBy: undefined,
 
                 reviewedAt: undefined,
 

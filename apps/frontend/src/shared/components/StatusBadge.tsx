@@ -17,12 +17,15 @@ import { Badge, type BadgeProps } from "@/shared/ui/Badge";
 const STATUS_VARIANT_MAP: Record<string, BadgeProps["variant"]> = {
   // success — positive / terminal-good
   ACTIVE: "success",
+  OPEN: "success",
   APPROVED: "success",
   PUBLISHED: "success",
   COMPLETED: "success",
+  PASSED: "success",
   SELECTED: "success",
   VERIFIED: "success",
   PUBLIC: "success",
+  ACCEPTED: "success",
 
   // warning — in progress / awaiting action
   PENDING: "warning",
@@ -32,14 +35,19 @@ const STATUS_VARIANT_MAP: Record<string, BadgeProps["variant"]> = {
   SHORTLISTED: "warning",
   INVITED: "warning",
   IN_PROGRESS: "warning",
+  SCHEDULED: "warning",
   APPLIED: "warning",
+  EMAIL_VERIFIED: "warning",
 
   // destructive — negative / terminal-bad
   SUSPENDED: "destructive",
   DEACTIVATED: "destructive",
   REJECTED: "destructive",
   CANCELLED: "destructive",
+  FAILED: "destructive",
   CLOSED: "destructive",
+  EXPIRED: "destructive",
+  REVOKED: "destructive",
 
   // secondary — neutral / muted
   INACTIVE: "secondary",

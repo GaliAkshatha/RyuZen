@@ -6,6 +6,7 @@ import { Button } from "@/shared/ui/Button";
 import { Input } from "@/shared/ui/Input";
 import { Textarea } from "@/shared/ui/Textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/Select";
+import { humanizeEnumValue } from "@/utils/humanizeEnumValue";
 import { FormErrorSummary } from "@/shared/components/FormErrorSummary";
 import { flattenApiErrors } from "@/utils/flattenApiErrors";
 import type { AppApiError } from "@/types/api";
@@ -92,7 +93,7 @@ export function SendNotificationForm({ isSubmitting, error, onSubmit }: SendNoti
                 <SelectContent>
                   {TYPES.map((type) => (
                     <SelectItem key={type} value={type}>
-                      {type}
+                      {humanizeEnumValue(type)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -115,7 +116,7 @@ export function SendNotificationForm({ isSubmitting, error, onSubmit }: SendNoti
                 <SelectContent>
                   {AUDIENCES.map((audience) => (
                     <SelectItem key={audience} value={audience}>
-                      {audience}
+                      {humanizeEnumValue(audience)}
                     </SelectItem>
                   ))}
                 </SelectContent>

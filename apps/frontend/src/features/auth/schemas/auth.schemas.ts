@@ -31,42 +31,6 @@ export const loginSchema = z.object({
 
 export type LoginFormValues = z.infer<typeof loginSchema>;
 
-/** Mirrors RegisterUserSchema exactly */
-export const registerSchema = z.object({
-  organizationCode: z
-    .string()
-    .trim()
-    .min(2, "Organization code must be at least 2 characters.")
-    .max(20, "Organization code must be at most 20 characters."),
-  name: z
-    .string()
-    .trim()
-    .min(3, "Name must be at least 3 characters.")
-    .max(100, "Name must be at most 100 characters."),
-  email: z
-    .string()
-    .email("Enter a valid email address.")
-    .transform((email) => email.toLowerCase()),
-  password: passwordRules,
-});
-
-/**
- * Form-level schema only — adds a client-only confirmPassword check.
- * `confirmPassword` is never sent to the backend (stripped before the
- * API call); this does not change or invent any backend validation
- * rule, it's a standard client-side double-entry UX convention.
- */
-export const registerFormSchema = registerSchema
-  .extend({
-    confirmPassword: z.string().min(1, "Please confirm your password."),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match.",
-    path: ["confirmPassword"],
-  });
-
-export type RegisterFormValues = z.infer<typeof registerFormSchema>;
-
 /** Mirrors ForgotPasswordSchema exactly */
 export const forgotPasswordSchema = z.object({
   email: z
@@ -98,3 +62,24 @@ export const resetPasswordFormSchema = resetPasswordSchema
   });
 
 export type ResetPasswordFormValues = z.infer<typeof resetPasswordFormSchema>;
+
+/** Mirrors AcceptInvitationDto — reuses the same passwordRules as reset-password rather than duplicating the strength rule. */
+export const acceptInvitationSchema = z.object({
+  email: z
+    .string()
+    .email("Enter a valid email address.")
+    .transform((email) => email.toLowerCase()),
+  token: z.string().min(1, "Invitation token is required."),
+  password: passwordRules,
+});
+
+export const acceptInvitationFormSchema = acceptInvitationSchema
+  .extend({
+    confirmPassword: z.string().min(1, "Please confirm your password."),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match.",
+    path: ["confirmPassword"],
+  });
+
+export type AcceptInvitationFormValues = z.infer<typeof acceptInvitationFormSchema>;

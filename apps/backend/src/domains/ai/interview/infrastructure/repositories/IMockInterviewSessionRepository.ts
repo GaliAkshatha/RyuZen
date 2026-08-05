@@ -18,4 +18,9 @@ export interface IMockInterviewSessionRepository {
         session: MockInterviewSession
     ): Promise<MockInterviewSession>;
 
+    /** Organization-wide AI usage count for the dashboard - same reasoning as IAIChatRepository.countByUserIds. */
+    countByUserIds(
+        userIds: string[]
+    ): Promise<number>;
+
 }

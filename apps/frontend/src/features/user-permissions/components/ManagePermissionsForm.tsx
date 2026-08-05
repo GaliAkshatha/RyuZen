@@ -8,6 +8,7 @@ import { Input } from "@/shared/ui/Input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/Select";
 import { FormErrorSummary } from "@/shared/components/FormErrorSummary";
 import { flattenApiErrors } from "@/utils/flattenApiErrors";
+import { humanizeEnumValue } from "@/utils/humanizeEnumValue";
 import type { AppApiError } from "@/types/api";
 import { Permission } from "@/types/enums";
 
@@ -80,7 +81,7 @@ export function ManagePermissionsForm({
               <SelectContent>
                 {PERMISSIONS.map((permission) => (
                   <SelectItem key={permission} value={permission}>
-                    {permission}
+                    {humanizeEnumValue(permission)}
                   </SelectItem>
                 ))}
               </SelectContent>

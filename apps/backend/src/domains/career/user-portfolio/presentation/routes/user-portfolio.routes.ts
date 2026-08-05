@@ -3,18 +3,24 @@ import { Router } from "express";
 import { UserPortfolioController } from "../controllers/UserPortfolioController.js";
 
 import { asyncHandler } from "../../../../../shared/core/middleware/asyncHandler.js";
-import { authenticate } from "../../../../../shared/core/middleware/index.js";
+import {
+    authenticate,
+    authorizePermission
+} from "../../../../../shared/core/middleware/index.js";
 
 import { validate } from "../../../../../shared/core/validation/index.js";
 
 import { UpdateUserPortfolioSchema } from "../validators/UpdateUserPortfolioSchema.js";
+
+import { UserRole } from "../../../../identity/domain/constants/UserRole.js";
 
 const router = Router();
 
 const controller = new UserPortfolioController();
 
 /*
- My Portfolio
+ My Portfolio - restricted to STUDENT, the real intended audience.
+ Previously open to any authenticated role.
 
  Declared before "/:userId" to avoid "me" being
  captured as a userId route parameter.
@@ -25,6 +31,12 @@ router.get(
     "/me",
 
     authenticate,
+
+    authorizePermission(
+
+        UserRole.STUDENT
+
+    ),
 
     asyncHandler(
 
@@ -43,6 +55,12 @@ router.patch(
     "/me",
 
     authenticate,
+
+    authorizePermission(
+
+        UserRole.STUDENT
+
+    ),
 
     validate(
 

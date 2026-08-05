@@ -21,7 +21,7 @@ export function AuditLogDetailPage() {
   }
 
   return (
-    <div className="flex max-w-xl flex-col gap-4">
+    <div className="mx-auto flex max-w-xl flex-col gap-4">
       <Link
         to="/app/admin/audit-logs"
         className="flex w-fit items-center gap-1 font-body text-sm text-muted-foreground hover:text-foreground"

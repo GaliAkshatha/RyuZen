@@ -1,4 +1,5 @@
 import { Skill } from "../../domain/entities/Skill.js";
+import { SkillSource } from "../../domain/constants/SkillSource.js";
 
 import { ISkillRepository } from "../../infrastructure/repositories/ISkillRepository.js";
 
@@ -62,7 +63,13 @@ export class CreateSkillUseCase {
                 dto.level,
 
             verified:
-                false
+                false,
+
+            source:
+                SkillSource.MANUAL,
+
+            approved:
+                true
 
         });
 

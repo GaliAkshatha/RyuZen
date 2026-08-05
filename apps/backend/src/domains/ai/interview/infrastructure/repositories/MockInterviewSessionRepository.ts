@@ -141,4 +141,18 @@ implements IMockInterviewSessionRepository {
 
     }
 
+    async countByUserIds(
+
+        userIds: string[]
+
+    ): Promise<number> {
+
+        return MockInterviewSessionModel.countDocuments({
+
+            userId: { $in: userIds }
+
+        });
+
+    }
+
 }

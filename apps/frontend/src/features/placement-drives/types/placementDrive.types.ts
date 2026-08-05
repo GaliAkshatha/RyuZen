@@ -9,6 +9,23 @@ import { PlacementDriveStatus } from "@/types/enums";
  * `companyId` is required on create but absent from the update
  * schema — a drive's company cannot be changed after creation.
  */
+/**
+ * Mirrors EligibilityCriteria exactly - the real, structured gate
+ * GetEligibleStudentsUseCase and ApplyToPlacementUseCase both
+ * evaluate against real Student records, not the free-text
+ * `eligibility` field below (which stays as a human-readable
+ * description). Every field optional; unset means no restriction on
+ * that dimension. Deliberately has no backlog field - no real backlog
+ * tracking exists anywhere in the Student domain, confirmed against
+ * the backend directly.
+ */
+export interface EligibilityCriteria {
+  departmentIds?: string[];
+  minCgpa?: number;
+  minSemester?: number;
+  batches?: string[];
+}
+
 export interface PlacementDriveResponseDto {
   id: string;
   organizationId: string;
@@ -18,6 +35,7 @@ export interface PlacementDriveResponseDto {
   package?: string;
   location?: string;
   eligibility?: string;
+  eligibilityCriteria?: EligibilityCriteria;
   deadline?: string;
   status: PlacementDriveStatus;
   createdAt?: string;
@@ -32,6 +50,7 @@ export interface CreatePlacementDrivePayload {
   package?: string;
   location?: string;
   eligibility?: string;
+  eligibilityCriteria?: EligibilityCriteria;
   deadline?: string;
 }
 
@@ -42,5 +61,6 @@ export interface UpdatePlacementDrivePayload {
   package?: string;
   location?: string;
   eligibility?: string;
+  eligibilityCriteria?: EligibilityCriteria;
   deadline?: string;
 }

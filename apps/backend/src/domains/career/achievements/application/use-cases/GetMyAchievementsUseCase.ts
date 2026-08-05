@@ -37,7 +37,7 @@ export class GetMyAchievementsUseCase {
 
             throw new ApiError(
 
-                "Only students have achievements.",
+                "No student profile is linked to your account yet. Contact your administrator.",
 
                 HttpStatus.FORBIDDEN
 

@@ -141,4 +141,18 @@ implements IAIChatRepository {
 
     }
 
+    async countByUserIds(
+
+        userIds: string[]
+
+    ): Promise<number> {
+
+        return AIChatModel.countDocuments({
+
+            userId: { $in: userIds }
+
+        });
+
+    }
+
 }

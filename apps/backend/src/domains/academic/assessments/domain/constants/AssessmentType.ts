@@ -1,0 +1,11 @@
+export enum AssessmentType {
+
+    APTITUDE = "APTITUDE",
+
+    BRANCH_SPECIFIC = "BRANCH_SPECIFIC",
+
+    WEEKLY = "WEEKLY",
+
+    COMPANY_SPECIFIC = "COMPANY_SPECIFIC"
+
+}

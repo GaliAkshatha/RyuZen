@@ -1,4 +1,4 @@
-import { StubCareerScoreProvider } from "../../infrastructure/ai/StubCareerScoreProvider.js";
+import { createCareerScoreProvider } from "../../../../../shared/infrastructure/ai/AIProviderFactory.js";
 
 import {
     LeaderboardRepository,
@@ -57,12 +57,12 @@ const educationRepository = new EducationRepository();
 const certificationRepository = new CertificationRepository();
 
 /*
- StubCareerScoreProvider is a placeholder (see
- infrastructure/ai/StubCareerScoreProvider.ts). Swap this single
- binding for a real ICareerScoreProvider implementation to go
- live; no other file in this module needs to change.
+ Real Ollama-backed career score insight (see
+ infrastructure/ai/OllamaCareerScoreProvider.ts). Every use case
+ depends only on the ICareerScoreProvider port, so this is the only
+ line that ever needed to change to go live.
 */
-const careerScoreProvider = new StubCareerScoreProvider();
+const careerScoreProvider = createCareerScoreProvider();
 
 export const careerScoreContainer = {
 

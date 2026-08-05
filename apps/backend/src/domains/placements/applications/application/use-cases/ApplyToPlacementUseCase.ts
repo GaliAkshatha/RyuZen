@@ -19,6 +19,8 @@ import {
 
 import { PlacementDriveStatus } from "../../../drives/domain/constants/PlacementDriveStatus.js";
 
+import { isStudentEligibleForDrive } from "../../../drives/domain/services/isStudentEligibleForDrive.js";
+
 import {
     IResumeRepository,
 } from "../../../../career/resume/infrastructure/repositories/IResumeRepository.js";
@@ -108,6 +110,18 @@ export class ApplyToPlacementUseCase {
             throw new ApiError(
 
                 "Only students can apply to placement drives.",
+
+                HttpStatus.FORBIDDEN
+
+            );
+
+        }
+
+        if (!isStudentEligibleForDrive(student, drive.eligibilityCriteria)) {
+
+            throw new ApiError(
+
+                "You do not meet the eligibility criteria for this placement drive.",
 
                 HttpStatus.FORBIDDEN
 

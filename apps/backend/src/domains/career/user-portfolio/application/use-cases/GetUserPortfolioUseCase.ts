@@ -185,6 +185,13 @@ export class GetUserPortfolioUseCase {
 
         ]);
 
+        // Unapproved AI-suggested skills are not yet real skills — see
+        // GetSkillsByUserUseCase for the same rule applied there. This
+        // is a public-facing portfolio view, so it especially must not
+        // present an unreviewed AI suggestion as a confirmed skill.
+        const approvedSkills =
+            skills.filter(skill => skill.approved);
+
         const student =
 
             await this.studentRepository.findByUserId(
@@ -266,7 +273,7 @@ export class GetUserPortfolioUseCase {
                 portfolio.theme,
 
             skills:
-                skills.map(
+                approvedSkills.map(
 
                     skill =>
                         SkillResponseMapper.toDto(skill)

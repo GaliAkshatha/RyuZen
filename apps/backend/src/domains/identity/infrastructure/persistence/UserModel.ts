@@ -38,6 +38,8 @@ export interface UserDocument extends Document {
 
         failedAttempts: number;
 
+        lockedUntil?: Date;
+
     };
 
     passwordReset?: {
@@ -130,7 +132,9 @@ const AuthSchema = new Schema(
 
             default: 0,
 
-        }
+        },
+
+        lockedUntil: Date
 
     },
 
@@ -238,7 +242,7 @@ const UserSchema = new Schema<UserDocument>(
 
             enum: Object.values(UserStatus),
 
-            default: UserStatus.PENDING,
+            default: UserStatus.INVITED,
 
             index: true,
 

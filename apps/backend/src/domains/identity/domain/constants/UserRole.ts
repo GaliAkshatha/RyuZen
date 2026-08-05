@@ -4,10 +4,14 @@ export enum UserRole {
 
     ORG_ADMIN = "ORG_ADMIN",
 
+    PLACEMENT_ADMIN = "PLACEMENT_ADMIN",
+
     FACULTY = "FACULTY",
 
     STUDENT = "STUDENT",
 
-    ALUMNI = "ALUMNI"
+    ALUMNI = "ALUMNI",
+
+    RECRUITER = "RECRUITER"
 
 }

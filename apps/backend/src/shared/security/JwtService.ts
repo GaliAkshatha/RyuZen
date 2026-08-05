@@ -12,6 +12,8 @@ export interface JwtPayload {
 
     role: UserRole;
 
+    sessionId?: string;
+
 }
 
 export class JwtService {

@@ -38,7 +38,7 @@ export function MentorshipDetailPage() {
   const mentor = faculty?.find((f) => f.id === mentorship.facultyId);
 
   return (
-    <div className="flex max-w-xl flex-col gap-6">
+    <div className="mx-auto flex max-w-xl flex-col gap-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-2xl font-semibold text-foreground">

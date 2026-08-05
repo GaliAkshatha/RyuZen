@@ -8,6 +8,7 @@ import { Textarea } from "@/shared/ui/Textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/Select";
 import { FormErrorSummary } from "@/shared/components/FormErrorSummary";
 import { flattenApiErrors } from "@/utils/flattenApiErrors";
+import { humanizeEnumValue } from "@/utils/humanizeEnumValue";
 import type { AppApiError } from "@/types/api";
 import { AchievementLevel } from "@/types/enums";
 
@@ -130,7 +131,7 @@ export function AchievementForm({
                 <SelectContent>
                   {ACHIEVEMENT_LEVELS.map((level) => (
                     <SelectItem key={level} value={level}>
-                      {level}
+                      {humanizeEnumValue(level)}
                     </SelectItem>
                   ))}
                 </SelectContent>

@@ -15,6 +15,9 @@ import { UpdateStudentUseCase } from "../use-cases/UpdateStudentUseCase.js";
 import { AssignMentorUseCase } from "../use-cases/AssignMentorUseCase.js";
 import { PromoteSemesterUseCase } from "../use-cases/PromoteSemesterUseCase.js";
 import { ArchiveStudentUseCase } from "../use-cases/ArchiveStudentUseCase.js";
+import { BulkImportStudentsUseCase } from "../use-cases/BulkImportStudentsUseCase.js";
+
+import { identityContainer } from "../../../../identity/application/container/IdentityContainer.js";
 
 const studentRepository = new StudentRepository();
 
@@ -26,19 +29,23 @@ const facultyRepository = new FacultyRepository();
 
 const mentorshipRepository = new MentorshipRepository();
 
+const createStudentUseCase =
+
+    new CreateStudentUseCase(
+
+        studentRepository,
+
+        userRepository,
+
+        departmentRepository
+
+    );
+
 export const studentContainer = {
 
     createStudent:
 
-        new CreateStudentUseCase(
-
-            studentRepository,
-
-            userRepository,
-
-            departmentRepository
-
-        ),
+        createStudentUseCase,
 
     getStudent:
 
@@ -80,6 +87,20 @@ export const studentContainer = {
 
         new ArchiveStudentUseCase(
             studentRepository
+        ),
+
+    bulkImportStudents:
+
+        new BulkImportStudentsUseCase(
+
+            userRepository,
+
+            departmentRepository,
+
+            identityContainer.inviteUser,
+
+            createStudentUseCase
+
         )
 
 };

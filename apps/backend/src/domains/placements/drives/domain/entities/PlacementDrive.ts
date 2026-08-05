@@ -52,6 +52,10 @@ export class PlacementDrive {
         return this.props.eligibility;
     }
 
+    get eligibilityCriteria() {
+        return this.props.eligibilityCriteria;
+    }
+
     get deadline(): Date | undefined {
         return this.props.deadline;
     }
@@ -85,6 +89,13 @@ export class PlacementDrive {
             location?: string;
 
             eligibility?: string;
+
+            eligibilityCriteria?: {
+                departmentIds?: string[];
+                minCgpa?: number;
+                minSemester?: number;
+                batches?: string[];
+            };
 
             deadline?: Date;
 
@@ -129,6 +140,14 @@ export class PlacementDrive {
             this.props.eligibility =
 
                 values.eligibility;
+
+        }
+
+        if (values.eligibilityCriteria !== undefined) {
+
+            this.props.eligibilityCriteria =
+
+                values.eligibilityCriteria;
 
         }
 

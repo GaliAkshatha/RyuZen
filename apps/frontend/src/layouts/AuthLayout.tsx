@@ -5,8 +5,8 @@ import { ThemeToggle } from "@/shared/ui/ThemeToggle";
 import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
 
 /**
- * Wraps /auth/login, /auth/register, /auth/forgot-password,
- * /auth/reset-password. The `academy` atmosphere and glowing card
+ * Wraps /auth/login, /auth/forgot-password, /auth/reset-password,
+ * /auth/accept-invitation. The `academy` atmosphere and glowing card
  * border carry the same visual language as the Landing Page and the
  * authenticated app through into the auth forms — this is the
  * "entering the world" transition, not a plain utilitarian form

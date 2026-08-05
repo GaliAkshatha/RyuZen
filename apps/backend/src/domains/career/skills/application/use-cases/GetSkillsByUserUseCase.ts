@@ -24,7 +24,19 @@ export class GetSkillsByUserUseCase {
                 userId
             );
 
-        return skills.map(
+        // Unapproved AI suggestions are not yet real skills — this
+        // use case backs Resume Review's skill count and Career
+        // Score's profile-completeness formula (both via
+        // ISkillRepository -> here), so an unreviewed suggestion must
+        // never silently inflate either score. Pending suggestions are
+        // surfaced separately via GetPendingSkillSuggestionsUseCase.
+        const approvedSkills =
+
+            skills.filter(
+                skill => skill.approved
+            );
+
+        return approvedSkills.map(
 
             skill =>
 

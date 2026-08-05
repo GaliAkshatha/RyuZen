@@ -58,51 +58,73 @@ export interface ProfileResponseDto {
   updatedAt?: string;
 }
 
-/** Mirrors RegisterUserDto (request body for POST /auth/register) */
-export interface RegisterPayload {
-  organizationCode: string;
-  name: string;
-  email: string;
-  password: string;
-}
-
-/**
- * Mirrors RegisterUserResponseDto. Deliberately does NOT include tokens
- * — confirmed against the backend, registration does not log the user
- * in; they must separately POST /auth/login afterward.
- */
-export interface RegisterUserResponseDto {
-  id: string;
-  organizationId: string;
-  name: string;
-  email: string;
-  role: UserRole;
-  status: UserStatus;
-}
-
 /** Mirrors ForgotPasswordDto */
 export interface ForgotPasswordPayload {
   email: string;
 }
 
 /**
- * Mirrors ForgotPasswordResponseDto exactly. `resetToken` is only
- * present when the account exists (an empty object is returned
- * otherwise, deliberately, to avoid revealing account existence — see
- * ForgotPasswordUseCase.ts). The backend's own source comments confirm
- * this is returned directly in the response only because no email
- * delivery infrastructure exists yet ("TODO: deliver via the
- * Notifications/Email module once available") — not a permanent design,
- * and the UI must present it as a temporary development convenience,
- * not as if it were delivered by email.
+ * Mirrors ForgotPasswordResponseDto exactly — always an empty object,
+ * whether or not the account exists (deliberately, to avoid revealing
+ * account existence). The reset token is emailed directly to the
+ * account's own address via the real SMTP-backed NodemailerEmailService
+ * and never appears in this response — confirmed by reading
+ * ForgotPasswordUseCase.ts directly, not assumed. This used to be
+ * different: the token was returned here as a "development mode"
+ * workaround before real email delivery existed, which was a genuine
+ * security gap (anyone could obtain a valid reset token for any email
+ * with no inbox access), now fixed.
  */
-export interface ForgotPasswordResponseDto {
-  resetToken?: string;
-}
+export type ForgotPasswordResponseDto = Record<string, never>;
 
 /** Mirrors ResetPasswordDto */
 export interface ResetPasswordPayload {
   email: string;
   token: string;
   newPassword: string;
+}
+
+/** Mirrors VerifyInvitationDto */
+export interface VerifyInvitationPayload {
+  email: string;
+  token: string;
+}
+
+/**
+ * Mirrors VerifyInvitationResponseDto. Verifying has a real side
+ * effect on the backend — it transitions the User from INVITED to
+ * EMAIL_VERIFIED (clicking a link that could only have arrived via
+ * the invitation email genuinely is the email-verification act) —
+ * confirmed by reading VerifyInvitationUseCase directly, not assumed.
+ */
+export interface VerifyInvitationResponseDto {
+  name: string;
+  email: string;
+  role: string;
+  organizationName: string;
+}
+
+/** Mirrors AcceptInvitationDto — sets the real password and activates the account (EMAIL_VERIFIED -> ACTIVE). */
+export interface AcceptInvitationPayload {
+  email: string;
+  token: string;
+  password: string;
+}
+
+/**
+ * Mirrors SessionResponseDto exactly. Each row is a genuinely real,
+ * tracked login session (device/browser parsed from the real
+ * User-Agent, real IP, real refresh-token rotation state) — confirmed
+ * by reading Session.ts and RefreshTokenUseCase.ts directly. `isCurrent`
+ * is computed server-side from the access token's own sessionId claim,
+ * not guessed on the frontend.
+ */
+export interface SessionResponseDto {
+  id: string;
+  device: string;
+  browser: string;
+  ipAddress: string;
+  createdAt?: string;
+  lastActiveAt: string;
+  isCurrent: boolean;
 }

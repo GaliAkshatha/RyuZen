@@ -40,6 +40,23 @@ export class PlacementDriveMapper {
             eligibility:
                 document.eligibility,
 
+            eligibilityCriteria:
+                document.eligibilityCriteria && {
+
+                    departmentIds:
+                        document.eligibilityCriteria.departmentIds?.map(id => id.toString()),
+
+                    minCgpa:
+                        document.eligibilityCriteria.minCgpa,
+
+                    minSemester:
+                        document.eligibilityCriteria.minSemester,
+
+                    batches:
+                        document.eligibilityCriteria.batches
+
+                },
+
             deadline:
                 document.deadline,
 
@@ -87,6 +104,9 @@ export class PlacementDriveMapper {
 
             eligibility:
                 data.eligibility,
+
+            eligibilityCriteria:
+                data.eligibilityCriteria,
 
             deadline:
                 data.deadline,

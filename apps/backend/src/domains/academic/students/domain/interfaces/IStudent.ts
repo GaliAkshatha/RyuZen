@@ -20,6 +20,19 @@ export interface IStudent {
 
     cgpa?: number;
 
+    /** All below are new, added for bulk import - CreateStudentUseCase and the manual student-creation flow leave them undefined, they're optional everywhere. */
+    section?: string;
+
+    admissionYear?: number;
+
+    graduationYear?: number;
+
+    tenthPercentage?: number;
+
+    twelfthPercentage?: number;
+
+    entranceRank?: number;
+
     status: StudentStatus;
 
     joinedAt?: Date;

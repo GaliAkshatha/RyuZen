@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/shared/ui/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/Select";
 import { useToast } from "@/hooks/useToast";
+import { humanizeEnumValue } from "@/utils/humanizeEnumValue";
 import { OrganizationStatus } from "@/types/enums";
 
 import { useUpdateOrganizationStatus } from "@/features/organizations/hooks/useUpdateOrganizationStatus";
@@ -52,7 +53,7 @@ export function UpdateOrganizationStatusAction({
             <SelectContent>
               {STATUSES.map((status) => (
                 <SelectItem key={status} value={status}>
-                  {status}
+                  {humanizeEnumValue(status)}
                 </SelectItem>
               ))}
             </SelectContent>

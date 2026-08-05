@@ -43,6 +43,24 @@ export class StudentMapper {
             cgpa:
                 document.cgpa,
 
+            section:
+                document.section,
+
+            admissionYear:
+                document.admissionYear,
+
+            graduationYear:
+                document.graduationYear,
+
+            tenthPercentage:
+                document.tenthPercentage,
+
+            twelfthPercentage:
+                document.twelfthPercentage,
+
+            entranceRank:
+                document.entranceRank,
+
             status:
                 document.status as StudentStatus,
 
@@ -93,6 +111,24 @@ export class StudentMapper {
 
             cgpa:
                 data.cgpa,
+
+            section:
+                data.section,
+
+            admissionYear:
+                data.admissionYear,
+
+            graduationYear:
+                data.graduationYear,
+
+            tenthPercentage:
+                data.tenthPercentage,
+
+            twelfthPercentage:
+                data.twelfthPercentage,
+
+            entranceRank:
+                data.entranceRank,
 
             status:
                 data.status,

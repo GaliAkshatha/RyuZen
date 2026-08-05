@@ -518,7 +518,9 @@ export class EventController {
 
                     id,
 
-                    req.user!.organizationId
+                    req.user!.organizationId,
+
+                    req.user!.userId
 
                 );
 

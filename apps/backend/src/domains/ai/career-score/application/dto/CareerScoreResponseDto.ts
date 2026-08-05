@@ -14,4 +14,8 @@ export interface CareerScoreResponseDto {
 
     narrative: string;
 
+    recommendations: string[];
+
+    roadmap: string[];
+
 }

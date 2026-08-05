@@ -10,6 +10,10 @@ import {
     StudentRepository,
 } from "../../../../academic/students/infrastructure/repositories/StudentRepository.js";
 
+import {
+    notificationContainer,
+} from "../../../../communication/notifications/application/container/NotificationContainer.js";
+
 import { CreateEventUseCase } from "../use-cases/CreateEventUseCase.js";
 import { GetEventUseCase } from "../use-cases/GetEventUseCase.js";
 import { GetEventsUseCase } from "../use-cases/GetEventsUseCase.js";
@@ -18,6 +22,9 @@ import { DeleteEventUseCase } from "../use-cases/DeleteEventUseCase.js";
 import { PublishEventUseCase } from "../use-cases/PublishEventUseCase.js";
 import { RegisterForEventUseCase } from "../use-cases/RegisterForEventUseCase.js";
 import { MarkAttendanceUseCase } from "../use-cases/MarkAttendanceUseCase.js";
+import {
+    pointLedgerContainer,
+} from "../../../point-ledger/application/container/PointLedgerContainer.js";
 import { SubmitEventFeedbackUseCase } from "../use-cases/SubmitEventFeedbackUseCase.js";
 import { IssueCertificatesUseCase } from "../use-cases/IssueCertificatesUseCase.js";
 import { GetEventRegistrationsUseCase } from "../use-cases/GetEventRegistrationsUseCase.js";
@@ -94,7 +101,9 @@ export const eventContainer = {
 
             eventRepository,
 
-            eventRegistrationRepository
+            eventRegistrationRepository,
+
+            pointLedgerContainer.recordPointTransaction
 
         ),
 
@@ -114,7 +123,11 @@ export const eventContainer = {
 
             eventRepository,
 
-            eventRegistrationRepository
+            eventRegistrationRepository,
+
+            studentRepository,
+
+            notificationContainer.recordSystemNotification
 
         ),
 

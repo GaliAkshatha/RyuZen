@@ -13,7 +13,7 @@ const NAV_LINKS = [
 export function Header() {
   return (
     <header className="fixed top-0 z-50 w-full border-b border-border/50 bg-background/70 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+      <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-6 sm:px-8 lg:px-12">
         <Link to="/" className="font-display text-xl font-bold tracking-wide text-foreground">
           RyuZen
         </Link>
@@ -36,7 +36,7 @@ export function Header() {
           </Button>
 
           <Button asChild>
-            <Link to="/auth/register">Join Organization</Link>
+            <a href="#contact">Bring RyuZen to your campus</a>
           </Button>
         </div>
       </div>

@@ -279,4 +279,58 @@ export class AlumniController {
 
     }
 
+    async convertFromStudent(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const { studentId } = req.params;
+
+        if (!studentId || Array.isArray(studentId)) {
+
+            throw new ApiError(
+
+                "Invalid student id.",
+
+                HttpStatus.BAD_REQUEST
+
+            );
+
+        }
+
+        const alumni =
+
+            await alumniContainer
+
+                .convertStudentToAlumni
+
+                .execute(
+
+                    studentId,
+
+                    req.user!.organizationId,
+
+                    req.body,
+
+                    req.user!.userId
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            alumni,
+
+            "Student converted to alumni successfully.",
+
+            201
+
+        );
+
+    }
+
 }

@@ -46,6 +46,9 @@ export interface IUser {
 
         failedAttempts: number;
 
+        /** Set once failedAttempts reaches env.ACCOUNT_LOCK_THRESHOLD; login is denied while this is in the future. Cleared on a successful login or an admin unlock. */
+        lockedUntil?: Date;
+
     };
 
     passwordReset?: {

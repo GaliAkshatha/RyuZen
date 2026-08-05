@@ -18,6 +18,18 @@ export interface StudentDocument extends Document {
 
     cgpa?: number;
 
+    section?: string;
+
+    admissionYear?: number;
+
+    graduationYear?: number;
+
+    tenthPercentage?: number;
+
+    twelfthPercentage?: number;
+
+    entranceRank?: number;
+
     status: string;
 
     joinedAt?: Date;
@@ -105,6 +117,42 @@ const StudentSchema = new Schema<StudentDocument>(
         },
 
         cgpa: {
+
+            type: Number,
+
+        },
+
+        section: {
+
+            type: String,
+
+        },
+
+        admissionYear: {
+
+            type: Number,
+
+        },
+
+        graduationYear: {
+
+            type: Number,
+
+        },
+
+        tenthPercentage: {
+
+            type: Number,
+
+        },
+
+        twelfthPercentage: {
+
+            type: Number,
+
+        },
+
+        entranceRank: {
 
             type: Number,
 

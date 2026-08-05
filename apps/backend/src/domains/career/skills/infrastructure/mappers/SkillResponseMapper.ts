@@ -30,6 +30,18 @@ export class SkillResponseMapper {
             verified:
                 skill.verified,
 
+            source:
+                skill.source,
+
+            confidence:
+                skill.confidence,
+
+            evidence:
+                skill.evidence,
+
+            approved:
+                skill.approved,
+
             createdAt:
                 skill.createdAt,
 

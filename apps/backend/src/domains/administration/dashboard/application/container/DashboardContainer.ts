@@ -38,6 +38,30 @@ import {
     GetPlacementAnalyticsUseCase,
 } from "../../../../placements/analytics/application/use-cases/GetPlacementAnalyticsUseCase.js";
 
+import {
+    StudentRepository,
+} from "../../../../academic/students/infrastructure/repositories/StudentRepository.js";
+
+import {
+    LeaderboardRepository,
+} from "../../../../campus/leaderboard/infrastructure/repositories/LeaderboardRepository.js";
+
+import {
+    CertificateRepository,
+} from "../../../../campus/certificates/infrastructure/repositories/CertificateRepository.js";
+
+import {
+    PointLedgerRepository,
+} from "../../../../campus/point-ledger/infrastructure/repositories/PointLedgerRepository.js";
+
+import {
+    AIChatRepository,
+} from "../../../../ai/chat/infrastructure/repositories/AIChatRepository.js";
+
+import {
+    MockInterviewSessionRepository,
+} from "../../../../ai/interview/infrastructure/repositories/MockInterviewSessionRepository.js";
+
 import { GetDashboardUseCase } from "../use-cases/GetDashboardUseCase.js";
 
 import { cacheService } from "../../../../../shared/infrastructure/cache/InMemoryCacheService.js";
@@ -59,6 +83,18 @@ const companyRepository = new CompanyRepository();
 const placementDriveRepository = new PlacementDriveRepository();
 
 const jobApplicationRepository = new JobApplicationRepository();
+
+const studentRepository = new StudentRepository();
+
+const leaderboardRepository = new LeaderboardRepository();
+
+const certificateRepository = new CertificateRepository();
+
+const pointLedgerRepository = new PointLedgerRepository();
+
+const aiChatRepository = new AIChatRepository();
+
+const mockInterviewSessionRepository = new MockInterviewSessionRepository();
 
 const placementAnalyticsUseCase =
 
@@ -91,6 +127,18 @@ export const dashboardContainer = {
             eventRepository,
 
             placementAnalyticsUseCase,
+
+            studentRepository,
+
+            leaderboardRepository,
+
+            certificateRepository,
+
+            pointLedgerRepository,
+
+            aiChatRepository,
+
+            mockInterviewSessionRepository,
 
             cacheService
 

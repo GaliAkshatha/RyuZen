@@ -26,7 +26,7 @@ export function CreateEventPage() {
   }
 
   return (
-    <div className="flex max-w-xl flex-col gap-6">
+    <div className="mx-auto flex max-w-xl flex-col gap-6">
       <Link
         to="/app/events"
         className="flex w-fit items-center gap-1 font-body text-sm text-muted-foreground hover:text-foreground"

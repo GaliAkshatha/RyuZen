@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-import { Award, BookOpen, FileText, FolderKanban, Medal, Sparkles, Trophy } from "lucide-react";
+import { BookOpen, FileText, FolderKanban, Medal, Sparkles, Trophy } from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
+import { Card, CardContent } from "@/shared/components/Card";
 import { Spinner } from "@/shared/components/Spinner";
 import { LevelProgressRing } from "@/shared/components/LevelProgressRing";
 import { computeLevelProgress } from "@/utils/xpLevel";
-import { AchievementLevel, AchievementStatus } from "@/types/enums";
+import { AchievementStatus } from "@/types/enums";
 
 import { useMyLeaderboardEntry } from "@/features/leaderboard/hooks/useMyLeaderboardEntry";
 import { useCareerScore } from "@/features/career-score/hooks/useCareerScore";
@@ -14,13 +14,6 @@ import { useStudentBadges } from "@/features/badges/hooks/useStudentBadges";
 import { useMySkills } from "@/features/skills/hooks/useMySkills";
 import { useMyCertificates } from "@/features/certificates/hooks/useMyCertificates";
 import { useMyPortfolioProjects } from "@/features/portfolio/hooks/useMyPortfolioProjects";
-
-const ACHIEVEMENT_LEVEL_STYLE: Record<AchievementLevel, string> = {
-  [AchievementLevel.COLLEGE]: "text-muted-foreground",
-  [AchievementLevel.STATE]: "text-info",
-  [AchievementLevel.NATIONAL]: "text-primary",
-  [AchievementLevel.INTERNATIONAL]: "text-warning",
-};
 
 function StatTile({ icon: Icon, label, value, to }: { icon: typeof BookOpen; label: string; value: number; to: string }) {
   return (
@@ -83,6 +76,12 @@ export function StudentProgressionSection() {
                 <span className="font-body text-xs text-muted-foreground">
                   {progress.pointsForNextLevel - progress.pointsIntoLevel} XP to Level {progress.level + 1}
                 </span>
+                <Link
+                  to="/app/point-history"
+                  className="mt-1 font-body text-xs text-primary underline underline-offset-4 hover:text-primary/80"
+                >
+                  View point history
+                </Link>
               </div>
             </div>
           )}
@@ -103,7 +102,11 @@ export function StudentProgressionSection() {
         </CardContent>
       </Card>
 
-      {/* Quick stats grid */}
+      {/* Quick stats grid - each tile links to its real dedicated page,
+        so "at a glance + jump to full page" lives here without also
+        duplicating that page's own content inline (an embedded
+        Achievements list previously did exactly that and was removed -
+        confirmed as genuine redundancy, not useful summary). */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         <StatTile icon={Trophy} label="Achievements" value={verifiedAchievements.length} to="/app/career/achievements" />
         <StatTile icon={Medal} label="Badges" value={(badges ?? []).length} to="/app/leaderboard" />
@@ -111,46 +114,6 @@ export function StudentProgressionSection() {
         <StatTile icon={FolderKanban} label="Projects" value={(projects ?? []).length} to="/app/career/portfolio" />
         <StatTile icon={FileText} label="Certificates" value={(certificates ?? []).length} to="/app/certificates" />
       </div>
-
-      {/* Celebrated achievements */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <Award className="h-4 w-4 text-primary" aria-hidden="true" />
-            Achievements
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {verifiedAchievements.length === 0 ? (
-            <p className="font-body text-sm text-muted-foreground">
-              No verified achievements yet — submit one from your Achievements page to start building your
-              record.
-            </p>
-          ) : (
-            <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-              {verifiedAchievements.slice(0, 6).map((achievement) => (
-                <li
-                  key={achievement.id}
-                  className="flex items-center gap-3 rounded-lg border border-border/60 bg-card/60 px-3 py-2.5"
-                >
-                  <Trophy
-                    className={`h-5 w-5 shrink-0 ${achievement.level ? ACHIEVEMENT_LEVEL_STYLE[achievement.level] : "text-muted-foreground"}`}
-                    aria-hidden="true"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate font-body text-sm font-medium text-foreground">{achievement.title}</p>
-                    {achievement.level && (
-                      <p className="font-body text-xs capitalize text-muted-foreground">
-                        {achievement.level.toLowerCase()} level
-                      </p>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </CardContent>
-      </Card>
     </div>
   );
 }

@@ -35,6 +35,7 @@ export interface OrganizationSettingsResponseDto {
     sessionTimeoutMinutes: number;
     loginAttemptLimit: number;
     accountLockDurationMinutes: number;
+    invitationExpiryDays: number;
     ipWhitelist: string[];
   };
   academic: {

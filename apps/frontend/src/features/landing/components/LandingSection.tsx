@@ -37,9 +37,12 @@ export function LandingSection({
   className,
 }: LandingSectionProps) {
   return (
-    <section id={id} className={cn("relative overflow-hidden px-6 py-24 sm:py-28", className)}>
+    <section
+      id={id}
+      className={cn("relative overflow-hidden px-6 py-24 sm:px-8 sm:py-28 lg:px-12", className)}
+    >
       {atmosphere && <PageAtmosphere variant={atmosphere} />}
-      <div className="relative mx-auto max-w-6xl">
+      <div className="relative mx-auto max-w-[1440px]">
         <ScrollReveal className="mx-auto mb-14 max-w-2xl text-center">
           {eyebrow && (
             <p className="mb-3 font-body text-xs font-semibold uppercase tracking-[0.3em] text-primary">

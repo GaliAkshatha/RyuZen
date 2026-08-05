@@ -49,11 +49,8 @@ export function LoginPage() {
           <Link to="/auth/forgot-password" className="text-primary underline underline-offset-4">
             Forgot your password?
           </Link>
-          <p>
-            Don&apos;t have an account?{" "}
-            <Link to="/auth/register" className="text-primary underline underline-offset-4">
-              Register
-            </Link>
+          <p className="text-muted-foreground">
+            Don&apos;t have an account? Ask your organization administrator to invite you.
           </p>
         </div>
       }

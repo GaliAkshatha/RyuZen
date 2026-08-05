@@ -49,6 +49,10 @@ export class Notification {
         return this.props.targetAudience;
     }
 
+    get recipientUserId(): string | undefined {
+        return this.props.recipientUserId;
+    }
+
     get readBy(): string[] {
         return [...this.props.readBy];
     }

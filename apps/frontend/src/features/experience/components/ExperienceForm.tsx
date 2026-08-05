@@ -10,6 +10,7 @@ import { Switch } from "@/shared/ui/Switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/Select";
 import { FormErrorSummary } from "@/shared/components/FormErrorSummary";
 import { flattenApiErrors } from "@/utils/flattenApiErrors";
+import { humanizeEnumValue } from "@/utils/humanizeEnumValue";
 import type { AppApiError } from "@/types/api";
 import { EmploymentType } from "@/types/enums";
 
@@ -129,7 +130,7 @@ export function ExperienceForm({
                 <SelectContent>
                   {EMPLOYMENT_TYPES.map((type) => (
                     <SelectItem key={type} value={type}>
-                      {type}
+                      {humanizeEnumValue(type)}
                     </SelectItem>
                   ))}
                 </SelectContent>

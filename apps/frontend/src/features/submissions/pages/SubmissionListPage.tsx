@@ -5,6 +5,7 @@ import { ErrorState } from "@/shared/components/ErrorState";
 import { StatusBadge } from "@/shared/components/StatusBadge";
 import { useAuth } from "@/contexts/AuthContext";
 
+import { AcademicLayout } from "@/features/academic-hub/components/AcademicLayout";
 import { useSubmissions } from "@/features/submissions/hooks/useSubmissions";
 import { canReviewSubmissions } from "@/features/submissions/utils/submissionPermissions";
 import type { SubmissionResponseDto } from "@/features/submissions/types/submission.types";
@@ -57,28 +58,34 @@ export function SubmissionListPage() {
   ];
 
   if (isError) {
-    return <ErrorState error={error} onRetry={() => refetch()} />;
+    return (
+      <AcademicLayout>
+        <ErrorState error={error} onRetry={() => refetch()} />
+      </AcademicLayout>
+    );
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <h1 className="font-display text-2xl font-semibold text-foreground">
-        {isReviewer ? "Submissions" : "My Submissions"}
-      </h1>
+    <AcademicLayout>
+      <div className="flex flex-col gap-6">
+        <h1 className="font-display text-2xl font-semibold text-foreground">
+          {isReviewer ? "Submissions" : "My Submissions"}
+        </h1>
 
-      <DataGrid
-        data={submissions ?? []}
-        columns={columnsWithActivity}
-        getRowId={(s) => s.id}
-        isLoading={isLoading}
-        emptyTitle={isReviewer ? "No submissions yet" : "You haven't submitted anything yet"}
-        emptyDescription={
-          isReviewer
-            ? "Submissions will appear here once students start submitting activities."
-            : "Browse activities and submit your work to see it listed here."
-        }
-        onRowClick={(s) => navigate(`/app/submissions/${s.id}`)}
-      />
-    </div>
+        <DataGrid
+          data={submissions ?? []}
+          columns={columnsWithActivity}
+          getRowId={(s) => s.id}
+          isLoading={isLoading}
+          emptyTitle={isReviewer ? "No submissions yet" : "You haven't submitted anything yet"}
+          emptyDescription={
+            isReviewer
+              ? "Submissions will appear here once students start submitting activities."
+              : "Browse activities and submit your work to see it listed here."
+          }
+          onRowClick={(s) => navigate(`/app/submissions/${s.id}`)}
+        />
+      </div>
+    </AcademicLayout>
   );
 }

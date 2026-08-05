@@ -6,6 +6,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useUI } from "@/contexts/UIContext";
 import { useLogout } from "@/features/auth/hooks/useLogout";
 import { useMyNotifications } from "@/features/notifications/hooks/useMyNotifications";
+import { NotificationRow } from "@/features/notifications/components/NotificationRow";
+import { SkeletonLoader } from "@/shared/components/SkeletonLoader";
 
 import { Button } from "@/shared/ui/Button";
 import { Drawer, DrawerContent, DrawerTitle } from "@/shared/ui/Drawer";
@@ -35,11 +37,14 @@ function SidebarBrand({ collapsed = false }: { collapsed?: boolean }) {
       to="/"
       aria-label="RyuZen — go to homepage"
       className={cn(
-        "flex h-16 shrink-0 items-center border-b border-border font-display text-lg font-bold tracking-wide text-foreground transition-colors hover:text-primary",
+        "flex h-16 shrink-0 items-center gap-2 border-b border-border font-display text-lg font-bold tracking-wide text-foreground transition-colors hover:text-primary",
         collapsed ? "justify-center px-2" : "px-4",
       )}
     >
-      {collapsed ? "R" : "RyuZen"}
+      <span className="text-primary" aria-hidden="true">
+        ◆
+      </span>
+      {!collapsed && "RyuZen"}
     </Link>
   );
 }
@@ -47,7 +52,7 @@ function SidebarBrand({ collapsed = false }: { collapsed?: boolean }) {
 export function AppShell() {
   const { user } = useAuth();
   const logout = useLogout();
-  const { data: notifications } = useMyNotifications();
+  const { data: notifications, isLoading: isLoadingNotifications } = useMyNotifications();
   const unreadNotificationCount = notifications?.filter((n) => !n.isRead).length;
   const {
     sidebarCollapsed,
@@ -71,7 +76,7 @@ export function AppShell() {
         reachable regardless of scroll position. */}
       <aside
         className={cn(
-          "hidden h-full shrink-0 flex-col border-r border-border transition-[width] lg:flex",
+          "hidden h-full shrink-0 flex-col border-r border-border bg-card/60 transition-[width] lg:flex",
           sidebarCollapsed ? "w-16" : "w-64",
         )}
       >
@@ -105,15 +110,39 @@ export function AppShell() {
         </DrawerContent>
       </Drawer>
 
-      {/* Notification drawer — shell only, real content wired in CM1 */}
+      {/* Notification drawer — shows the same real data as the full
+        /app/notifications page (via the useMyNotifications() call
+        already made above for the unread badge), just the most recent
+        few plus a link to see everything. */}
       <Drawer open={notificationDrawerOpen} onOpenChange={setNotificationDrawerOpen}>
         <DrawerContent side="right">
           <DrawerTitle>Notifications</DrawerTitle>
-          <div className="mt-4">
-            <EmptyState
-              title="No notifications yet"
-              description="Notifications will appear here once the Notifications module is built."
-            />
+          <div className="mt-4 flex flex-col gap-3">
+            {isLoadingNotifications ? (
+              <div className="flex flex-col gap-2">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <SkeletonLoader key={i} className="h-20" />
+                ))}
+              </div>
+            ) : !notifications || notifications.length === 0 ? (
+              <EmptyState
+                title="No notifications yet"
+                description="You're all caught up."
+              />
+            ) : (
+              <ul className="flex flex-col gap-2">
+                {notifications.slice(0, 5).map((notification) => (
+                  <NotificationRow key={notification.id} notification={notification} />
+                ))}
+              </ul>
+            )}
+            <Link
+              to="/app/notifications"
+              onClick={() => setNotificationDrawerOpen(false)}
+              className="font-body text-sm text-primary underline underline-offset-4 hover:text-primary/80"
+            >
+              View all notifications
+            </Link>
           </div>
         </DrawerContent>
       </Drawer>
@@ -138,7 +167,7 @@ export function AppShell() {
             </Button>
           }
         />
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>

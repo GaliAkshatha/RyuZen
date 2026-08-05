@@ -3,6 +3,7 @@ import http from "http";
 import app from "./app.js";
 import { bootstrapDatabase } from "./bootstrap/database.js";
 import { env } from "./config/index.js";
+import { startCodingProfileSyncJob } from "./shared/infrastructure/jobs/codingProfileSyncJob.js";
 
 async function startServer(): Promise<void> {
     await bootstrapDatabase();
@@ -14,6 +15,8 @@ async function startServer(): Promise<void> {
             `Server running at http://localhost:${env.PORT}`
         );
     });
+
+    startCodingProfileSyncJob();
 }
 
 startServer();

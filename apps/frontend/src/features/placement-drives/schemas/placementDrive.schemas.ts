@@ -1,5 +1,21 @@
 import { z } from "zod";
 
+/**
+ * Mirrors EligibilityCriteria exactly. Empty arrays are normalized to
+ * undefined before submission (see PlacementDriveForm) so "nothing
+ * selected" genuinely means "no restriction", matching the backend's
+ * own default - not an empty-array edge case the evaluator has to
+ * special-case.
+ */
+const eligibilityCriteriaSchema = z
+  .object({
+    departmentIds: z.array(z.string()).optional(),
+    minCgpa: z.coerce.number().min(0).max(10).optional(),
+    minSemester: z.coerce.number().int().min(1).max(12).optional(),
+    batches: z.array(z.string()).optional(),
+  })
+  .optional();
+
 /** Mirrors CreatePlacementDriveSchema exactly */
 export const createPlacementDriveSchema = z.object({
   companyId: z.string().trim().min(1, "Company id is required."),
@@ -20,6 +36,7 @@ export const createPlacementDriveSchema = z.object({
     .trim()
     .max(2000, "Eligibility must be at most 2000 characters.")
     .optional(),
+  eligibilityCriteria: eligibilityCriteriaSchema,
   deadline: z.coerce.date({ errorMap: () => ({ message: "Enter a valid deadline." }) }).optional(),
 });
 
@@ -45,6 +62,7 @@ export const updatePlacementDriveSchema = z.object({
     .trim()
     .max(2000, "Eligibility must be at most 2000 characters.")
     .optional(),
+  eligibilityCriteria: eligibilityCriteriaSchema,
   deadline: z.coerce.date({ errorMap: () => ({ message: "Enter a valid deadline." }) }).optional(),
 });
 

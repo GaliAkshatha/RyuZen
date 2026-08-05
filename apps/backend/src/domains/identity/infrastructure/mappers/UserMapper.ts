@@ -45,6 +45,8 @@ export class UserMapper {
 
                 failedAttempts: document.auth.failedAttempts,
 
+                lockedUntil: document.auth.lockedUntil,
+
             },
 
             passwordReset: document.passwordReset

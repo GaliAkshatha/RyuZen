@@ -61,6 +61,7 @@ export const SETTINGS_CATEGORIES: SettingsCategoryConfig[] = [
         label: "Account Lock Duration (minutes)",
         type: "number",
       },
+      { key: "invitationExpiryDays", label: "Invitation Expiry (days)", type: "number" },
       { key: "ipWhitelist", label: "IP Whitelist (comma-separated)", type: "string[]" },
     ],
   },

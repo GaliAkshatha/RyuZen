@@ -56,6 +56,30 @@ export class Student {
         return this.props.cgpa;
     }
 
+    get section(): string | undefined {
+        return this.props.section;
+    }
+
+    get admissionYear(): number | undefined {
+        return this.props.admissionYear;
+    }
+
+    get graduationYear(): number | undefined {
+        return this.props.graduationYear;
+    }
+
+    get tenthPercentage(): number | undefined {
+        return this.props.tenthPercentage;
+    }
+
+    get twelfthPercentage(): number | undefined {
+        return this.props.twelfthPercentage;
+    }
+
+    get entranceRank(): number | undefined {
+        return this.props.entranceRank;
+    }
+
     get status(): StudentStatus {
         return this.props.status;
     }

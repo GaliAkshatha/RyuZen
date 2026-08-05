@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAppForm } from "@/hooks/useAppForm";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { KeyRound } from "lucide-react";
 
 import { Button } from "@/shared/ui/Button";
 import { Input } from "@/shared/ui/Input";
@@ -16,11 +15,20 @@ import {
   type ForgotPasswordFormValues,
 } from "@/features/auth/schemas/auth.schemas";
 
+/**
+ * Simplified once real SMTP email delivery existed on the backend
+ * (NodemailerEmailService) — this used to show the raw reset token
+ * directly on the page as an explicitly-labeled "Development mode"
+ * workaround, because the backend had no way to email it and was
+ * returning it directly in the API response instead (a real
+ * account-takeover risk: anyone could fetch a valid reset token for
+ * any email with no inbox access at all). The backend no longer
+ * returns the token in the response under any circumstance; this page
+ * only ever shows the generic "check your email" confirmation now.
+ */
 export function ForgotPasswordPage() {
-  const navigate = useNavigate();
   const { mutate, isPending, error } = useForgotPassword();
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
-  const [devResetToken, setDevResetToken] = useState<string | null>(null);
 
   const {
     register,
@@ -33,10 +41,7 @@ export function ForgotPasswordPage() {
 
   function onSubmit(values: ForgotPasswordFormValues) {
     mutate(values, {
-      onSuccess: (result) => {
-        setSubmittedEmail(values.email);
-        setDevResetToken(result.resetToken ?? null);
-      },
+      onSuccess: () => setSubmittedEmail(values.email),
     });
   }
 
@@ -47,47 +52,20 @@ export function ForgotPasswordPage() {
     return (
       <AuthCard
         title="Check your email"
-        description={`If an account exists for ${submittedEmail}, password reset instructions have been generated.`}
+        description={`If an account exists for ${submittedEmail}, we've sent password reset instructions to that address.`}
         footer={
           <Link to="/auth/login" className="text-primary underline underline-offset-4">
             Back to sign in
           </Link>
         }
-      >
-        {devResetToken && (
-          <div className="flex flex-col gap-3 rounded-md border border-warning/40 bg-warning/5 p-3">
-            <p className="flex items-center gap-2 font-body text-xs font-medium text-warning">
-              <KeyRound className="h-3.5 w-3.5" aria-hidden="true" />
-              Development mode
-            </p>
-            <p className="font-body text-xs text-muted-foreground">
-              No email delivery is configured on the backend yet, so the reset token is shown here
-              directly instead of being emailed. This will not happen in production.
-            </p>
-            <code className="break-all rounded bg-muted px-2 py-1 font-mono text-xs text-foreground">
-              {devResetToken}
-            </code>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() =>
-                navigate("/reset-password", {
-                  state: { email: submittedEmail, token: devResetToken },
-                })
-              }
-            >
-              Continue to reset password
-            </Button>
-          </div>
-        )}
-      </AuthCard>
+      />
     );
   }
 
   return (
     <AuthCard
       title="Forgot your password?"
-      description="Enter your email and we'll help you reset it."
+      description="Enter your email and we'll send you reset instructions."
       footer={
         <Link to="/auth/login" className="text-primary underline underline-offset-4">
           Back to sign in

@@ -41,7 +41,7 @@ export function WidgetCard({
   return (
     <Card
       className={cn(
-        "group flex flex-col border-border/60 bg-card/80 backdrop-blur-sm transition-all duration-300",
+        "group flex h-full flex-col border-border/60 bg-card/80 backdrop-blur-sm transition-all duration-300",
         "hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_0_24px_-8px_hsl(var(--primary)/0.35)]",
         className,
       )}

@@ -65,7 +65,7 @@ export function ClubDetailPage() {
   const currentAdvisor = resolveFacultyById(facultyList, club.facultyAdvisorId);
 
   return (
-    <div className="flex max-w-xl flex-col gap-6">
+    <div className="mx-auto flex max-w-xl flex-col gap-6">
       <div className="flex items-start justify-between">
         <div>
           <h1 className="font-display text-2xl font-semibold text-foreground">{club.name}</h1>

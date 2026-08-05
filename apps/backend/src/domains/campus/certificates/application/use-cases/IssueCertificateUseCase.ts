@@ -22,6 +22,10 @@ import {
 import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
+import { RecordSystemNotificationUseCase } from "../../../../communication/notifications/application/use-cases/RecordSystemNotificationUseCase.js";
+
+import { RecordGrowthEventUseCase } from "../../../../../shared/infrastructure/growth/RecordGrowthEventUseCase.js";
+
 export class IssueCertificateUseCase {
 
     constructor(
@@ -32,7 +36,11 @@ export class IssueCertificateUseCase {
 
         private readonly eventRepository: IEventRepository,
 
-        private readonly activityRepository: IActivityRepository
+        private readonly activityRepository: IActivityRepository,
+
+        private readonly recordSystemNotification: RecordSystemNotificationUseCase,
+
+        private readonly recordGrowthEvent: RecordGrowthEventUseCase
 
     ) {}
 
@@ -40,7 +48,9 @@ export class IssueCertificateUseCase {
 
         organizationId: string,
 
-        dto: IssueCertificateDto
+        dto: IssueCertificateDto,
+
+        issuedBy: string
 
     ): Promise<CertificateResponseDto> {
 
@@ -181,6 +191,42 @@ export class IssueCertificateUseCase {
                 certificate
 
             );
+
+        await this.recordSystemNotification.execute({
+
+            organizationId,
+
+            recipientUserId:
+                student.userId,
+
+            senderId:
+                issuedBy,
+
+            title:
+                "New certificate issued",
+
+            message:
+                "A new certificate has been issued to your profile and is ready to view."
+
+        });
+
+        await this.recordGrowthEvent.execute({
+
+            organizationId,
+
+            studentId: dto.studentId,
+
+            domain: "campus",
+
+            eventType: "CERTIFICATE_ISSUED",
+
+            evidence: { entityType: "Certificate", entityId: created.id! },
+
+            verifiedBy: issuedBy
+
+        }).catch(() => {
+            // Growth Profile recording must never break a real, already-issued certificate.
+        });
 
         return CertificateResponseMapper.toDto(
 

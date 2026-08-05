@@ -343,4 +343,54 @@ export class StudentController {
 
     }
 
+    async bulkImport(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        if (!req.file) {
+
+            throw new ApiError(
+
+                "No file was uploaded. Attach a CSV file as 'file'.",
+
+                HttpStatus.BAD_REQUEST
+
+            );
+
+        }
+
+        const report =
+
+            await studentContainer
+
+                .bulkImportStudents
+
+                .execute(
+
+                    req.user!.organizationId,
+
+                    req.user!.userId,
+
+                    req.user!.role,
+
+                    req.file.buffer
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            report,
+
+            `Import complete: ${report.successfulImports.length} of ${report.totalRows} rows imported successfully.`
+
+        );
+
+    }
+
 }

@@ -18,6 +18,12 @@ import { GetMyJobApplicationsUseCase } from "../use-cases/GetMyJobApplicationsUs
 import { GetJobApplicationsForPlacementUseCase } from "../use-cases/GetJobApplicationsForPlacementUseCase.js";
 import { UpdateJobApplicationStatusUseCase } from "../use-cases/UpdateJobApplicationStatusUseCase.js";
 
+import { growthEventRecorder } from "../../../../../shared/infrastructure/growth/growthEventRecorder.js";
+
+import {
+    notificationContainer,
+} from "../../../../communication/notifications/application/container/NotificationContainer.js";
+
 const jobApplicationRepository = new JobApplicationRepository();
 
 const placementDriveRepository = new PlacementDriveRepository();
@@ -80,7 +86,13 @@ export const jobApplicationContainer = {
 
             jobApplicationRepository,
 
-            placementDriveRepository
+            placementDriveRepository,
+
+            studentRepository,
+
+            notificationContainer.recordSystemNotification,
+
+            growthEventRecorder
 
         )
 

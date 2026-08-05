@@ -12,7 +12,7 @@ export function InviteAlumniPage() {
   const { mutate, isPending, error } = useInviteAlumni();
 
   return (
-    <div className="flex max-w-xl flex-col gap-6">
+    <div className="mx-auto flex max-w-xl flex-col gap-6">
       <Link
         to="/app/admin/alumni"
         className="flex w-fit items-center gap-1 font-body text-sm text-muted-foreground hover:text-foreground"

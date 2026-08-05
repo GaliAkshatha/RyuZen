@@ -167,7 +167,8 @@ export class JobApplicationController {
         const viewerIsAdmin =
 
             req.user!.role === UserRole.SUPER_ADMIN ||
-            req.user!.role === UserRole.ORG_ADMIN;
+            req.user!.role === UserRole.ORG_ADMIN ||
+            req.user!.role === UserRole.PLACEMENT_ADMIN;
 
         const application =
 
@@ -233,7 +234,9 @@ export class JobApplicationController {
 
                     req.user!.organizationId,
 
-                    req.body
+                    req.body,
+
+                    req.user!.userId
 
                 );
 

@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 export interface AuthCardProps {
   title: string;
   description?: string;
-  children: ReactNode;
+  children?: ReactNode;
   /** Footer link row, e.g. "Don't have an account? Register" */
   footer?: ReactNode;
 }

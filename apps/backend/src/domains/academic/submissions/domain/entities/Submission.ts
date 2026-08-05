@@ -219,7 +219,7 @@ export class Submission {
 
         this.props.review = {
 
-            reviewedBy: "",
+            reviewedBy: undefined,
 
             reviewedAt: undefined,
 

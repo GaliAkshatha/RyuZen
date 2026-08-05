@@ -95,4 +95,30 @@ implements ICertificateRepository {
 
     }
 
+    async findByStudentIds(
+
+        studentIds: string[]
+
+    ): Promise<Certificate[]> {
+
+        const documents =
+
+            await CertificateModel.find({
+
+                studentId: { $in: studentIds }
+
+            });
+
+        return documents.map(
+
+            document =>
+
+                CertificateMapper.toDomain(
+                    document
+                )
+
+        );
+
+    }
+
 }

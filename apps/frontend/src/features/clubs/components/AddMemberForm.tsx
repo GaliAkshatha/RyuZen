@@ -6,6 +6,7 @@ import { Button } from "@/shared/ui/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/Select";
 import { FormErrorSummary } from "@/shared/components/FormErrorSummary";
 import { flattenApiErrors } from "@/utils/flattenApiErrors";
+import { humanizeEnumValue } from "@/utils/humanizeEnumValue";
 import type { AppApiError } from "@/types/api";
 import { ClubMemberRole } from "@/types/enums";
 
@@ -88,7 +89,7 @@ export function AddMemberForm({
               <SelectContent>
                 {CLUB_MEMBER_ROLES.map((role) => (
                   <SelectItem key={role} value={role}>
-                    {role}
+                    {humanizeEnumValue(role)}
                   </SelectItem>
                 ))}
               </SelectContent>

@@ -36,7 +36,9 @@ router.post(
 
     authorizePermission(
 
-        UserRole.ORG_ADMIN
+        UserRole.ORG_ADMIN,
+
+        UserRole.PLACEMENT_ADMIN
 
     ),
 
@@ -102,7 +104,9 @@ router.patch(
 
     authorizePermission(
 
-        UserRole.ORG_ADMIN
+        UserRole.ORG_ADMIN,
+
+        UserRole.PLACEMENT_ADMIN
 
     ),
 
@@ -132,7 +136,9 @@ router.patch(
 
     authorizePermission(
 
-        UserRole.ORG_ADMIN
+        UserRole.ORG_ADMIN,
+
+        UserRole.PLACEMENT_ADMIN
 
     ),
 
@@ -156,13 +162,44 @@ router.patch(
 
     authorizePermission(
 
-        UserRole.ORG_ADMIN
+        UserRole.ORG_ADMIN,
+
+        UserRole.PLACEMENT_ADMIN
 
     ),
 
     asyncHandler(
 
         controller.close.bind(controller)
+
+    )
+
+);
+
+/*
+ Get Eligible Students - the real gate for Company -> Drive ->
+ Eligibility Criteria -> Eligible Students -> Student Applies. Same
+ roles that manage drives; students see this scoped to themselves via
+ the application flow, not this admin-facing full list.
+*/
+
+router.get(
+
+    "/:id/eligible-students",
+
+    authenticate,
+
+    authorizePermission(
+
+        UserRole.ORG_ADMIN,
+
+        UserRole.PLACEMENT_ADMIN
+
+    ),
+
+    asyncHandler(
+
+        controller.getEligibleStudents.bind(controller)
 
     )
 
@@ -180,7 +217,9 @@ router.delete(
 
     authorizePermission(
 
-        UserRole.ORG_ADMIN
+        UserRole.ORG_ADMIN,
+
+        UserRole.PLACEMENT_ADMIN
 
     ),
 

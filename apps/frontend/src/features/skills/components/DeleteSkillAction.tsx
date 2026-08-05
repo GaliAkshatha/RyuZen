@@ -7,7 +7,19 @@ import { useToast } from "@/hooks/useToast";
 
 import { useDeleteSkill } from "@/features/skills/hooks/useDeleteSkill";
 
-export function DeleteSkillAction({ skillId }: { skillId: string }) {
+interface DeleteSkillActionProps {
+  skillId: string;
+  title?: string;
+  confirmLabel?: string;
+  successMessage?: string;
+}
+
+export function DeleteSkillAction({
+  skillId,
+  title = "Remove this skill?",
+  confirmLabel = "Remove",
+  successMessage = "Skill removed",
+}: DeleteSkillActionProps) {
   const { toast } = useToast();
   const { mutate, isPending } = useDeleteSkill();
   const [open, setOpen] = useState(false);
@@ -20,14 +32,14 @@ export function DeleteSkillAction({ skillId }: { skillId: string }) {
       <ConfirmDialog
         open={open}
         onOpenChange={setOpen}
-        title="Remove this skill?"
+        title={title}
         destructive
-        confirmLabel="Remove"
+        confirmLabel={confirmLabel}
         isConfirming={isPending}
         onConfirm={() =>
           mutate(skillId, {
             onSuccess: () => {
-              toast({ title: "Skill removed" });
+              toast({ title: successMessage });
               setOpen(false);
             },
           })

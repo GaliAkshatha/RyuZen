@@ -28,7 +28,9 @@ export class GetMyNotificationsUseCase {
 
                 organizationId,
 
-                role
+                role,
+
+                userId
 
             );
 

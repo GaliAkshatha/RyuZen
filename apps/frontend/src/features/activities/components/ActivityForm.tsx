@@ -6,6 +6,7 @@ import { Button } from "@/shared/ui/Button";
 import { Input } from "@/shared/ui/Input";
 import { Textarea } from "@/shared/ui/Textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/Select";
+import { humanizeEnumValue } from "@/utils/humanizeEnumValue";
 import { FormErrorSummary } from "@/shared/components/FormErrorSummary";
 import { flattenApiErrors } from "@/utils/flattenApiErrors";
 import type { AppApiError } from "@/types/api";
@@ -117,7 +118,7 @@ export function ActivityForm({ activity, isSubmitting, error, onSubmit }: Activi
                 <SelectContent>
                   {ACTIVITY_TYPES.map((type) => (
                     <SelectItem key={type} value={type}>
-                      {type}
+                      {humanizeEnumValue(type)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -141,7 +142,7 @@ export function ActivityForm({ activity, isSubmitting, error, onSubmit }: Activi
                 <SelectContent>
                   {ACTIVITY_VISIBILITIES.map((visibility) => (
                     <SelectItem key={visibility} value={visibility}>
-                      {visibility}
+                      {humanizeEnumValue(visibility)}
                     </SelectItem>
                   ))}
                 </SelectContent>

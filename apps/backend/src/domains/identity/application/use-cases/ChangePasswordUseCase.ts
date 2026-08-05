@@ -2,6 +2,10 @@ import { IUserRepository } from "../../infrastructure/repositories/IUserReposito
 
 import { IPasswordHasher } from "../ports/IPasswordHasher.js";
 
+import {
+    IOrganizationSettingsRepository,
+} from "../../../organizations/infrastructure/repositories/IOrganizationSettingsRepository.js";
+
 import { ChangePasswordDto } from "../dto/ChangePasswordDto.js";
 
 import { ApiError } from "../../../../shared/core/http/ApiError.js";
@@ -13,7 +17,9 @@ export class ChangePasswordUseCase {
 
         private readonly userRepository: IUserRepository,
 
-        private readonly passwordHasher: IPasswordHasher
+        private readonly passwordHasher: IPasswordHasher,
+
+        private readonly organizationSettingsRepository: IOrganizationSettingsRepository
 
     ) {}
 
@@ -66,6 +72,26 @@ export class ChangePasswordUseCase {
                 "Current password is incorrect.",
 
                 HttpStatus.UNAUTHORIZED
+
+            );
+
+        }
+
+        const orgSettings =
+
+            await this.organizationSettingsRepository.findByOrganizationId(
+                user.organizationId
+            );
+
+        const minLength = orgSettings?.security.passwordMinLength;
+
+        if (minLength && dto.newPassword.length < minLength) {
+
+            throw new ApiError(
+
+                `This organization requires passwords to be at least ${minLength} characters.`,
+
+                HttpStatus.BAD_REQUEST
 
             );
 

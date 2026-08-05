@@ -26,7 +26,9 @@ export class CertificateController {
 
                     req.user!.organizationId,
 
-                    req.body
+                    req.body,
+
+                    req.user!.userId
 
                 );
 

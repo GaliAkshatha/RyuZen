@@ -38,7 +38,18 @@ import { UserRole } from "@/types/enums";
  * the registry below reflects the backend exactly as implemented.
  */
 
-export type NavGroup = "main" | "career" | "placements" | "ai" | "admin" | "account";
+export type NavGroup =
+  | "overview"
+  | "campus"
+  | "academic"
+  | "community"
+  | "career"
+  | "placements"
+  | "ai"
+  | "people"
+  | "organization"
+  | "insights"
+  | "account";
 
 export interface NavItem {
   path: string;
@@ -57,107 +68,145 @@ const ALL_ROLES: UserRole[] = [
   UserRole.ALUMNI,
 ];
 
+/**
+ * Everyone except SUPER_ADMIN. Corrected scope: Super Admin's real
+ * job is maintaining the platform itself - organizations, platform
+ * users/security, audit - not campus life, AI tools, or placements
+ * for any single organization. Confirmed a Super Admin account could
+ * reach "My Education -> Add an Education Entry"-style campus tooling
+ * before this fix, the same class of gap already closed for Faculty
+ * in the career section.
+ */
+export const CAMPUS_ROLES: UserRole[] = [
+  UserRole.ORG_ADMIN,
+  UserRole.FACULTY,
+  UserRole.STUDENT,
+  UserRole.ALUMNI,
+];
+
 export const navRegistry: NavItem[] = [
   // --- account (rendered via topbar menu, not the main sidebar) ---
   { path: "/app/profile", label: "Profile", icon: "user", roles: ALL_ROLES, group: "account" },
 
-  // --- main ---
+  // --- overview ---
   {
     path: "/app/dashboard",
     label: "Dashboard",
     icon: "layout-dashboard",
     roles: ALL_ROLES,
-    group: "main",
+    group: "overview",
   },
-  {
-    path: "/app/activities",
-    label: "Activities",
-    icon: "clipboard-list",
-    roles: ALL_ROLES,
-    group: "main",
-  },
-  {
-    path: "/app/submissions",
-    label: "Submissions",
-    icon: "file-check",
-    roles: ALL_ROLES,
-    group: "main",
-  },
-  { path: "/app/clubs", label: "Clubs", icon: "users", roles: ALL_ROLES, group: "main" },
-  { path: "/app/events", label: "Events", icon: "calendar", roles: ALL_ROLES, group: "main" },
-  {
-    path: "/app/leaderboard",
-    label: "Leaderboard",
-    icon: "trophy",
-    roles: ALL_ROLES,
-    group: "main",
-  },
-  { path: "/app/badges", label: "Badges", icon: "award", roles: ALL_ROLES, group: "main" },
+
+  // --- campus ---
+  { path: "/app/clubs", label: "Clubs", icon: "users", roles: CAMPUS_ROLES, group: "campus" },
+  { path: "/app/events", label: "Events", icon: "calendar", roles: CAMPUS_ROLES, group: "campus" },
+  { path: "/app/badges", label: "Badges", icon: "award", roles: CAMPUS_ROLES, group: "campus" },
   {
     path: "/app/certificates",
     label: "Certificates",
     icon: "file-badge",
     roles: [UserRole.STUDENT], // route-verified: GET .../certificates "mine" is STUDENT-only
-    group: "main",
+    group: "campus",
+  },
+
+  // --- academic ---
+  // Consolidated: Activities, Submissions, Attendance, Assessments,
+  // and Coding Practice all reach real pages via AcademicLayout's
+  // role-aware tab strip, matching "all the assignments and related
+  // falls in one." roles here match the widest real access among the
+  // 5 (Activities/Submissions/Assessments) - AcademicLayout itself
+  // only renders the Attendance/Coding Practice tabs for the roles
+  // that actually have them.
+  {
+    path: "/app/activities",
+    label: "Academic",
+    icon: "graduation-cap",
+    roles: CAMPUS_ROLES,
+    group: "academic",
+  },
+
+  // --- community ---
+  {
+    path: "/app/leaderboard",
+    label: "Leaderboard",
+    icon: "trophy",
+    roles: CAMPUS_ROLES,
+    group: "community",
+  },
+  {
+    path: "/app/point-history",
+    label: "Point History",
+    icon: "coins",
+    roles: [UserRole.STUDENT],
+    group: "community",
   },
   {
     path: "/app/mentorship",
     label: "Mentorship",
     icon: "graduation-cap",
     // route-verified: no STUDENT-accessible route exists (see correction #2 above)
-    roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN, UserRole.FACULTY],
-    group: "main",
+    roles: [UserRole.ORG_ADMIN, UserRole.FACULTY],
+    group: "community",
   },
   {
     path: "/app/notifications",
     label: "Notifications",
     icon: "bell",
-    roles: ALL_ROLES,
-    group: "main",
+    roles: CAMPUS_ROLES,
+    group: "community",
   },
   {
-    path: "/app/chat",
-    label: "Chat",
+    path: "/app/connect/people",
+    label: "Connect",
     icon: "message-circle",
-    // route-verified: SUPER_ADMIN explicitly excluded on chat.routes.ts
+    // route-verified: SUPER_ADMIN explicitly excluded on chat.routes.ts -
+    // Connect wraps real messaging (Chat) alongside the new People/
+    // Requests/Connections tabs, same real role scope.
     roles: [UserRole.ORG_ADMIN, UserRole.FACULTY, UserRole.STUDENT, UserRole.ALUMNI],
-    group: "main",
+    group: "community",
   },
 
   // --- career ---
+  // roles corrected to [STUDENT] across this whole group - these are
+  // student career-portfolio-building tools. Confirmed against a real
+  // screenshot: a Faculty account could reach "My Education -> Add an
+  // Education Entry" before this fix. The backend now enforces the
+  // same restriction (see career/*/presentation/routes/*.routes.ts) -
+  // this isn't just hiding the nav link, the routes actually reject
+  // non-STUDENT roles now.
   {
     path: "/app/career/skills",
     label: "Skills",
     icon: "sparkles",
-    roles: ALL_ROLES,
+    roles: [UserRole.STUDENT],
     group: "career",
   },
   {
     path: "/app/career/projects",
     label: "Portfolio Projects",
     icon: "folder-kanban",
-    roles: ALL_ROLES,
+    roles: [UserRole.STUDENT],
     group: "career",
   },
   {
     path: "/app/career/experience",
     label: "Experience",
     icon: "briefcase",
-    roles: ALL_ROLES,
+    roles: [UserRole.STUDENT],
     group: "career",
   },
   {
     path: "/app/career/education",
     label: "Education",
     icon: "book-open",
-    roles: ALL_ROLES,
+    roles: [UserRole.STUDENT],
     group: "career",
   },
   {
     path: "/app/career/certifications",
     label: "Certifications",
     icon: "badge-check",
-    roles: ALL_ROLES,
+    roles: [UserRole.STUDENT],
     group: "career",
   },
   {
@@ -171,92 +220,118 @@ export const navRegistry: NavItem[] = [
     path: "/app/career/portfolio",
     label: "My Portfolio",
     icon: "user-square",
-    roles: ALL_ROLES,
+    roles: [UserRole.STUDENT],
     group: "career",
   },
   {
     path: "/app/career/resume",
     label: "Resume",
     icon: "file-text",
-    roles: ALL_ROLES,
+    roles: [UserRole.STUDENT],
     group: "career",
   },
 
   // --- placements ---
+  // Consolidated into one real hub entry - Companies/Drives/My
+  // Applications are reached via PlacementsLayout's persistent tab
+  // strip, matching the same pattern as the AI Tools hub above.
   {
-    path: "/app/placements/companies",
-    label: "Companies",
-    icon: "building-2",
-    roles: ALL_ROLES, // route-verified: browse GETs are open to all; manage is ORG_ADMIN-only (enforced in-page, not nav-level)
-    group: "placements",
-  },
-  {
-    path: "/app/placements/drives",
-    label: "Placement Drives",
+    path: "/app/placements",
+    label: "Placements",
     icon: "briefcase-business",
-    roles: ALL_ROLES,
-    group: "placements",
-  },
-  {
-    path: "/app/placements/applications",
-    label: "My Applications",
-    icon: "send",
-    roles: [UserRole.STUDENT], // route-verified: apply + "mine" are STUDENT-only
+    roles: CAMPUS_ROLES,
     group: "placements",
   },
 
   // --- ai ---
-  { path: "/app/ai/chat", label: "AI Chat", icon: "bot", roles: ALL_ROLES, group: "ai" },
-  {
-    path: "/app/ai/resume-review",
-    label: "Resume Review",
-    icon: "file-search",
-    roles: ALL_ROLES,
-    group: "ai",
-  },
-  {
-    path: "/app/ai/career-score",
-    label: "Career Score",
-    icon: "gauge",
-    roles: ALL_ROLES,
-    group: "ai",
-  },
-  {
-    path: "/app/ai/recommendations",
-    label: "Recommendations",
-    icon: "compass",
-    roles: ALL_ROLES,
-    group: "ai",
-  },
-  {
-    path: "/app/ai/interview",
-    label: "Mock Interview",
-    icon: "mic",
-    roles: ALL_ROLES,
-    group: "ai",
-  },
+  // Consolidated into one real hub entry - the 5 real tools
+  // underneath are reached via the persistent tab strip on
+  // AIToolsLayout, not 5 separate sidebar items.
+  { path: "/app/ai", label: "AI Tools", icon: "sparkles", roles: CAMPUS_ROLES, group: "ai" },
 
-  // --- admin ---
+  // --- insights ---
   {
     path: "/app/admin/dashboard",
     label: "Analytics",
     icon: "bar-chart-3",
     roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN],
-    group: "admin",
+    group: "insights",
   },
+  {
+    path: "/app/admin/audit-logs",
+    label: "Audit Logs",
+    icon: "scroll-text",
+    roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN],
+    group: "insights",
+  },
+  {
+    path: "/app/admin/point-ledger",
+    label: "Point Ledger",
+    icon: "shield-check",
+    roles: [UserRole.ORG_ADMIN, UserRole.FACULTY],
+    group: "insights",
+  },
+  {
+    path: "/app/admin/placement-analytics",
+    label: "Placement Analytics",
+    icon: "trending-up",
+    roles: [UserRole.ORG_ADMIN, UserRole.PLACEMENT_ADMIN],
+    // route-verified: ORG_ADMIN and PLACEMENT_ADMIN only, SUPER_ADMIN explicitly excluded
+    group: "insights",
+  },
+
+  // --- people ---
   {
     path: "/app/admin/users",
     label: "Users & Permissions",
     icon: "user-cog",
     roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN],
-    group: "admin",
+    group: "people",
   },
+  {
+    path: "/app/admin/invitations",
+    label: "Invitations",
+    icon: "send",
+    roles: [UserRole.ORG_ADMIN],
+    group: "people",
+  },
+  {
+    path: "/app/admin/bulk-import",
+    label: "Bulk Import",
+    icon: "upload",
+    roles: [UserRole.ORG_ADMIN],
+    group: "people",
+  },
+  {
+    path: "/app/admin/faculty",
+    label: "Faculty",
+    icon: "user-round",
+    roles: [UserRole.ORG_ADMIN],
+    group: "people",
+  },
+  {
+    path: "/app/admin/students",
+    label: "Students",
+    icon: "users-round",
+    roles: [UserRole.ORG_ADMIN],
+    group: "people",
+  },
+  {
+    path: "/app/admin/alumni",
+    label: "Alumni",
+    icon: "graduation-cap",
+    // route-verified: admin-only, no public directory route exists (see correction #1 above)
+    roles: [UserRole.ORG_ADMIN],
+    group: "people",
+  },
+
+  // --- organization ---
   {
     path: "/app/admin/organizations",
     label: "Organizations",
     icon: "building",
     roles: [UserRole.SUPER_ADMIN],
-    group: "admin",
+    group: "organization",
   },
   {
     path: "/app/admin/organization-settings",
@@ -264,58 +339,21 @@ export const navRegistry: NavItem[] = [
     icon: "settings",
     // route-verified: ORG_ADMIN only, SUPER_ADMIN explicitly excluded
     roles: [UserRole.ORG_ADMIN],
-    group: "admin",
-  },
-  {
-    path: "/app/admin/audit-logs",
-    label: "Audit Logs",
-    icon: "scroll-text",
-    roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN],
-    group: "admin",
+    group: "organization",
   },
   {
     path: "/app/admin/departments",
     label: "Departments",
     icon: "network",
-    roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN],
-    group: "admin",
-  },
-  {
-    path: "/app/admin/faculty",
-    label: "Faculty",
-    icon: "user-round",
-    roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN],
-    group: "admin",
-  },
-  {
-    path: "/app/admin/students",
-    label: "Students",
-    icon: "users-round",
-    roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN],
-    group: "admin",
-  },
-  {
-    path: "/app/admin/alumni",
-    label: "Alumni",
-    icon: "graduation-cap",
-    // route-verified: admin-only, no public directory route exists (see correction #1 above)
-    roles: [UserRole.SUPER_ADMIN, UserRole.ORG_ADMIN],
-    group: "admin",
-  },
-  {
-    path: "/app/admin/placement-analytics",
-    label: "Placement Analytics",
-    icon: "trending-up",
-    // route-verified: ORG_ADMIN only, SUPER_ADMIN explicitly excluded
     roles: [UserRole.ORG_ADMIN],
-    group: "admin",
+    group: "organization",
   },
   {
     path: "/app/admin/resume-templates",
     label: "Resume Templates",
     icon: "layout-template",
     roles: [UserRole.SUPER_ADMIN],
-    group: "admin",
+    group: "organization",
   },
 ];
 

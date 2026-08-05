@@ -1,6 +1,7 @@
 import { Skill } from "../../domain/entities/Skill.js";
 
 import { SkillLevel } from "../../domain/constants/SkillLevel.js";
+import { SkillSource } from "../../domain/constants/SkillSource.js";
 
 import {
     SkillDocument
@@ -33,6 +34,21 @@ export class SkillMapper {
 
             verified:
                 document.verified,
+
+            // Defaults preserve exact prior behavior for every skill
+            // created before AI extraction existed: MANUAL and already
+            // approved (nothing about existing records changes).
+            source:
+                (document.source as SkillSource | undefined) ?? SkillSource.MANUAL,
+
+            confidence:
+                document.confidence,
+
+            evidence:
+                document.evidence,
+
+            approved:
+                document.approved ?? true,
 
             createdAt:
                 document.createdAt,
@@ -68,7 +84,19 @@ export class SkillMapper {
                 data.level,
 
             verified:
-                data.verified
+                data.verified,
+
+            source:
+                data.source,
+
+            confidence:
+                data.confidence,
+
+            evidence:
+                data.evidence,
+
+            approved:
+                data.approved
 
         };
 

@@ -9,13 +9,31 @@ import { EventRegistrationResponseDto } from "../dto/EventRegistrationResponseDt
 import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
+import {
+    IStudentRepository,
+} from "../../../../academic/students/infrastructure/repositories/IStudentRepository.js";
+
+import { RecordSystemNotificationUseCase } from "../../../../communication/notifications/application/use-cases/RecordSystemNotificationUseCase.js";
+
+/**
+ * A genuinely separate certificate mechanism from campus/certificates'
+ * Certificate entity — this tracks issuance as a boolean flag on the
+ * EventRegistration itself, confirmed by reading both domains before
+ * touching either. Pre-existing architecture, not something introduced
+ * here; left as-is rather than unifying the two, which would be a real
+ * redesign beyond notification wiring.
+ */
 export class IssueCertificatesUseCase {
 
     constructor(
 
         private readonly repository: IEventRepository,
 
-        private readonly registrationRepository: IEventRegistrationRepository
+        private readonly registrationRepository: IEventRegistrationRepository,
+
+        private readonly studentRepository: IStudentRepository,
+
+        private readonly recordSystemNotification: RecordSystemNotificationUseCase
 
     ) {}
 
@@ -23,7 +41,9 @@ export class IssueCertificatesUseCase {
 
         eventId: string,
 
-        organizationId: string
+        organizationId: string,
+
+        issuedBy: string
 
     ): Promise<EventRegistrationResponseDto[]> {
 
@@ -88,6 +108,34 @@ export class IssueCertificatesUseCase {
                     );
 
                 issued.push(updated);
+
+                const student =
+
+                    await this.studentRepository.findById(
+                        registration.studentId
+                    );
+
+                if (student) {
+
+                    await this.recordSystemNotification.execute({
+
+                        organizationId,
+
+                        recipientUserId:
+                            student.userId,
+
+                        senderId:
+                            issuedBy,
+
+                        title:
+                            "New certificate issued",
+
+                        message:
+                            `A certificate for "${event.title}" has been issued to your profile.`
+
+                    });
+
+                }
 
             } else if (registration.certificateIssued) {
 

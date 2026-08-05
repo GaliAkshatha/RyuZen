@@ -7,6 +7,7 @@ import { Input } from "@/shared/ui/Input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/Select";
 import { FormErrorSummary } from "@/shared/components/FormErrorSummary";
 import { flattenApiErrors } from "@/utils/flattenApiErrors";
+import { humanizeEnumValue } from "@/utils/humanizeEnumValue";
 import type { AppApiError } from "@/types/api";
 import { SkillLevel } from "@/types/enums";
 
@@ -87,7 +88,7 @@ export function SkillForm({ skill, isSubmitting, error, onSubmit, onCancel }: Sk
                 <SelectContent>
                   {SKILL_LEVELS.map((level) => (
                     <SelectItem key={level} value={level}>
-                      {level}
+                      {humanizeEnumValue(level)}
                     </SelectItem>
                   ))}
                 </SelectContent>

@@ -1,4 +1,5 @@
 import jwt, { SignOptions} from "jsonwebtoken";
+import { randomUUID } from "node:crypto";
 
 import { User } from "../../domain/entities/User.js";
 
@@ -13,7 +14,8 @@ export class JwtTokenProvider
 implements ITokenProvider {
 
     async generateAccessToken(
-        user: User
+        user: User,
+        sessionId?: string
     ): Promise<string> {
 
         const options: SignOptions = {
@@ -30,7 +32,9 @@ implements ITokenProvider {
 
                 organizationId: user.organizationId,
 
-                role: user.role
+                role: user.role,
+
+                sessionId
 
             },
 
@@ -43,7 +47,8 @@ implements ITokenProvider {
     }
 
     async generateRefreshToken(
-        user: User
+        user: User,
+        sessionId: string
     ): Promise<string> {
 
         const options: SignOptions = {
@@ -58,7 +63,18 @@ implements ITokenProvider {
 
                 userId: user.id,
 
-                type: "refresh"
+                sessionId,
+
+                type: "refresh",
+
+                // A real, unique JWT ID (RFC 7519 `jti`) - without
+                // this, two tokens signed with identical claims within
+                // the same second (iat has second-granularity) are
+                // byte-for-byte identical, confirmed directly while
+                // testing rotation. Rotation must always produce a
+                // genuinely distinct token, not just a re-signed copy
+                // of the same claims.
+                jti: randomUUID()
 
             },
 
@@ -99,7 +115,8 @@ implements ITokenProvider {
 
             typeof payload === "string" ||
             payload.type !== "refresh" ||
-            typeof payload.userId !== "string"
+            typeof payload.userId !== "string" ||
+            typeof payload.sessionId !== "string"
 
         ) {
 
@@ -115,7 +132,9 @@ implements ITokenProvider {
 
         return {
 
-            userId: payload.userId
+            userId: payload.userId,
+
+            sessionId: payload.sessionId
 
         };
 

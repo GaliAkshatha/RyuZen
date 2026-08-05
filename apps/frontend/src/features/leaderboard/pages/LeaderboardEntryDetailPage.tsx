@@ -39,7 +39,7 @@ export function LeaderboardEntryDetailPage() {
   const canAdjust = canAdjustLeaderboard(user?.role);
 
   return (
-    <div className="flex max-w-xl flex-col gap-6">
+    <div className="mx-auto flex max-w-xl flex-col gap-6">
       <div>
         <h1 className="font-display text-2xl font-semibold text-foreground">
           {student ? studentLabel(student) : entry.studentId}

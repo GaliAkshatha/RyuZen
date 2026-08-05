@@ -4,6 +4,7 @@ import { UserRole } from "@/types/enums";
 import { StudentLayout } from "@/layouts/StudentLayout";
 import { FacultyLayout } from "@/layouts/FacultyLayout";
 import { AlumniLayout } from "@/layouts/AlumniLayout";
+import { RecruiterLayout } from "@/layouts/RecruiterLayout";
 import { OrganizationAdminLayout } from "@/layouts/OrganizationAdminLayout";
 import { SuperAdminLayout } from "@/layouts/SuperAdminLayout";
 
@@ -11,7 +12,9 @@ const LAYOUT_BY_ROLE: Record<UserRole, ComponentType> = {
   [UserRole.STUDENT]: StudentLayout,
   [UserRole.FACULTY]: FacultyLayout,
   [UserRole.ALUMNI]: AlumniLayout,
+  [UserRole.RECRUITER]: RecruiterLayout,
   [UserRole.ORG_ADMIN]: OrganizationAdminLayout,
+  [UserRole.PLACEMENT_ADMIN]: OrganizationAdminLayout,
   [UserRole.SUPER_ADMIN]: SuperAdminLayout,
 };
 

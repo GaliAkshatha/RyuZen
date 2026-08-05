@@ -12,17 +12,20 @@
 export enum UserRole {
   SUPER_ADMIN = "SUPER_ADMIN",
   ORG_ADMIN = "ORG_ADMIN",
+  PLACEMENT_ADMIN = "PLACEMENT_ADMIN",
   FACULTY = "FACULTY",
   STUDENT = "STUDENT",
   ALUMNI = "ALUMNI",
+  RECRUITER = "RECRUITER",
 }
 
 // domains/identity/domain/constants/UserStatus.ts
 export enum UserStatus {
-  PENDING = "PENDING",
+  INVITED = "INVITED",
+  EMAIL_VERIFIED = "EMAIL_VERIFIED",
   ACTIVE = "ACTIVE",
   SUSPENDED = "SUSPENDED",
-  DEACTIVATED = "DEACTIVATED",
+  ARCHIVED = "ARCHIVED",
 }
 
 // domains/organizations/domain/constants/OrganizationStatus.ts
@@ -212,6 +215,24 @@ export enum JobApplicationStatus {
   SELECTED = "SELECTED",
 }
 
+// domains/placements/interviews/domain/constants/InterviewRoundType.ts
+export enum InterviewRoundType {
+  ONLINE_ASSESSMENT = "ONLINE_ASSESSMENT",
+  TECHNICAL_1 = "TECHNICAL_1",
+  TECHNICAL_2 = "TECHNICAL_2",
+  MANAGERIAL = "MANAGERIAL",
+  HR = "HR",
+}
+
+// domains/placements/interviews/domain/constants/InterviewRoundStatus.ts
+export enum InterviewRoundStatus {
+  SCHEDULED = "SCHEDULED",
+  COMPLETED = "COMPLETED",
+  PASSED = "PASSED",
+  FAILED = "FAILED",
+  CANCELLED = "CANCELLED",
+}
+
 // domains/career/skills/domain/constants/SkillLevel.ts
 export enum SkillLevel {
   BEGINNER = "BEGINNER",
@@ -271,6 +292,8 @@ export enum NotificationAudience {
   FACULTY = "FACULTY",
   STUDENT = "STUDENT",
   ALUMNI = "ALUMNI",
+  /** System-generated, single-recipient notifications only (submission reviewed, achievement verified, etc.) — never sent by a human composing a broadcast. */
+  TARGETED = "TARGETED",
 }
 
 // domains/communication/chat/domain/constants/ChatType.ts

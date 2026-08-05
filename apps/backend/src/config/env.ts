@@ -29,12 +29,31 @@ export const env = {
         process.env.REFRESH_TOKEN_EXPIRES_IN ??
         "30d",
 
-    // Reserved for a future real IAIProvider implementation
-    // (see domains/ai/chat/infrastructure/ai/StubAIProvider.ts).
-    // Not read by the current stub provider.
-    AI_PROVIDER_API_KEY:
-        process.env.AI_PROVIDER_API_KEY ??
+    // AI_PROVIDER selects which real provider every AI feature's
+    // factory instantiates (see shared/infrastructure/ai/AIProviderFactory.ts).
+    // No business logic or use case ever reads this directly or
+    // hardcodes a provider - only the 5 factory functions do, exactly
+    // once each. Defaults to "gemini" (cloud-first), with "ollama"
+    // fully supported as the local/offline alternative.
+    AI_PROVIDER:
+        (process.env.AI_PROVIDER as "gemini" | "ollama" | undefined) ??
+        "gemini",
+
+    GEMINI_API_KEY:
+        process.env.GEMINI_API_KEY ??
         "",
+
+    GEMINI_MODEL:
+        process.env.GEMINI_MODEL ??
+        "gemini-1.5-flash",
+
+    OLLAMA_BASE_URL:
+        process.env.OLLAMA_BASE_URL ??
+        "http://localhost:11434",
+
+    OLLAMA_MODEL:
+        process.env.OLLAMA_MODEL ??
+        "qwen3:8b",
 
     RATE_LIMIT_WINDOW_MS:
         Number(
@@ -54,6 +73,55 @@ export const env = {
     CACHE_DEFAULT_TTL_SECONDS:
         Number(
             process.env.CACHE_DEFAULT_TTL_SECONDS ?? 60
+        ),
+
+    // SMTP config for real email delivery (invitations, email
+    // verification, password reset links). Every field defaults to
+    // empty/sensible so the app still starts without them configured
+    // - EmailService logs a clear warning and skips sending rather
+    // than crashing a request over missing mail config (see
+    // shared/infrastructure/email/NodemailerEmailService.ts).
+    SMTP_HOST:
+        process.env.SMTP_HOST ??
+        "",
+
+    SMTP_PORT:
+        Number(
+            process.env.SMTP_PORT ?? 587
+        ),
+
+    SMTP_SECURE:
+        process.env.SMTP_SECURE === "true",
+
+    SMTP_USER:
+        process.env.SMTP_USER ??
+        "",
+
+    SMTP_PASSWORD:
+        process.env.SMTP_PASSWORD ??
+        "",
+
+    EMAIL_FROM:
+        process.env.EMAIL_FROM ??
+        "RyuZen <no-reply@ryuzen.ai>",
+
+    FRONTEND_URL:
+        process.env.FRONTEND_URL ??
+        "http://localhost:5173",
+
+    // Account lockout: after this many consecutive failed login
+    // attempts, the account is locked for ACCOUNT_LOCK_DURATION_MS
+    // (auto-unlocks once that time passes - see LoginUserUseCase).
+    // An ORG_ADMIN can also unlock manually before it expires (see
+    // AdminUnlockUserUseCase).
+    ACCOUNT_LOCK_THRESHOLD:
+        Number(
+            process.env.ACCOUNT_LOCK_THRESHOLD ?? 5
+        ),
+
+    ACCOUNT_LOCK_DURATION_MS:
+        Number(
+            process.env.ACCOUNT_LOCK_DURATION_MS ?? 15 * 60 * 1000
         ),
 
 };

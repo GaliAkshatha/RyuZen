@@ -30,7 +30,9 @@ router.get(
 
     authorizePermission(
 
-        UserRole.ORG_ADMIN
+        UserRole.ORG_ADMIN,
+
+        UserRole.PLACEMENT_ADMIN
 
     ),
 

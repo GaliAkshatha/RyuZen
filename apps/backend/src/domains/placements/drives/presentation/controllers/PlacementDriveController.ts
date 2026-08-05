@@ -332,4 +332,52 @@ export class PlacementDriveController {
 
     }
 
+    async getEligibleStudents(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const { id } = req.params;
+
+        if (!id || Array.isArray(id)) {
+
+            throw new ApiError(
+
+                "Invalid placement drive id.",
+
+                HttpStatus.BAD_REQUEST
+
+            );
+
+        }
+
+        const students =
+
+            await placementDriveContainer
+
+                .getEligibleStudents
+
+                .execute(
+
+                    id,
+
+                    req.user!.organizationId
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            students,
+
+            "Eligible students fetched successfully."
+
+        );
+
+    }
+
 }

@@ -2,11 +2,33 @@ import { randomBytes } from "crypto";
 
 import { IUserRepository } from "../../infrastructure/repositories/IUserRepository.js";
 
-import { IPasswordHasher } from "../ports/IPasswordHasher.js";
-
 import { ForgotPasswordDto } from "../dto/ForgotPasswordDto.js";
 import { ForgotPasswordResponseDto } from "../dto/ForgotPasswordResponseDto.js";
 
+import { IEmailService } from "../../../../shared/infrastructure/email/IEmailService.js";
+import { buildPasswordResetEmail } from "../../../../shared/infrastructure/email/emailTemplates.js";
+import { hashToken } from "../../../../shared/infrastructure/security/hashToken.js";
+import { env } from "../../../../config/env.js";
+
+/**
+ * SECURITY FIX: this previously returned the raw resetToken directly
+ * in the API response body (see the TODO that used to be here — "no
+ * email delivery infrastructure exists yet"). That meant ANY caller
+ * could obtain a valid password-reset token for ANY email address
+ * just by calling this endpoint, with no access to that person's
+ * inbox required at all — a real account-takeover path, not a
+ * theoretical one. Now that IEmailService exists, the token is only
+ * ever emailed to the account's own address; the API response never
+ * contains it.
+ *
+ * The token itself is hashed with hashToken (SHA-256), not bcrypt -
+ * bcrypt silently truncates input to 72 bytes, which is fine for
+ * short human passwords but the wrong tool for a token (see
+ * hashToken.ts). This 64-byte token was never actually vulnerable to
+ * the truncation bug itself, but using the same correct tool
+ * everywhere tokens are hashed removes the whole risk class rather
+ * than relying on every token happening to stay under 72 bytes.
+ */
 export class ForgotPasswordUseCase {
 
     private readonly TOKEN_TTL_MS = 60 * 60 * 1000;
@@ -15,7 +37,7 @@ export class ForgotPasswordUseCase {
 
         private readonly userRepository: IUserRepository,
 
-        private readonly passwordHasher: IPasswordHasher
+        private readonly emailService: IEmailService
 
     ) {}
 
@@ -44,7 +66,7 @@ export class ForgotPasswordUseCase {
 
         const tokenHash =
 
-            await this.passwordHasher.hash(
+            hashToken(
                 resetToken
             );
 
@@ -64,13 +86,22 @@ export class ForgotPasswordUseCase {
 
         );
 
-        // TODO: deliver via the Notifications/Email module once available.
-        // Returned directly for now since no email delivery infrastructure exists yet.
-        return {
+        const resetUrl =
+            `${env.FRONTEND_URL}/auth/reset-password?email=${encodeURIComponent(user.email)}&token=${resetToken}`;
 
-            resetToken
+        const { subject, html } = buildPasswordResetEmail(resetUrl);
 
-        };
+        await this.emailService.send({
+
+            to: user.email,
+
+            subject,
+
+            html
+
+        });
+
+        return {};
 
     }
 

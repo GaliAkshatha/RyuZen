@@ -7,6 +7,7 @@ import { Input } from "@/shared/ui/Input";
 import { Switch } from "@/shared/ui/Switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/Select";
 import { useToast } from "@/hooks/useToast";
+import { humanizeEnumValue } from "@/utils/humanizeEnumValue";
 
 import { useUpdateOrganizationSettings } from "@/features/organization-settings/hooks/useUpdateOrganizationSettings";
 import type { SettingsCategoryConfig } from "@/features/organization-settings/config/settingsFieldConfig";
@@ -74,7 +75,7 @@ export function SettingsCategorySection({ config, values }: SettingsCategorySect
                   <SelectContent>
                     {field.enumOptions?.map((option) => (
                       <SelectItem key={option} value={option}>
-                        {option}
+                        {humanizeEnumValue(option)}
                       </SelectItem>
                     ))}
                   </SelectContent>

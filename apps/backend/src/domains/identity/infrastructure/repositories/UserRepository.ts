@@ -2,6 +2,7 @@ import { IUserRepository } from "./IUserRepository.js";
 
 import { User } from "../../domain/entities/User.js";
 import { UserStatus } from "../../domain/constants/UserStatus.js";
+import { UserRole } from "../../domain/constants/UserRole.js";
 
 import { UserModel } from "../persistence/UserModel.js";
 import { UserMapper } from "../mappers/UserMapper.js";
@@ -144,22 +145,32 @@ implements IUserRepository {
     }
 
     async incrementFailedAttempts(
+
         userId: string
-    ): Promise<void> {
 
-        await UserModel.updateOne(
+    ): Promise<number> {
 
-            {
-                _id: userId,
-            },
+        const document =
 
-            {
-                $inc: {
-                    "auth.failedAttempts": 1,
+            await UserModel.findOneAndUpdate(
+
+                {
+                    _id: userId,
                 },
-            }
 
-        );
+                {
+                    $inc: {
+                        "auth.failedAttempts": 1,
+                    },
+                },
+
+                {
+                    new: true,
+                }
+
+            );
+
+        return document?.auth.failedAttempts ?? 0;
 
     }
 
@@ -176,6 +187,33 @@ implements IUserRepository {
             {
                 $set: {
                     "auth.failedAttempts": 0,
+                },
+                $unset: {
+                    "auth.lockedUntil": "",
+                },
+            }
+
+        );
+
+    }
+
+    async lockAccount(
+
+        userId: string,
+
+        lockedUntil: Date
+
+    ): Promise<void> {
+
+        await UserModel.updateOne(
+
+            {
+                _id: userId,
+            },
+
+            {
+                $set: {
+                    "auth.lockedUntil": lockedUntil,
                 },
             }
 
@@ -197,6 +235,27 @@ implements IUserRepository {
             {
                 $set: {
                     status,
+                },
+            }
+
+        );
+
+    }
+
+    async updateRole(
+        userId: string,
+        role: UserRole
+    ): Promise<void> {
+
+        await UserModel.updateOne(
+
+            {
+                _id: userId,
+            },
+
+            {
+                $set: {
+                    role,
                 },
             }
 
