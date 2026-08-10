@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { Info } from "lucide-react";
 
 import { DataGrid, type DataGridColumn } from "@/shared/components/DataGrid";
 import { ErrorState } from "@/shared/components/ErrorState";
@@ -13,12 +12,21 @@ import type { MentorshipResponseDto } from "@/features/mentorship/types/mentorsh
 import { useStudents } from "@/features/students/hooks/useStudents";
 import { studentLabel } from "@/features/students/utils/studentLabels";
 import { useFaculty } from "@/features/faculty/hooks/useFaculty";
+import { useMyFacultyProfile } from "@/features/faculty/hooks/useMyFacultyProfile";
 import { facultyLabel } from "@/features/faculty/utils/facultyLabels";
 
 export function MentorshipListPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { data: mentorships, isLoading, isError, error, refetch } = useMentorships();
+  const isFaculty = user?.role === UserRole.FACULTY;
+
+  // Real self-scoping now, not just a disclaimer: a faculty caller's
+  // own facultyId is resolved server-side (GetMyFacultyProfileUseCase)
+  // and used to genuinely filter this list to their own mentees.
+  const { data: myFacultyProfile } = useMyFacultyProfile();
+  const { data: mentorships, isLoading, isError, error, refetch } = useMentorships(
+    isFaculty && myFacultyProfile ? { facultyId: myFacultyProfile.id } : undefined,
+  );
   const { data: students } = useStudents();
   const { data: faculty } = useFaculty();
 
@@ -51,19 +59,9 @@ export function MentorshipListPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="font-display text-2xl font-semibold text-foreground">Mentorships</h1>
-        {user?.role === UserRole.FACULTY && (
-          <div className="mt-3 flex items-start gap-2 rounded-md border border-border bg-muted/50 p-3">
-            <Info className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-            <p className="font-body text-xs text-muted-foreground">
-              This list currently shows all mentorships in your organization, not only your own
-              mentees. The backend does not yet provide a way for faculty to look up their own
-              faculty record or filter this list to themselves.
-            </p>
-          </div>
-        )}
-      </div>
+      <h1 className="font-display text-2xl font-semibold text-foreground">
+        {isFaculty ? "My Mentees" : "Mentorships"}
+      </h1>
 
       <DataGrid
         data={mentorships ?? []}

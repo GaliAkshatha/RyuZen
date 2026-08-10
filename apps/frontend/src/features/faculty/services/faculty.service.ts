@@ -9,6 +9,12 @@ import type {
 } from "@/features/faculty/types/faculty.types";
 
 export const facultyService = {
+  getMe(): Promise<FacultyResponseDto> {
+    return apiClient
+      .get<FacultyResponseDto>(`${API_ENDPOINTS.faculty}/me`)
+      .then((response) => response.data);
+  },
+
   list(): Promise<FacultyResponseDto[]> {
     return apiClient
       .get<FacultyResponseDto[]>(API_ENDPOINTS.faculty)

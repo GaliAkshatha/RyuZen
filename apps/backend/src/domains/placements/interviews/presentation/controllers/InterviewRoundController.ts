@@ -28,7 +28,9 @@ export class InterviewRoundController {
 
                     req.body,
 
-                    req.user!.userId
+                    req.user!.userId,
+
+                    req.user!.role
 
                 );
 
@@ -82,7 +84,9 @@ export class InterviewRoundController {
 
                     req.body,
 
-                    req.user!.userId
+                    req.user!.userId,
+
+                    req.user!.role
 
                 );
 

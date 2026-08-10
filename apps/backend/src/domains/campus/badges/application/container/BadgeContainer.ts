@@ -16,6 +16,9 @@ import { GetStudentBadgesUseCase } from "../use-cases/GetStudentBadgesUseCase.js
 
 import { cacheService } from "../../../../../shared/infrastructure/cache/InMemoryCacheService.js";
 
+import { notificationContainer } from "../../../../communication/notifications/application/container/NotificationContainer.js";
+import { growthEventRecorder } from "../../../../../shared/infrastructure/growth/growthEventRecorder.js";
+
 const badgeRepository = new BadgeRepository();
 
 const studentBadgeRepository = new StudentBadgeRepository();
@@ -78,7 +81,11 @@ export const badgeContainer = {
 
             studentBadgeRepository,
 
-            studentRepository
+            studentRepository,
+
+            notificationContainer.recordSystemNotification,
+
+            growthEventRecorder
 
         ),
 

@@ -16,6 +16,16 @@ import {
     IStudentRepository,
 } from "../../../../academic/students/infrastructure/repositories/IStudentRepository.js";
 
+import {
+    IPlacementDriveRepository,
+} from "../../../drives/infrastructure/repositories/IPlacementDriveRepository.js";
+
+import {
+    IRecruiterRepository,
+} from "../../../recruiters/infrastructure/repositories/IRecruiterRepository.js";
+
+import { UserRole } from "../../../../identity/domain/constants/UserRole.js";
+
 import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
@@ -27,6 +37,11 @@ import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
  * the HR round). Failing a round never emits one - only real positive
  * progress counts, same discipline as everywhere else this pattern is
  * wired in.
+ *
+ * ORG_ADMIN/PLACEMENT_ADMIN can evaluate any real round in their org.
+ * RECRUITER can only evaluate rounds for applications to drives at
+ * their own real company - the real gap this closes alongside
+ * ScheduleInterviewRoundUseCase.
  */
 export class RecordInterviewEvaluationUseCase {
 
@@ -37,6 +52,10 @@ export class RecordInterviewEvaluationUseCase {
         private readonly applicationRepository: IJobApplicationRepository,
 
         private readonly studentRepository: IStudentRepository,
+
+        private readonly driveRepository: IPlacementDriveRepository,
+
+        private readonly recruiterRepository: IRecruiterRepository,
 
         private readonly recordGrowthEvent: RecordGrowthEventUseCase,
 
@@ -52,7 +71,9 @@ export class RecordInterviewEvaluationUseCase {
 
         dto: RecordInterviewEvaluationDto,
 
-        evaluatedBy: string
+        evaluatedBy: string,
+
+        evaluatedByRole: UserRole
 
     ): Promise<InterviewRoundResponseDto> {
 
@@ -76,6 +97,49 @@ export class RecordInterviewEvaluationUseCase {
                 HttpStatus.NOT_FOUND
 
             );
+
+        }
+
+        if (evaluatedByRole === UserRole.RECRUITER) {
+
+            const applicationForOwnership =
+
+                await this.applicationRepository.findById(
+                    round.applicationId
+                );
+
+            const driveForOwnership =
+
+                applicationForOwnership
+                    ? await this.driveRepository.findById(
+                        applicationForOwnership.placementId
+                    )
+                    : null;
+
+            const recruiter =
+
+                await this.recruiterRepository.findByUserId(
+                    evaluatedBy
+                );
+
+            if (
+
+                !driveForOwnership ||
+                !recruiter ||
+                recruiter.organizationId !== organizationId ||
+                recruiter.companyId !== driveForOwnership.companyId
+
+            ) {
+
+                throw new ApiError(
+
+                    "Interview round not found.",
+
+                    HttpStatus.NOT_FOUND
+
+                );
+
+            }
 
         }
 

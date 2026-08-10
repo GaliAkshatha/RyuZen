@@ -13,9 +13,20 @@ import {
     IStudentRepository,
 } from "../../../../academic/students/infrastructure/repositories/IStudentRepository.js";
 
+import { RecordSystemNotificationUseCase } from "../../../../communication/notifications/application/use-cases/RecordSystemNotificationUseCase.js";
+import { RecordGrowthEventUseCase } from "../../../../../shared/infrastructure/growth/RecordGrowthEventUseCase.js";
+
 import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
+/**
+ * Awarding a badge is a genuinely celebratory, recognition-worthy
+ * moment - the same class of event as VerifyAchievementUseCase and
+ * IssueCertificateUseCase, both of which already notify the student
+ * and record a real growth event. This use case previously did
+ * neither; a badge could be awarded and the student would have no way
+ * to know unless they happened to check their profile.
+ */
 export class AwardBadgeUseCase {
 
     constructor(
@@ -24,7 +35,11 @@ export class AwardBadgeUseCase {
 
         private readonly studentBadgeRepository: IStudentBadgeRepository,
 
-        private readonly studentRepository: IStudentRepository
+        private readonly studentRepository: IStudentRepository,
+
+        private readonly recordSystemNotification: RecordSystemNotificationUseCase,
+
+        private readonly recordGrowthEvent: RecordGrowthEventUseCase
 
     ) {}
 
@@ -124,6 +139,38 @@ export class AwardBadgeUseCase {
                 studentBadge
 
             );
+
+        await this.recordGrowthEvent.execute({
+
+            organizationId,
+
+            studentId: dto.studentId,
+
+            domain: "campus",
+
+            eventType: "BADGE_AWARDED",
+
+            evidence: { entityType: "Badge", entityId: badgeId },
+
+            verifiedBy: awardedBy
+
+        });
+
+        await this.recordSystemNotification.execute({
+
+            organizationId,
+
+            recipientUserId: student.userId,
+
+            senderId: awardedBy,
+
+            title: "New badge earned",
+
+            message: `You've been awarded the "${badge.name}" badge.`
+
+        }).catch(() => {
+            // A notification failure must never undo an already-recorded award.
+        });
 
         return StudentBadgeResponseMapper.toDto(
 

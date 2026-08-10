@@ -14,14 +14,10 @@ import { LeaderboardPodium } from "@/features/leaderboard/components/Leaderboard
 import { canAdjustLeaderboard } from "@/features/leaderboard/utils/leaderboardPermissions";
 import type { LeaderboardEntryResponseDto } from "@/features/leaderboard/types/leaderboard.types";
 
-import { useStudents } from "@/features/students/hooks/useStudents";
-import { studentLabel, resolveStudentById } from "@/features/students/utils/studentLabels";
-
 export function LeaderboardPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { data: entries, isLoading, isError, error, refetch } = useLeaderboard();
-  const { data: students } = useStudents();
   const { data: myEntry } = useMyLeaderboardEntry();
 
   const sorted = [...(entries ?? [])].sort((a, b) => a.rank - b.rank);
@@ -41,11 +37,10 @@ export function LeaderboardPage() {
       key: "student",
       header: "Student",
       render: (e) => {
-        const student = resolveStudentById(students, e.studentId);
         const isMe = myEntry?.studentId === e.studentId;
         return (
           <span className="flex items-center gap-2">
-            {student ? studentLabel(student) : e.studentId}
+            {e.studentName ?? e.studentId}
             {isMe && (
               <Badge variant="secondary" className="text-[10px]">
                 You
@@ -81,12 +76,7 @@ export function LeaderboardPage() {
       </div>
 
       {!isLoading && sorted.length > 0 && (
-        <LeaderboardPodium
-          first={first}
-          second={second}
-          third={third}
-          resolveStudent={(id) => resolveStudentById(students, id)}
-        />
+        <LeaderboardPodium first={first} second={second} third={third} />
       )}
 
       <DataGrid
@@ -96,10 +86,7 @@ export function LeaderboardPage() {
         isLoading={isLoading}
         searchable
         searchPlaceholder="Search students…"
-        getSearchableText={(e) => {
-          const student = resolveStudentById(students, e.studentId);
-          return student ? studentLabel(student) : e.studentId;
-        }}
+        getSearchableText={(e) => e.studentName ?? e.studentId}
         emptyTitle={sorted.length === 0 ? "No leaderboard entries yet" : "That's everyone in the top 3"}
         emptyDescription="Points are earned through activities, clubs, events, and placements."
         onRowClick={(e) => navigate(`/app/leaderboard/${e.studentId}`)}

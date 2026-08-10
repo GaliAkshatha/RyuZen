@@ -11,6 +11,7 @@ import { Input } from "@/shared/ui/Input";
 
 import { useMyApplicants } from "@/features/recruiters/hooks/useMyApplicants";
 import { useSearchApplicants } from "@/features/recruiters/hooks/useSearchApplicants";
+import { InterviewRoundsPanel } from "@/features/interview-rounds/components/InterviewRoundsPanel";
 import type { JobApplicationResponseDto } from "@/features/job-applications/types/jobApplication.types";
 
 /**
@@ -50,6 +51,8 @@ export function RecruiterDashboardPage() {
     resetSearch();
   }
 
+  const [selectedApplicationId, setSelectedApplicationId] = useState<string | null>(null);
+
   const displayedApplicants = hasSearched ? (searchResults ?? []) : (applicants ?? []);
 
   const columns: DataGridColumn<JobApplicationResponseDto>[] = [
@@ -79,11 +82,31 @@ export function RecruiterDashboardPage() {
           <span className="text-muted-foreground">—</span>
         ),
     },
+    {
+      key: "interviews",
+      header: "Interviews",
+      render: (a) => (
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => setSelectedApplicationId(selectedApplicationId === a.id ? null : a.id)}
+        >
+          {selectedApplicationId === a.id ? "Close" : "Manage"}
+        </Button>
+      ),
+    },
   ];
 
   if (isError) {
     return <ErrorState error={error} onRetry={() => refetch()} />;
   }
+
+  const funnelCounts = {
+    APPLIED: (applicants ?? []).filter((a) => a.status === "APPLIED").length,
+    SHORTLISTED: (applicants ?? []).filter((a) => a.status === "SHORTLISTED").length,
+    SELECTED: (applicants ?? []).filter((a) => a.status === "SELECTED").length,
+    REJECTED: (applicants ?? []).filter((a) => a.status === "REJECTED").length,
+  };
 
   return (
     <div className="relative flex flex-col gap-6">
@@ -93,6 +116,44 @@ export function RecruiterDashboardPage() {
         <Users className="h-6 w-6 text-primary" aria-hidden="true" />
         My Applicants
       </h1>
+
+      {/* Real hiring funnel, computed from this recruiter's own real
+        applicant pool - the "hiring analytics" a Placement Management
+        System needs, not a placeholder metric. */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <Card>
+          <CardContent className="py-4">
+            <p className="font-body text-xs text-muted-foreground">New</p>
+            <p className="font-display text-2xl font-bold text-foreground">
+              {funnelCounts.APPLIED}
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="py-4">
+            <p className="font-body text-xs text-muted-foreground">Shortlisted</p>
+            <p className="font-display text-2xl font-bold text-foreground">
+              {funnelCounts.SHORTLISTED}
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="py-4">
+            <p className="font-body text-xs text-muted-foreground">Offered</p>
+            <p className="font-display text-2xl font-bold text-success">
+              {funnelCounts.SELECTED}
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="py-4">
+            <p className="font-body text-xs text-muted-foreground">Rejected</p>
+            <p className="font-display text-2xl font-bold text-muted-foreground">
+              {funnelCounts.REJECTED}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
 
       <Card>
         <CardHeader>
@@ -150,6 +211,17 @@ export function RecruiterDashboardPage() {
             : "Applicants to your company's placement drives will appear here."
         }
       />
+
+      {selectedApplicationId && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Interview Rounds</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <InterviewRoundsPanel applicationId={selectedApplicationId} />
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

@@ -7,6 +7,8 @@ import {
     IUserRepository,
 } from "../../../../identity/infrastructure/repositories/IUserRepository.js";
 
+import { UserRole } from "../../../../identity/domain/constants/UserRole.js";
+
 import { RecordSystemNotificationUseCase } from "../../../../communication/notifications/application/use-cases/RecordSystemNotificationUseCase.js";
 
 import { ConnectionRequestResponseMapper } from "../../infrastructure/mappers/ConnectionRequestResponseMapper.js";
@@ -66,7 +68,9 @@ export class SendConnectionRequestUseCase {
         if (
 
             !toUser ||
-            toUser.organizationId !== organizationId
+            toUser.organizationId !== organizationId ||
+            toUser.role === UserRole.ORG_ADMIN ||
+            toUser.role === UserRole.SUPER_ADMIN
 
         ) {
 

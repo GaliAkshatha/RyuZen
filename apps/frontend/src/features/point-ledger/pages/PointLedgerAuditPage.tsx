@@ -111,6 +111,8 @@ export function PointLedgerAuditPage() {
               searchable
               searchPlaceholder="Search by reason…"
               getSearchableText={(e) => e.reason}
+              emptyTitle="No point transactions yet"
+              emptyDescription="Points are recorded here automatically as activities, achievements, and other real events are approved across your organization."
             />
           )}
         </>

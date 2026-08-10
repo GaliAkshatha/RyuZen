@@ -6,6 +6,15 @@ export interface LeaderboardEntryResponseDto {
 
     studentId: string;
 
+    /** Enriched server-side (GetLeaderboardUseCase) - the frontend
+     * previously called the admin-only GET /students to resolve these,
+     * which genuinely 403'd for every real student viewing their own
+     * leaderboard. Real display data belongs in the response, not
+     * behind a second, wrongly-scoped request. */
+    studentName?: string;
+
+    studentUsn?: string;
+
     activityPoints: number;
 
     clubPoints: number;

@@ -17,10 +17,13 @@ import { UserRole } from "@/types/enums";
  * clicking into a specific activity/assessment naturally leaves the
  * hub view, the same way detail pages usually do.
  *
- * Tabs are role-aware: Attendance points to the real path for the
- * current role (Faculty opens sessions, Students view their own
- * record), and Coding Practice only shows for STUDENT, matching its
- * real backend restriction.
+ * Tabs are role-aware: Attendance only appears for Faculty (opens
+ * sessions) and Student (views their own record) - Org Admin, who
+ * also reaches this hub, has no valid Attendance destination (they
+ * don't open sessions and aren't a student), so the tab is hidden for
+ * them rather than pointing at a route that would reject them. Coding
+ * Practice only shows for STUDENT, matching its real backend
+ * restriction.
  */
 export function AcademicLayout({ children }: { children: ReactNode }) {
   const { user } = useAuth();
@@ -30,11 +33,15 @@ export function AcademicLayout({ children }: { children: ReactNode }) {
   const tabs = [
     { to: "/app/activities", label: "Activities", icon: ClipboardList },
     { to: "/app/submissions", label: "Submissions", icon: FileCheck },
-    {
-      to: isFaculty ? "/app/attendance/open" : "/app/attendance/me",
-      label: "Attendance",
-      icon: isFaculty ? QrCode : CalendarCheck,
-    },
+    ...(isFaculty || isStudent
+      ? [
+          {
+            to: isFaculty ? "/app/attendance/open" : "/app/attendance/me",
+            label: "Attendance",
+            icon: isFaculty ? QrCode : CalendarCheck,
+          },
+        ]
+      : []),
     { to: "/app/assessments", label: "Assessments", icon: GraduationCap },
     ...(isStudent
       ? [{ to: "/app/coding-profiles", label: "Coding Practice", icon: Code2 }]

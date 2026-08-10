@@ -34,7 +34,9 @@ router.post(
 
         UserRole.ORG_ADMIN,
 
-        UserRole.PLACEMENT_ADMIN
+        UserRole.PLACEMENT_ADMIN,
+
+        UserRole.RECRUITER
 
     ),
 
@@ -64,7 +66,9 @@ router.patch(
 
         UserRole.ORG_ADMIN,
 
-        UserRole.PLACEMENT_ADMIN
+        UserRole.PLACEMENT_ADMIN,
+
+        UserRole.RECRUITER
 
     ),
 

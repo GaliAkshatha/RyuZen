@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Trophy, TrendingUp } from "lucide-react";
 
 import { WidgetCard } from "@/widgets/shared/WidgetCard";
@@ -33,10 +34,14 @@ export function XpPointsWidget() {
         <div className="flex items-center gap-4">
           <LevelProgressRing level={progress.level} progress={progress.progress} size={72} />
           <div className="flex flex-col gap-1">
-            <p className="font-display text-2xl font-bold leading-none text-foreground">
-              {entry.totalPoints.toLocaleString()}
-              <span className="ml-1 font-body text-sm font-normal text-muted-foreground">pts</span>
-            </p>
+            <Link to="/app/point-history" className="group w-fit">
+              <p className="font-display text-2xl font-bold leading-none text-foreground group-hover:text-primary">
+                {entry.totalPoints.toLocaleString()}
+                <span className="ml-1 font-body text-sm font-normal text-muted-foreground">
+                  pts
+                </span>
+              </p>
+            </Link>
             <p className="flex items-center gap-1 font-body text-xs text-muted-foreground">
               <TrendingUp className="h-3 w-3 text-success" aria-hidden="true" />
               Rank #{entry.rank}

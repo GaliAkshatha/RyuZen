@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Network } from "lucide-react";
 
 import { WidgetCard } from "@/widgets/shared/WidgetCard";
@@ -8,7 +9,9 @@ import { useFaculty } from "@/features/faculty/hooks/useFaculty";
 
 /**
  * Wired in A1, per the roadmap's explicit Definition of Done: "D1's
- * Department Statistics widget shows real, live counts."
+ * Department Statistics widget shows real, live counts." Each stat
+ * now links to its real dedicated page - a widget showing a number
+ * with nowhere to go is a dead end, not a decision aid.
  */
 export function DepartmentStatisticsWidget() {
   const { data: departments, isLoading: isLoadingDepartments } = useDepartments();
@@ -25,22 +28,24 @@ export function DepartmentStatisticsWidget() {
         <Spinner size="sm" />
       ) : (
         <dl className="grid grid-cols-3 gap-3 font-body text-sm">
-          <div>
-            <dt className="text-muted-foreground">Departments</dt>
-            <dd className="font-display text-xl font-semibold text-foreground">
+          <Link to="/app/admin/departments" className="group">
+            <dt className="text-muted-foreground group-hover:text-primary">Departments</dt>
+            <dd className="font-display text-xl font-semibold text-foreground group-hover:text-primary">
               {departments?.length ?? 0}
             </dd>
-          </div>
-          <div>
-            <dt className="text-muted-foreground">With HOD</dt>
-            <dd className="font-display text-xl font-semibold text-foreground">
+          </Link>
+          <Link to="/app/admin/departments" className="group">
+            <dt className="text-muted-foreground group-hover:text-primary">With HOD</dt>
+            <dd className="font-display text-xl font-semibold text-foreground group-hover:text-primary">
               {departmentsWithHod}
             </dd>
-          </div>
-          <div>
-            <dt className="text-muted-foreground">Active Faculty</dt>
-            <dd className="font-display text-xl font-semibold text-foreground">{activeFaculty}</dd>
-          </div>
+          </Link>
+          <Link to="/app/admin/faculty" className="group">
+            <dt className="text-muted-foreground group-hover:text-primary">Active Faculty</dt>
+            <dd className="font-display text-xl font-semibold text-foreground group-hover:text-primary">
+              {activeFaculty}
+            </dd>
+          </Link>
         </dl>
       )}
     </WidgetCard>

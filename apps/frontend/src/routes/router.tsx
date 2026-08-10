@@ -5,7 +5,7 @@ import { Spinner } from "@/shared/components/Spinner";
 
 import { useAuth } from "@/contexts/AuthContext";
 
-import { navRegistry, CAMPUS_ROLES } from "@/shared/constants/navRegistry";
+import { navRegistry, CAMPUS_ROLES, ENROLLED_ROLES } from "@/shared/constants/navRegistry";
 import { UserRole } from "@/types/enums";
 
 import { ProtectedRoute } from "@/routes/ProtectedRoute";
@@ -580,12 +580,17 @@ export function AppRoutes() {
                   "/app/admin/faculty",
                   "/app/admin/students",
                   "/app/admin/alumni",
+                  "/app/admin/invitations",
+                  "/app/admin/bulk-import",
+                  "/app/admin/point-ledger",
                   "/app/mentorship",
+                  "/app/connect/people",
                   "/app/activities",
                   "/app/submissions",
                   "/app/clubs",
                   "/app/events",
                   "/app/leaderboard",
+                  "/app/point-history",
                   "/app/badges",
                   "/app/certificates",
                   "/app/career/skills",
@@ -596,12 +601,14 @@ export function AppRoutes() {
                   "/app/career/resume",
                   "/app/admin/resume-templates",
                   "/app/career/portfolio",
+                  "/app/placements",
                   "/app/placements/companies",
                   "/app/placements/drives",
                   "/app/placements/applications",
                   "/app/admin/placement-analytics",
                   "/app/notifications",
                   "/app/chat",
+                  "/app/ai",
                   "/app/ai/chat",
                   "/app/ai/resume-review",
                   "/app/ai/career-score",
@@ -770,7 +777,7 @@ export function AppRoutes() {
           <Route
             path="/app/activities"
             element={
-              <RoleRoute allowedRoles={CAMPUS_ROLES}>
+              <RoleRoute allowedRoles={ENROLLED_ROLES}>
                 <AcademicLayout>
                   <ActivityListPage />
                 </AcademicLayout>
@@ -797,7 +804,7 @@ export function AppRoutes() {
           <Route
             path="/app/submissions"
             element={
-              <RoleRoute allowedRoles={CAMPUS_ROLES}>
+              <RoleRoute allowedRoles={ENROLLED_ROLES}>
                 <AcademicLayout>
                   <SubmissionListPage />
                 </AcademicLayout>
@@ -1101,7 +1108,7 @@ export function AppRoutes() {
           <Route
             path="/app/placements"
             element={
-              <RoleRoute allowedRoles={CAMPUS_ROLES}>
+              <RoleRoute allowedRoles={[UserRole.ORG_ADMIN, UserRole.STUDENT, UserRole.ALUMNI]}>
                 <PlacementsLayout />
               </RoleRoute>
             }
@@ -1176,7 +1183,7 @@ export function AppRoutes() {
           <Route
             path="/app/admin/placement-analytics"
             element={
-              <RoleRoute allowedRoles={[UserRole.ORG_ADMIN]}>
+              <RoleRoute allowedRoles={[UserRole.ORG_ADMIN, UserRole.PLACEMENT_ADMIN]}>
                 <PlacementAnalyticsPage />
               </RoleRoute>
             }
@@ -1219,7 +1226,6 @@ export function AppRoutes() {
             element={
               <RoleRoute
                 allowedRoles={[
-                  UserRole.ORG_ADMIN,
                   UserRole.FACULTY,
                   UserRole.STUDENT,
                   UserRole.ALUMNI,

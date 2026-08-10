@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { QRCodeSVG } from "qrcode.react";
 import { QrCode, Users, AlertTriangle, ArrowLeft } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
 import { Button } from "@/shared/ui/Button";
+import { Input } from "@/shared/ui/Input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/Select";
 import { StatusBadge } from "@/shared/components/StatusBadge";
 import { Spinner } from "@/shared/components/Spinner";
 import { ErrorState } from "@/shared/components/ErrorState";
@@ -15,6 +18,8 @@ import { useQrToken } from "@/features/attendance/hooks/useQrToken";
 import { useSessionRecords } from "@/features/attendance/hooks/useSessionRecords";
 import { useSuspiciousPatterns } from "@/features/attendance/hooks/useSuspiciousPatterns";
 import { useCloseAttendanceSession } from "@/features/attendance/hooks/useCloseAttendanceSession";
+import { useReviewAttendanceCorrection } from "@/features/attendance/hooks/useReviewAttendanceCorrection";
+import { useMarkAttendanceManually } from "@/features/attendance/hooks/useMarkAttendanceManually";
 
 /**
  * The real, live centerpiece: a QR image that genuinely changes as
@@ -37,6 +42,12 @@ export function AttendanceSessionDetailPage() {
   const { data: records, isLoading: recordsLoading } = useSessionRecords(sessionId!);
   const { data: suspiciousPatterns } = useSuspiciousPatterns(sessionId!);
   const { mutate: closeSession, isPending: isClosing } = useCloseAttendanceSession();
+  const { mutate: reviewCorrection, isPending: isReviewing } = useReviewAttendanceCorrection();
+  const { mutate: markManually, isPending: isMarking } = useMarkAttendanceManually(sessionId!);
+  const [manualStudentId, setManualStudentId] = useState("");
+  const [manualStatus, setManualStatus] = useState<"PRESENT" | "LATE" | "ABSENT" | "EXCUSED">(
+    "PRESENT",
+  );
 
   if (isError) {
     return <ErrorState error={error} />;
@@ -131,6 +142,59 @@ export function AttendanceSessionDetailPage() {
 
       <Card>
         <CardHeader>
+          <CardTitle className="text-base">Mark Manually</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-wrap items-end gap-2">
+          <div className="flex flex-col gap-1">
+            <label htmlFor="manual-student-id" className="font-body text-xs text-muted-foreground">
+              Student ID
+            </label>
+            <Input
+              id="manual-student-id"
+              value={manualStudentId}
+              onChange={(e) => setManualStudentId(e.target.value)}
+              placeholder="Student ID"
+              className="w-56"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="font-body text-xs text-muted-foreground">Status</label>
+            <Select
+              value={manualStatus}
+              onValueChange={(v) => setManualStatus(v as typeof manualStatus)}
+            >
+              <SelectTrigger className="w-36" aria-label="Status">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="PRESENT">Present</SelectItem>
+                <SelectItem value="LATE">Late</SelectItem>
+                <SelectItem value="ABSENT">Absent</SelectItem>
+                <SelectItem value="EXCUSED">Excused</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <Button
+            disabled={isMarking || !manualStudentId.trim()}
+            onClick={() =>
+              markManually(
+                { studentId: manualStudentId.trim(), status: manualStatus, method: "MANUAL" },
+                {
+                  onSuccess: () => {
+                    toast({ title: "Attendance marked" });
+                    setManualStudentId("");
+                  },
+                },
+              )
+            }
+          >
+            Mark
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-4 w-4" aria-hidden="true" />
             Marked ({records?.length ?? 0})
@@ -150,13 +214,53 @@ export function AttendanceSessionDetailPage() {
               {records.map((record) => (
                 <li
                   key={record.id}
-                  className="flex items-center justify-between rounded-md border border-border p-2"
+                  className="flex flex-col gap-2 rounded-md border border-border p-2"
                 >
-                  <span className="font-body text-sm text-foreground">{record.studentId}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="font-body text-xs text-muted-foreground">{record.method}</span>
-                    <StatusBadge status={record.status} />
+                  <div className="flex items-center justify-between">
+                    <span className="font-body text-sm text-foreground">{record.studentId}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-body text-xs text-muted-foreground">
+                        {record.method}
+                      </span>
+                      <StatusBadge status={record.status} />
+                    </div>
                   </div>
+                  {record.correctionStatus === "PENDING" && (
+                    <div className="flex items-center justify-between gap-2 rounded-md bg-warning/10 p-2">
+                      <p className="font-body text-xs text-foreground">
+                        Correction requested
+                        {record.correctionReason ? `: ${record.correctionReason}` : ""}
+                      </p>
+                      <div className="flex shrink-0 gap-1.5">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          disabled={isReviewing}
+                          onClick={() =>
+                            reviewCorrection(
+                              { recordId: record.id, payload: { approved: true, newStatus: "PRESENT" } },
+                              { onSuccess: () => toast({ title: "Correction approved" }) },
+                            )
+                          }
+                        >
+                          Approve
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          disabled={isReviewing}
+                          onClick={() =>
+                            reviewCorrection(
+                              { recordId: record.id, payload: { approved: false } },
+                              { onSuccess: () => toast({ title: "Correction rejected" }) },
+                            )
+                          }
+                        >
+                          Reject
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>

@@ -135,6 +135,40 @@ export class FacultyController {
 
     }
 
+    async getMe(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const faculty =
+
+            await facultyContainer
+
+                .getMyFacultyProfile
+
+                .execute(
+
+                    req.user!.userId,
+
+                    req.user!.organizationId
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            faculty,
+
+            "Faculty profile fetched successfully."
+
+        );
+
+    }
+
     async update(
 
         req: Request,

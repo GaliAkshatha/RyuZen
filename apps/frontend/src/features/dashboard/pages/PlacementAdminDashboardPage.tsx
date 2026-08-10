@@ -5,6 +5,7 @@ import { DashboardHero } from "@/widgets/shared/HeroWidget";
 import { NotificationsWidget } from "@/widgets/shared/NotificationsWidget";
 import { AiLauncherWidget } from "@/widgets/shared/AiLauncherWidget";
 import { PlacementsOverviewWidget } from "@/widgets/org-admin/PlacementsOverviewWidget";
+import { ActiveDrivesWidget } from "@/widgets/placement-admin/ActiveDrivesWidget";
 
 /**
  * Deliberately minimal, not a scaled-down copy of the Org Admin
@@ -15,7 +16,9 @@ import { PlacementsOverviewWidget } from "@/widgets/org-admin/PlacementsOverview
  * UserManagementShortcutWidget, which they have no ability to act on
  * ("cannot manage organizations, cannot create faculty" is an
  * explicit rule, not just an omission). Reuses PlacementsOverviewWidget
- * as-is rather than building a new one.
+ * as-is rather than building a new one. ActiveDrivesWidget added
+ * separately - real, urgency-sorted drives, answering "what should I
+ * look at today" rather than just static totals.
  */
 export function PlacementAdminDashboardPage() {
   return (
@@ -24,6 +27,7 @@ export function PlacementAdminDashboardPage() {
       <DashboardHero />
       <DashboardGrid>
         <PlacementsOverviewWidget />
+        <ActiveDrivesWidget />
         <AiLauncherWidget />
         <NotificationsWidget />
       </DashboardGrid>

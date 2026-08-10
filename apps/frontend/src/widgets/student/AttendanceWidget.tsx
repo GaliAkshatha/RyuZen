@@ -1,4 +1,5 @@
 import { CheckCircle2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import { WidgetCard } from "@/widgets/shared/WidgetCard";
 import { Spinner } from "@/shared/components/Spinner";
@@ -31,15 +32,15 @@ export function AttendanceWidget() {
           session.
         </p>
       ) : (
-        <div className="flex flex-col gap-1">
-          <p className="font-display text-2xl font-bold leading-none text-foreground">
+        <Link to="/app/attendance/me" className="group flex flex-col gap-1 w-fit">
+          <p className="font-display text-2xl font-bold leading-none text-foreground group-hover:text-primary">
             {presentOrLate}
             <span className="ml-1 font-body text-sm font-normal text-muted-foreground">
               / {total} sessions
             </span>
           </p>
           <p className="font-body text-xs text-muted-foreground">Present or late, all-time</p>
-        </div>
+        </Link>
       )}
     </WidgetCard>
   );

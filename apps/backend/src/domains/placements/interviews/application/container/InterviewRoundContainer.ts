@@ -12,6 +12,10 @@ import {
     StudentRepository,
 } from "../../../../academic/students/infrastructure/repositories/StudentRepository.js";
 
+import {
+    RecruiterRepository,
+} from "../../../recruiters/infrastructure/repositories/RecruiterRepository.js";
+
 import { ScheduleInterviewRoundUseCase } from "../use-cases/ScheduleInterviewRoundUseCase.js";
 import { RecordInterviewEvaluationUseCase } from "../use-cases/RecordInterviewEvaluationUseCase.js";
 import { GetInterviewRoundsForApplicationUseCase } from "../use-cases/GetInterviewRoundsForApplicationUseCase.js";
@@ -28,6 +32,8 @@ const placementDriveRepository = new PlacementDriveRepository();
 
 const studentRepository = new StudentRepository();
 
+const recruiterRepository = new RecruiterRepository();
+
 export const interviewRoundContainer = {
 
     scheduleInterviewRound:
@@ -42,6 +48,8 @@ export const interviewRoundContainer = {
 
             studentRepository,
 
+            recruiterRepository,
+
             notificationContainer.recordSystemNotification
 
         ),
@@ -55,6 +63,10 @@ export const interviewRoundContainer = {
             jobApplicationRepository,
 
             studentRepository,
+
+            placementDriveRepository,
+
+            recruiterRepository,
 
             growthEventRecorder,
 

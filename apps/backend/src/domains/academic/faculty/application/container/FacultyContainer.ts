@@ -6,6 +6,7 @@ import { DepartmentRepository } from "../../../departments/infrastructure/reposi
 
 import { CreateFacultyUseCase } from "../use-cases/CreateFacultyUseCase.js";
 import { GetFacultyUseCase } from "../use-cases/GetFacultyUseCase.js";
+import { GetMyFacultyProfileUseCase } from "../use-cases/GetMyFacultyProfileUseCase.js";
 import { GetFacultiesUseCase } from "../use-cases/GetFacultiesUseCase.js";
 import { UpdateFacultyUseCase } from "../use-cases/UpdateFacultyUseCase.js";
 import { AssignFacultyDepartmentUseCase } from "../use-cases/AssignFacultyDepartmentUseCase.js";
@@ -34,6 +35,12 @@ export const facultyContainer = {
     getFaculty:
 
         new GetFacultyUseCase(
+            facultyRepository
+        ),
+
+    getMyFacultyProfile:
+
+        new GetMyFacultyProfileUseCase(
             facultyRepository
         ),
 

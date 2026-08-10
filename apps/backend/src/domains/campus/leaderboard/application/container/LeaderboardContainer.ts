@@ -16,6 +16,10 @@ import {
     EventRegistrationRepository,
 } from "../../../events/infrastructure/repositories/EventRegistrationRepository.js";
 
+import {
+    UserRepository,
+} from "../../../../identity/infrastructure/repositories/UserRepository.js";
+
 import { RecalculateLeaderboardUseCase } from "../use-cases/RecalculateLeaderboardUseCase.js";
 import { GetLeaderboardUseCase } from "../use-cases/GetLeaderboardUseCase.js";
 import { GetLeaderboardEntryUseCase } from "../use-cases/GetLeaderboardEntryUseCase.js";
@@ -34,6 +38,8 @@ const submissionRepository = new SubmissionRepository();
 const eventRepository = new EventRepository();
 
 const eventRegistrationRepository = new EventRegistrationRepository();
+
+const userRepository = new UserRepository();
 
 export const leaderboardContainer = {
 
@@ -56,7 +62,9 @@ export const leaderboardContainer = {
     getLeaderboard:
 
         new GetLeaderboardUseCase(
-            leaderboardRepository
+            leaderboardRepository,
+            studentRepository,
+            userRepository
         ),
 
     getLeaderboardEntry:

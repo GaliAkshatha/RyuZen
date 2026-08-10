@@ -11,6 +11,8 @@ export interface LeaderboardEntryResponseDto {
   id: string;
   organizationId: string;
   studentId: string;
+  studentName?: string;
+  studentUsn?: string;
   activityPoints: number;
   clubPoints: number;
   eventPoints: number;

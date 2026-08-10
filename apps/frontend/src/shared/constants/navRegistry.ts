@@ -84,6 +84,21 @@ export const CAMPUS_ROLES: UserRole[] = [
   UserRole.ALUMNI,
 ];
 
+/**
+ * Actively-enrolled academic work only - CAMPUS_ROLES minus ALUMNI.
+ * An alumnus has already graduated; submitting activities or being
+ * marked for attendance doesn't apply to them, unlike genuinely
+ * ongoing community features (Clubs, Events, Leaderboard, Connect).
+ * Confirmed real gap: the consolidated Academic hub was using
+ * CAMPUS_ROLES and showing Alumni a "submit an activity" workflow
+ * that makes no sense for a graduated account.
+ */
+export const ENROLLED_ROLES: UserRole[] = [
+  UserRole.ORG_ADMIN,
+  UserRole.FACULTY,
+  UserRole.STUDENT,
+];
+
 export const navRegistry: NavItem[] = [
   // --- account (rendered via topbar menu, not the main sidebar) ---
   { path: "/app/profile", label: "Profile", icon: "user", roles: ALL_ROLES, group: "account" },
@@ -121,7 +136,7 @@ export const navRegistry: NavItem[] = [
     path: "/app/activities",
     label: "Academic",
     icon: "graduation-cap",
-    roles: CAMPUS_ROLES,
+    roles: ENROLLED_ROLES,
     group: "academic",
   },
 
@@ -159,10 +174,12 @@ export const navRegistry: NavItem[] = [
     path: "/app/connect/people",
     label: "Connect",
     icon: "message-circle",
-    // route-verified: SUPER_ADMIN explicitly excluded on chat.routes.ts -
-    // Connect wraps real messaging (Chat) alongside the new People/
-    // Requests/Connections tabs, same real role scope.
-    roles: [UserRole.ORG_ADMIN, UserRole.FACULTY, UserRole.STUDENT, UserRole.ALUMNI],
+    // Deliberately excludes ORG_ADMIN and SUPER_ADMIN - explicit rule:
+    // platform/org administrators don't participate in the social
+    // connection graph, and other users can't send them connection
+    // requests either (enforced server-side too, see
+    // GetConnectableUsersUseCase and SendConnectionRequestUseCase).
+    roles: [UserRole.FACULTY, UserRole.STUDENT, UserRole.ALUMNI],
     group: "community",
   },
 
@@ -178,13 +195,6 @@ export const navRegistry: NavItem[] = [
     path: "/app/career/skills",
     label: "Skills",
     icon: "sparkles",
-    roles: [UserRole.STUDENT],
-    group: "career",
-  },
-  {
-    path: "/app/career/projects",
-    label: "Portfolio Projects",
-    icon: "folder-kanban",
     roles: [UserRole.STUDENT],
     group: "career",
   },
@@ -239,7 +249,12 @@ export const navRegistry: NavItem[] = [
     path: "/app/placements",
     label: "Placements",
     icon: "briefcase-business",
-    roles: CAMPUS_ROLES,
+    // Deliberately not CAMPUS_ROLES: Faculty has no real use for this
+    // (browse-only Companies/Drives, no apply/manage rights) and it's
+    // not in Faculty's stated scope - students/mentoring/attendance/
+    // submissions/approvals/activities/guidance. Placement Admin is
+    // the real designated role for placement operations.
+    roles: [UserRole.ORG_ADMIN, UserRole.STUDENT, UserRole.ALUMNI],
     group: "placements",
   },
 

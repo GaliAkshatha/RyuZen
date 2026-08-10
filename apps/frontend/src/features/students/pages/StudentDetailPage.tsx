@@ -24,6 +24,7 @@ import { StudentEducationSection } from "@/features/education/components/Student
 import { StudentExperienceSection } from "@/features/experience/components/StudentExperienceSection";
 import { StudentCertificationsSection } from "@/features/certifications/components/StudentCertificationsSection";
 import { StudentAchievementsSection } from "@/features/achievements/components/StudentAchievementsSection";
+import { StudentPointHistorySection } from "@/features/point-ledger/components/StudentPointHistorySection";
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -115,6 +116,7 @@ export function StudentDetailPage() {
       <StudentExperienceSection userId={student.userId} />
       <StudentCertificationsSection userId={student.userId} />
       <StudentAchievementsSection studentId={student.id} />
+      <StudentPointHistorySection studentId={student.id} />
     </div>
   );
 }

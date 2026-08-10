@@ -79,6 +79,28 @@ router.get(
 );
 
 /*
+ Get My Faculty Profile - declared before "/:id" to avoid "me" being
+ captured as an id route parameter. Open to any authenticated user;
+ FACULTY is the real intended caller (resolving their own facultyId
+ for self-scoped views like "my mentees"), but there's no harm in a
+ non-faculty caller getting a 404 for having no faculty profile.
+*/
+
+router.get(
+
+    "/me",
+
+    authenticate,
+
+    asyncHandler(
+
+        controller.getMe.bind(controller)
+
+    )
+
+);
+
+/*
  Get Faculty
 */
 

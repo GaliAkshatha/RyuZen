@@ -10,17 +10,23 @@ import { NotificationsWidget } from "@/widgets/shared/NotificationsWidget";
 import { AiLauncherWidget } from "@/widgets/shared/AiLauncherWidget";
 import { XpPointsWidget } from "@/widgets/student/XpPointsWidget";
 import { RecentActivitiesWidget } from "@/widgets/student/RecentActivitiesWidget";
-import { UpcomingEventsWidget } from "@/widgets/student/UpcomingEventsWidget";
 import { LeaderboardSnippetWidget } from "@/widgets/student/LeaderboardSnippetWidget";
 import { AttendanceWidget } from "@/widgets/student/AttendanceWidget";
 import { CareerScoreWidget } from "@/widgets/student/CareerScoreWidget";
 import { MyApplicationsWidget } from "@/widgets/student/MyApplicationsWidget";
+import { TodaysFocusWidget } from "@/widgets/student/TodaysFocusWidget";
+import { UpcomingWidget } from "@/widgets/student/UpcomingWidget";
+import { AIInsightWidget } from "@/widgets/student/AIInsightWidget";
 
 /**
- * The showcase page for the product-experience redesign — the visual
- * language established here (atmosphere layer, hero-level Level ring,
- * featured-widget hierarchy) is the template the other 4 dashboards
- * follow next, not a one-off treatment.
+ * Follows the wireframe's real vertical flow deliberately, not a flat
+ * grid of equal-weight cards: Career Score (featured, full-width) ->
+ * Today's Focus + Upcoming (the two "what do I do now" answers,
+ * side by side) -> Growth/Activity (the supporting detail) -> AI
+ * Insight -> Placement. The question this page answers is "what
+ * should I work on next to improve my chances of getting placed" -
+ * the layout order is the answer to that question, not alphabetical
+ * or incidental.
  */
 export function StudentDashboardPage() {
   const { data: entry } = useMyLeaderboardEntry();
@@ -46,19 +52,33 @@ export function StudentDashboardPage() {
         }
       />
 
+      {/* Career Score + Progress - featured, full width */}
+      <CareerScoreWidget />
+
+      {/* Today's Focus + Upcoming - the two "what do I do now" answers */}
+      <DashboardGrid className="md:grid-cols-2 xl:grid-cols-2">
+        <TodaysFocusWidget />
+        <UpcomingWidget />
+      </DashboardGrid>
+
+      {/* Growth / Activity */}
       <DashboardGrid>
-        <div className="md:col-span-2 xl:col-span-1">
-          <XpPointsWidget />
-        </div>
+        <XpPointsWidget />
         <RecentActivitiesWidget />
-        <UpcomingEventsWidget />
         <LeaderboardSnippetWidget />
         <AttendanceWidget />
-        <AiLauncherWidget />
-        <NotificationsWidget />
-        <CareerScoreWidget />
-        <MyApplicationsWidget />
       </DashboardGrid>
+
+      {/* AI Insight */}
+      <AIInsightWidget />
+
+      {/* Placement / Career information */}
+      <DashboardGrid className="md:grid-cols-2 xl:grid-cols-2">
+        <MyApplicationsWidget />
+        <AiLauncherWidget />
+      </DashboardGrid>
+
+      <NotificationsWidget />
     </div>
   );
 }

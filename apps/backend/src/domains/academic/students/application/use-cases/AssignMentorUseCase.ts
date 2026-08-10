@@ -19,9 +19,17 @@ import { Mentorship } from "../../../mentorship/domain/entities/Mentorship.js";
 
 import { MentorshipStatus } from "../../../mentorship/domain/constants/MentorshipStatus.js";
 
+import { RecordSystemNotificationUseCase } from "../../../../communication/notifications/application/use-cases/RecordSystemNotificationUseCase.js";
+
 import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
+/**
+ * Assigning a mentor is a genuinely significant moment for both real
+ * people involved - previously neither the student nor the newly-
+ * assigned faculty mentor had any way to know it happened short of
+ * checking the platform themselves.
+ */
 export class AssignMentorUseCase {
 
     constructor(
@@ -30,7 +38,9 @@ export class AssignMentorUseCase {
 
         private readonly facultyRepository: IFacultyRepository,
 
-        private readonly mentorshipRepository: IMentorshipRepository
+        private readonly mentorshipRepository: IMentorshipRepository,
+
+        private readonly recordSystemNotification: RecordSystemNotificationUseCase
 
     ) {}
 
@@ -159,6 +169,38 @@ export class AssignMentorUseCase {
             await this.repository.save(
                 student
             );
+
+        await this.recordSystemNotification.execute({
+
+            organizationId,
+
+            recipientUserId: student.userId,
+
+            senderId: assignedBy,
+
+            title: "Mentor assigned",
+
+            message: "A faculty mentor has been assigned to you."
+
+        }).catch(() => {
+            // A notification failure must never undo an already-recorded assignment.
+        });
+
+        await this.recordSystemNotification.execute({
+
+            organizationId,
+
+            recipientUserId: faculty.userId,
+
+            senderId: assignedBy,
+
+            title: "New mentee assigned",
+
+            message: "A new student has been assigned to you as a mentee."
+
+        }).catch(() => {
+            // A notification failure must never undo an already-recorded assignment.
+        });
 
         return StudentResponseMapper.toDto(
 

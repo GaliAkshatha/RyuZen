@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, Users } from "lucide-react";
 
@@ -29,9 +29,18 @@ export function ChatDetailPage() {
 
   const unreadFromOthers = (messages ?? []).filter((m) => !m.isRead && m.senderId !== user?.id);
 
+  const markedIdsRef = useRef(new Set<string>());
+
   useEffect(() => {
-    unreadFromOthers.forEach((message) => markRead(message.id));
-    // Intentionally scoped to the message list changing, not markRead identity.
+    unreadFromOthers.forEach((message) => {
+      if (markedIdsRef.current.has(message.id)) return;
+      markedIdsRef.current.add(message.id);
+      markRead(message.id);
+    });
+    // Intentionally scoped to the message list changing, not markRead
+    // identity - the markedIdsRef guard above (not this dependency
+    // array) is what prevents re-marking, since markRead's own
+    // mutation invalidates this same messages query on success.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
 

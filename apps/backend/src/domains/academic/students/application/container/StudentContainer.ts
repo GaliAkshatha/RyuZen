@@ -18,6 +18,7 @@ import { ArchiveStudentUseCase } from "../use-cases/ArchiveStudentUseCase.js";
 import { BulkImportStudentsUseCase } from "../use-cases/BulkImportStudentsUseCase.js";
 
 import { identityContainer } from "../../../../identity/application/container/IdentityContainer.js";
+import { notificationContainer } from "../../../../communication/notifications/application/container/NotificationContainer.js";
 
 const studentRepository = new StudentRepository();
 
@@ -73,7 +74,9 @@ export const studentContainer = {
 
             facultyRepository,
 
-            mentorshipRepository
+            mentorshipRepository,
+
+            notificationContainer.recordSystemNotification
 
         ),
 

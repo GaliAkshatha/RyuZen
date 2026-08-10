@@ -5,15 +5,12 @@ import { Avatar, AvatarFallback } from "@/shared/ui/Avatar";
 import { cn } from "@/utils/cn";
 
 import type { LeaderboardEntryResponseDto } from "@/features/leaderboard/types/leaderboard.types";
-import type { StudentResponseDto } from "@/features/students/types/student.types";
-import { studentLabel } from "@/features/students/utils/studentLabels";
 import { initialsOf } from "@/utils/initialsOf";
 
 interface LeaderboardPodiumProps {
   first?: LeaderboardEntryResponseDto;
   second?: LeaderboardEntryResponseDto;
   third?: LeaderboardEntryResponseDto;
-  resolveStudent: (studentId: string) => StudentResponseDto | undefined;
 }
 
 
@@ -47,11 +44,9 @@ const PLACE_STYLE = {
 function PodiumStep({
   place,
   entry,
-  student,
 }: {
   place: 1 | 2 | 3;
   entry?: LeaderboardEntryResponseDto;
-  student?: StudentResponseDto;
 }) {
   const style = PLACE_STYLE[place];
 
@@ -59,7 +54,7 @@ function PodiumStep({
     return <div className={cn("flex-1", style.order)} />;
   }
 
-  const name = student ? studentLabel(student) : entry.studentId;
+  const name = entry.studentName ?? entry.studentId;
 
   return (
     <Link
@@ -97,14 +92,14 @@ function PodiumStep({
  * standing in for bronze), so it themes automatically and adds no new
  * dependencies or assets.
  */
-export function LeaderboardPodium({ first, second, third, resolveStudent }: LeaderboardPodiumProps) {
+export function LeaderboardPodium({ first, second, third }: LeaderboardPodiumProps) {
   if (!first && !second && !third) return null;
 
   return (
     <div className="flex items-end justify-center gap-3 sm:gap-4">
-      <PodiumStep place={2} entry={second} student={second ? resolveStudent(second.studentId) : undefined} />
-      <PodiumStep place={1} entry={first} student={first ? resolveStudent(first.studentId) : undefined} />
-      <PodiumStep place={3} entry={third} student={third ? resolveStudent(third.studentId) : undefined} />
+      <PodiumStep place={2} entry={second} />
+      <PodiumStep place={1} entry={first} />
+      <PodiumStep place={3} entry={third} />
     </div>
   );
 }

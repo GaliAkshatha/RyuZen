@@ -5,6 +5,7 @@ import {
 } from "../../../../identity/infrastructure/repositories/IUserRepository.js";
 
 import { UserStatus } from "../../../../identity/domain/constants/UserStatus.js";
+import { UserRole } from "../../../../identity/domain/constants/UserRole.js";
 
 import { ConnectableUserResponseDto } from "../dto/ConnectableUserResponseDto.js";
 
@@ -14,6 +15,14 @@ import { ConnectableUserResponseDto } from "../dto/ConnectableUserResponseDto.js
  * comment on why) and only ever shows genuinely ACTIVE accounts in the
  * caller's own real organization - never another org's people, never
  * an invited-but-not-yet-active account.
+ *
+ * ORG_ADMIN and SUPER_ADMIN are deliberately excluded from the
+ * results entirely - explicit rule: platform/org administrators don't
+ * participate in the social connection graph, and other users
+ * shouldn't be able to send them connection requests. Enforced here
+ * (never shown as browsable) and again in
+ * SendConnectionRequestUseCase (never accepted even if a caller
+ * somehow already has the id).
  */
 export class GetConnectableUsersUseCase {
 
@@ -45,7 +54,9 @@ export class GetConnectableUsersUseCase {
 
                 user =>
                     user.id !== requestingUserId &&
-                    user.status === UserStatus.ACTIVE
+                    user.status === UserStatus.ACTIVE &&
+                    user.role !== UserRole.ORG_ADMIN &&
+                    user.role !== UserRole.SUPER_ADMIN
 
             );
 

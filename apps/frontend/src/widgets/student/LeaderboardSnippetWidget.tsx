@@ -6,8 +6,6 @@ import { Spinner } from "@/shared/components/Spinner";
 import { cn } from "@/utils/cn";
 
 import { useLeaderboard } from "@/features/leaderboard/hooks/useLeaderboard";
-import { useStudents } from "@/features/students/hooks/useStudents";
-import { studentLabel, resolveStudentById } from "@/features/students/utils/studentLabels";
 
 /**
  * Wired in C4 — top 5 ranked students, from the same GET /leaderboard
@@ -19,7 +17,6 @@ import { studentLabel, resolveStudentById } from "@/features/students/utils/stud
  */
 export function LeaderboardSnippetWidget() {
   const { data: entries, isLoading } = useLeaderboard();
-  const { data: students } = useStudents();
 
   const top = [...(entries ?? [])].sort((a, b) => a.rank - b.rank).slice(0, 5);
 
@@ -32,7 +29,6 @@ export function LeaderboardSnippetWidget() {
       ) : (
         <ul className="flex flex-col gap-1">
           {top.map((entry) => {
-            const student = resolveStudentById(students, entry.studentId);
             const isTopThree = entry.rank <= 3;
             return (
               <li key={entry.id}>
@@ -56,7 +52,7 @@ export function LeaderboardSnippetWidget() {
                         {entry.rank}
                       </span>
                     )}
-                    <span className="truncate">{student ? studentLabel(student) : entry.studentId}</span>
+                    <span className="truncate">{entry.studentName ?? entry.studentId}</span>
                   </span>
                   <span className="shrink-0 font-medium text-muted-foreground">
                     {entry.totalPoints.toLocaleString()} pts

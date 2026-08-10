@@ -22,6 +22,12 @@ import {
     IStudentRepository,
 } from "../../../../academic/students/infrastructure/repositories/IStudentRepository.js";
 
+import {
+    IRecruiterRepository,
+} from "../../../recruiters/infrastructure/repositories/IRecruiterRepository.js";
+
+import { UserRole } from "../../../../identity/domain/constants/UserRole.js";
+
 import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
@@ -33,13 +39,13 @@ import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
  * never guessed from roundType alone, since a real drive might skip a
  * round entirely.
  *
- * ORG_ADMIN/PLACEMENT_ADMIN-initiated for now, matching
- * UpdateJobApplicationStatusUseCase's existing scope - recruiter-
- * initiated scheduling (with real company-ownership resolution, the
- * same chain GetApplicantsForRecruiterUseCase already proves out) is
- * a real, reasonable near-term follow-up, not built here to keep this
- * pass honest and bounded rather than half-implementing multi-actor
- * ownership checks.
+ * ORG_ADMIN/PLACEMENT_ADMIN can schedule for any real application in
+ * their org. RECRUITER can only schedule for applications to drives
+ * at their own real company - resolved the same way
+ * GetApplicantsForRecruiterUseCase already proves out (recruiter
+ * profile -> real companyId -> drive.companyId match), not just
+ * trusted from the request. This was the real, deliberately-deferred
+ * gap from the original build - now closed.
  */
 export class ScheduleInterviewRoundUseCase {
 
@@ -53,6 +59,8 @@ export class ScheduleInterviewRoundUseCase {
 
         private readonly studentRepository: IStudentRepository,
 
+        private readonly recruiterRepository: IRecruiterRepository,
+
         private readonly recordSystemNotification: RecordSystemNotificationUseCase
 
     ) {}
@@ -63,7 +71,9 @@ export class ScheduleInterviewRoundUseCase {
 
         dto: ScheduleInterviewRoundDto,
 
-        scheduledBy: string
+        scheduledBy: string,
+
+        scheduledByRole: UserRole
 
     ): Promise<InterviewRoundResponseDto> {
 
@@ -105,6 +115,34 @@ export class ScheduleInterviewRoundUseCase {
                 HttpStatus.NOT_FOUND
 
             );
+
+        }
+
+        if (scheduledByRole === UserRole.RECRUITER) {
+
+            const recruiter =
+
+                await this.recruiterRepository.findByUserId(
+                    scheduledBy
+                );
+
+            if (
+
+                !recruiter ||
+                recruiter.organizationId !== organizationId ||
+                recruiter.companyId !== drive.companyId
+
+            ) {
+
+                throw new ApiError(
+
+                    "Job application not found.",
+
+                    HttpStatus.NOT_FOUND
+
+                );
+
+            }
 
         }
 
