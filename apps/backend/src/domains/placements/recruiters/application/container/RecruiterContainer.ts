@@ -64,7 +64,11 @@ export const recruiterContainer = {
 
             placementDriveRepository,
 
-            jobApplicationRepository
+            jobApplicationRepository,
+
+            studentRepository,
+
+            userRepository
 
         ),
 
@@ -80,7 +84,9 @@ export const recruiterContainer = {
 
             studentRepository,
 
-            skillRepository
+            skillRepository,
+
+            userRepository
 
         )
 

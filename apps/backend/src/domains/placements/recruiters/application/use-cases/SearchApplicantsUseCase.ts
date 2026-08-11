@@ -22,9 +22,15 @@ import {
     IStudentRepository,
 } from "../../../../academic/students/infrastructure/repositories/IStudentRepository.js";
 
+import { Student } from "../../../../academic/students/domain/entities/Student.js";
+
 import {
     ISkillRepository,
 } from "../../../../career/skills/infrastructure/repositories/ISkillRepository.js";
+
+import {
+    IUserRepository,
+} from "../../../../identity/infrastructure/repositories/IUserRepository.js";
 
 import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
@@ -58,7 +64,9 @@ export class SearchApplicantsUseCase {
 
         private readonly studentRepository: IStudentRepository,
 
-        private readonly skillRepository: ISkillRepository
+        private readonly skillRepository: ISkillRepository,
+
+        private readonly userRepository: IUserRepository
 
     ) {}
 
@@ -122,7 +130,7 @@ export class SearchApplicantsUseCase {
 
             criteria.skillNames?.map(name => name.trim().toLowerCase()) ?? [];
 
-        const matching: typeof applications = [];
+        const matching: { application: (typeof applications)[number]; student: Student }[] = [];
 
         for (const application of applications) {
 
@@ -173,15 +181,35 @@ export class SearchApplicantsUseCase {
 
             }
 
-            matching.push(application);
+            matching.push({ application, student });
 
         }
 
-        return matching.map(
+        const dtos: JobApplicationResponseDto[] = [];
 
-            application => JobApplicationResponseMapper.toDto(application)
+        for (const { application, student } of matching) {
 
-        );
+            const dto = JobApplicationResponseMapper.toDto(application);
+
+            dto.studentUsn = student.usn;
+
+            const user =
+
+                await this.userRepository.findById(
+                    student.userId
+                );
+
+            if (user) {
+
+                dto.studentName = user.name;
+
+            }
+
+            dtos.push(dto);
+
+        }
+
+        return dtos;
 
     }
 

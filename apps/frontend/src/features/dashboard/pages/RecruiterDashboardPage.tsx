@@ -56,7 +56,7 @@ export function RecruiterDashboardPage() {
   const displayedApplicants = hasSearched ? (searchResults ?? []) : (applicants ?? []);
 
   const columns: DataGridColumn<JobApplicationResponseDto>[] = [
-    { key: "studentId", header: "Student", render: (a) => a.studentId },
+    { key: "studentId", header: "Student", render: (a) => a.studentName ?? a.studentId },
     { key: "status", header: "Status", render: (a) => <StatusBadge status={a.status} /> },
     {
       key: "appliedAt",
@@ -203,7 +203,7 @@ export function RecruiterDashboardPage() {
         isLoading={isLoading || isSearching}
         searchable
         searchPlaceholder="Filter results by student…"
-        getSearchableText={(a) => a.studentId}
+        getSearchableText={(a) => a.studentName ?? a.studentId}
         emptyTitle={hasSearched ? "No matching candidates" : "No applicants yet"}
         emptyDescription={
           hasSearched

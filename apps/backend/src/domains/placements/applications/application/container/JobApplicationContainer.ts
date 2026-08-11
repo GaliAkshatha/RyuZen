@@ -12,6 +12,10 @@ import {
     ResumeRepository,
 } from "../../../../career/resume/infrastructure/repositories/ResumeRepository.js";
 
+import {
+    UserRepository,
+} from "../../../../identity/infrastructure/repositories/UserRepository.js";
+
 import { ApplyToPlacementUseCase } from "../use-cases/ApplyToPlacementUseCase.js";
 import { GetJobApplicationUseCase } from "../use-cases/GetJobApplicationUseCase.js";
 import { GetMyJobApplicationsUseCase } from "../use-cases/GetMyJobApplicationsUseCase.js";
@@ -31,6 +35,8 @@ const placementDriveRepository = new PlacementDriveRepository();
 const studentRepository = new StudentRepository();
 
 const resumeRepository = new ResumeRepository();
+
+const userRepository = new UserRepository();
 
 export const jobApplicationContainer = {
 
@@ -76,7 +82,11 @@ export const jobApplicationContainer = {
 
             jobApplicationRepository,
 
-            placementDriveRepository
+            placementDriveRepository,
+
+            studentRepository,
+
+            userRepository
 
         ),
 

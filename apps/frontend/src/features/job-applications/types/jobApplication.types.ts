@@ -16,6 +16,8 @@ export interface JobApplicationResponseDto {
   id: string;
   placementId: string;
   studentId: string;
+  studentName?: string;
+  studentUsn?: string;
   resume?: string;
   status: JobApplicationStatus;
   remarks?: string;

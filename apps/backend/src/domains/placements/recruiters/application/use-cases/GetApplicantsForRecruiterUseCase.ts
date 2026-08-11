@@ -16,6 +16,14 @@ import {
     JobApplicationResponseDto,
 } from "../../../applications/application/dto/JobApplicationResponseDto.js";
 
+import {
+    IStudentRepository,
+} from "../../../../academic/students/infrastructure/repositories/IStudentRepository.js";
+
+import {
+    IUserRepository,
+} from "../../../../identity/infrastructure/repositories/IUserRepository.js";
+
 import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
@@ -26,7 +34,14 @@ import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
  * company's real drives - resolved from their own Recruiter profile,
  * never taking a companyId as a caller-supplied parameter (which
  * would let a recruiter simply ask for another company's applicants).
- * There is no unrestricted student directory anywhere in this path.
+ * There is no unrestricted student directory anywhere in this path -
+ * the name enrichment below is scoped to exactly the applicants this
+ * recruiter is already, correctly, allowed to see.
+ *
+ * Real gap found while auditing Placement Admin: this returned only
+ * raw studentId, matching the same bug already fixed on
+ * GetJobApplicationsForPlacementUseCase - a recruiter reviewing
+ * applicants had no way to see who they actually were.
  */
 export class GetApplicantsForRecruiterUseCase {
 
@@ -36,7 +51,11 @@ export class GetApplicantsForRecruiterUseCase {
 
         private readonly driveRepository: IPlacementDriveRepository,
 
-        private readonly applicationRepository: IJobApplicationRepository
+        private readonly applicationRepository: IJobApplicationRepository,
+
+        private readonly studentRepository: IStudentRepository,
+
+        private readonly userRepository: IUserRepository
 
     ) {}
 
@@ -94,11 +113,41 @@ export class GetApplicantsForRecruiterUseCase {
                 driveIds
             );
 
-        return applications.map(
+        const dtos: JobApplicationResponseDto[] = [];
 
-            application => JobApplicationResponseMapper.toDto(application)
+        for (const application of applications) {
 
-        );
+            const dto = JobApplicationResponseMapper.toDto(application);
+
+            const student =
+
+                await this.studentRepository.findById(
+                    dto.studentId
+                );
+
+            if (student) {
+
+                dto.studentUsn = student.usn;
+
+                const user =
+
+                    await this.userRepository.findById(
+                        student.userId
+                    );
+
+                if (user) {
+
+                    dto.studentName = user.name;
+
+                }
+
+            }
+
+            dtos.push(dto);
+
+        }
+
+        return dtos;
 
     }
 

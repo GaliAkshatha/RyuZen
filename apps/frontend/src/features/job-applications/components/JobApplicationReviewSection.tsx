@@ -39,7 +39,7 @@ function ApplicationRow({
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <span className="font-body text-sm font-medium text-foreground">
-              {application.studentId}
+              {application.studentName ?? application.studentId}
             </span>
             <StatusBadge status={application.status} />
           </div>
