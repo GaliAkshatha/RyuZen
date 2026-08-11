@@ -16,6 +16,7 @@ export interface AuditLogResponseDto {
   id: string;
   organizationId: string;
   userId?: string;
+  userName?: string;
   action: string;
   entityType?: string;
   entityId?: string;

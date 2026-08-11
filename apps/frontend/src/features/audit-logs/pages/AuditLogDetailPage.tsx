@@ -61,7 +61,7 @@ export function AuditLogDetailPage() {
           {log.userId && (
             <p>
               <span className="font-medium text-foreground">User:</span>{" "}
-              <span className="font-mono text-xs text-muted-foreground">{log.userId}</span>
+              <span className="text-xs text-muted-foreground">{log.userName ?? log.userId}</span>
             </p>
           )}
           {log.ipAddress && (

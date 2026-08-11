@@ -117,7 +117,7 @@ export function AuditLogListPage() {
                       {log.statusCode}
                     </Badge>
                   </TableCell>
-                  <TableCell className="font-mono text-xs">{log.userId ?? "—"}</TableCell>
+                  <TableCell className="text-xs">{log.userName ?? log.userId ?? "—"}</TableCell>
                   <TableCell className="text-xs text-muted-foreground">
                     {log.createdAt ? new Date(log.createdAt).toLocaleString() : "—"}
                   </TableCell>

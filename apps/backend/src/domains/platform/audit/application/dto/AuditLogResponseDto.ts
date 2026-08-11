@@ -6,6 +6,12 @@ export interface AuditLogResponseDto {
 
     userId?: string;
 
+    /** Enriched server-side (GetAuditLogsUseCase) - an audit log's
+     * whole purpose is answering "who did this," and previously
+     * showed only a raw userId. Bounded to the current page's real
+     * results, not every log in the table. */
+    userName?: string;
+
     action: string;
 
     entityType?: string;
