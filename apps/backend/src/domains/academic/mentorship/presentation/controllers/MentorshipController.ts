@@ -45,7 +45,11 @@ export class MentorshipController {
                                 ? status
                                 : undefined
 
-                    }
+                    },
+
+                    req.user!.userId,
+
+                    req.user!.role
 
                 );
 

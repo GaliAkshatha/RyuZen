@@ -82,7 +82,11 @@ export const interviewRoundContainer = {
 
             jobApplicationRepository,
 
-            studentRepository
+            placementDriveRepository,
+
+            studentRepository,
+
+            recruiterRepository
 
         )
 

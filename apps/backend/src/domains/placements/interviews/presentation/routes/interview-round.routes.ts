@@ -85,9 +85,12 @@ router.patch(
 );
 
 /*
- Get Interview Rounds For An Application - the student who owns it, or
- an org admin/placement admin. See GetInterviewRoundsForApplicationUseCase
- for the real ownership check.
+ Get Interview Rounds For An Application - the student who owns it,
+ an org admin/placement admin, or a recruiter scoped to their own
+ company's drive. Real ownership/scope enforcement lives in
+ GetInterviewRoundsForApplicationUseCase (the route-level check alone
+ cannot know which student or which company a given application
+ belongs to).
 */
 
 router.get(
@@ -95,6 +98,15 @@ router.get(
     "/application/:applicationId",
 
     authenticate,
+
+    authorizePermission(
+
+        UserRole.STUDENT,
+        UserRole.ORG_ADMIN,
+        UserRole.PLACEMENT_ADMIN,
+        UserRole.RECRUITER
+
+    ),
 
     asyncHandler(
 

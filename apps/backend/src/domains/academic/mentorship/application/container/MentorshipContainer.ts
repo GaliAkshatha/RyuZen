@@ -1,5 +1,9 @@
 import { MentorshipRepository } from "../../infrastructure/repositories/MentorshipRepository.js";
 
+import {
+    FacultyRepository,
+} from "../../../faculty/infrastructure/repositories/FacultyRepository.js";
+
 import { GetMentorshipUseCase } from "../use-cases/GetMentorshipUseCase.js";
 import { GetMentorshipsUseCase } from "../use-cases/GetMentorshipsUseCase.js";
 import { UpdateMentorshipUseCase } from "../use-cases/UpdateMentorshipUseCase.js";
@@ -7,6 +11,8 @@ import { CompleteMentorshipUseCase } from "../use-cases/CompleteMentorshipUseCas
 import { CancelMentorshipUseCase } from "../use-cases/CancelMentorshipUseCase.js";
 
 const mentorshipRepository = new MentorshipRepository();
+
+const facultyRepository = new FacultyRepository();
 
 export const mentorshipContainer = {
 
@@ -19,7 +25,8 @@ export const mentorshipContainer = {
     getMentorships:
 
         new GetMentorshipsUseCase(
-            mentorshipRepository
+            mentorshipRepository,
+            facultyRepository
         ),
 
     updateMentorship:
