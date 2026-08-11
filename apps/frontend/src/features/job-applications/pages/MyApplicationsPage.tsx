@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ExternalLink, Send } from "lucide-react";
+import { ChevronDown, ChevronUp, ExternalLink, Send } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/Card";
+import { Button } from "@/shared/ui/Button";
 import { StatusBadge } from "@/shared/components/StatusBadge";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { ErrorState } from "@/shared/components/ErrorState";
@@ -10,10 +12,12 @@ import { SkeletonLoader } from "@/shared/components/SkeletonLoader";
 import { useMyJobApplications } from "@/features/job-applications/hooks/useMyJobApplications";
 
 import { usePlacementDrives } from "@/features/placement-drives/hooks/usePlacementDrives";
+import { InterviewRoundsPanel } from "@/features/interview-rounds/components/InterviewRoundsPanel";
 
 export function MyApplicationsPage() {
   const { data: applications, isLoading, isError, error, refetch } = useMyJobApplications();
   const { data: drives } = usePlacementDrives();
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const driveById = new Map((drives ?? []).map((d) => [d.id, d]));
 
@@ -69,6 +73,26 @@ export function MyApplicationsPage() {
                       <ExternalLink className="h-3 w-3" aria-hidden="true" />
                       Submitted resume
                     </a>
+                  )}
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="mt-2 w-fit"
+                    onClick={() =>
+                      setExpandedId(expandedId === application.id ? null : application.id)
+                    }
+                  >
+                    {expandedId === application.id ? (
+                      <ChevronUp className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
+                    ) : (
+                      <ChevronDown className="mr-1 h-3.5 w-3.5" aria-hidden="true" />
+                    )}
+                    Interview status
+                  </Button>
+                  {expandedId === application.id && (
+                    <div className="mt-1 rounded-md border border-border p-3">
+                      <InterviewRoundsPanel applicationId={application.id} readOnly />
+                    </div>
                   )}
                 </CardContent>
               </Card>

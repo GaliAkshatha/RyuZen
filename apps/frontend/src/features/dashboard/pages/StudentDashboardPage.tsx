@@ -14,7 +14,7 @@ import { LeaderboardSnippetWidget } from "@/widgets/student/LeaderboardSnippetWi
 import { AttendanceWidget } from "@/widgets/student/AttendanceWidget";
 import { CareerScoreWidget } from "@/widgets/student/CareerScoreWidget";
 import { MyApplicationsWidget } from "@/widgets/student/MyApplicationsWidget";
-import { TodaysFocusWidget } from "@/widgets/student/TodaysFocusWidget";
+import { YourFocusWidget } from "@/widgets/student/YourFocusWidget";
 import { UpcomingWidget } from "@/widgets/student/UpcomingWidget";
 import { AIInsightWidget } from "@/widgets/student/AIInsightWidget";
 
@@ -52,28 +52,24 @@ export function StudentDashboardPage() {
         }
       />
 
-      {/* Career Score + Progress - featured, full width */}
-      <CareerScoreWidget />
-
-      {/* Today's Focus + Upcoming - the two "what do I do now" answers */}
-      <DashboardGrid className="md:grid-cols-2 xl:grid-cols-2">
-        <TodaysFocusWidget />
+      {/* Career Score + Today's Focus + Upcoming - the three "what's my state, what do I do now" answers, in one row */}
+      <DashboardGrid>
+        <CareerScoreWidget />
+        <YourFocusWidget />
         <UpcomingWidget />
       </DashboardGrid>
 
       {/* Growth / Activity */}
-      <DashboardGrid>
+      <DashboardGrid className="lg:grid-cols-4 xl:grid-cols-4">
         <XpPointsWidget />
         <RecentActivitiesWidget />
         <LeaderboardSnippetWidget />
         <AttendanceWidget />
       </DashboardGrid>
 
-      {/* AI Insight */}
-      <AIInsightWidget />
-
-      {/* Placement / Career information */}
-      <DashboardGrid className="md:grid-cols-2 xl:grid-cols-2">
+      {/* AI Insight + Placement / Career information */}
+      <DashboardGrid>
+        <AIInsightWidget />
         <MyApplicationsWidget />
         <AiLauncherWidget />
       </DashboardGrid>

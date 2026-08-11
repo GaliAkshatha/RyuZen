@@ -5,11 +5,11 @@ import { Button } from "@/shared/ui/Button";
 import { WidgetCard } from "@/widgets/shared/WidgetCard";
 
 /**
- * Genuinely wired — a launcher button needs no data, only a
- * destination route, which already exists (registered in F5's
- * navRegistry as /app/ai/chat). The destination page itself is still a
- * RouteStubPage until AI1 builds it; that's AI1's scope, not this
- * widget's.
+ * Genuinely wired - a launcher button needs no data, only a real
+ * destination. Links into AI Chat, which sits inside AIToolsLayout's
+ * persistent tab strip alongside Resume Review, Career Score,
+ * Recommendations, and Mock Interview - so this is a launcher into
+ * the full AI workspace, not just the chat tab in isolation.
  */
 export function AiLauncherWidget() {
   return (

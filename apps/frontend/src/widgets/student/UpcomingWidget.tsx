@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Calendar, Briefcase, ClipboardCheck } from "lucide-react";
 
 import { WidgetCard } from "@/widgets/shared/WidgetCard";
-import { Spinner } from "@/shared/components/Spinner";
+import { WidgetSkeletonRows } from "@/widgets/shared/WidgetSkeletonRows";
 import { Badge } from "@/shared/ui/Badge";
 import { EventStatus } from "@/types/enums";
 
@@ -80,7 +80,7 @@ export function UpcomingWidget() {
   return (
     <WidgetCard title="Upcoming" icon={Calendar} wired>
       {isLoading ? (
-        <Spinner size="sm" />
+        <WidgetSkeletonRows rows={5} />
       ) : items.length === 0 ? (
         <p className="font-body text-sm text-muted-foreground">Nothing on the horizon right now.</p>
       ) : (

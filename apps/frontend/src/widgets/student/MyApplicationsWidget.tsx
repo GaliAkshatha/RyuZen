@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Send } from "lucide-react";
 
 import { WidgetCard } from "@/widgets/shared/WidgetCard";
-import { Spinner } from "@/shared/components/Spinner";
+import { WidgetSkeletonRows } from "@/widgets/shared/WidgetSkeletonRows";
 import { StatusBadge } from "@/shared/components/StatusBadge";
 
 import { useMyJobApplications } from "@/features/job-applications/hooks/useMyJobApplications";
@@ -23,7 +23,7 @@ export function MyApplicationsWidget() {
   return (
     <WidgetCard title="My Applications" icon={Send} wired>
       {isLoading ? (
-        <Spinner size="sm" />
+        <WidgetSkeletonRows />
       ) : recent.length === 0 ? (
         <p className="font-body text-sm text-muted-foreground">
           You haven't applied to any drives yet.

@@ -40,6 +40,7 @@ import { UserRole } from "@/types/enums";
 
 export type NavGroup =
   | "overview"
+  | "growth"
   | "campus"
   | "academic"
   | "community"
@@ -102,6 +103,7 @@ export const ENROLLED_ROLES: UserRole[] = [
 export const navRegistry: NavItem[] = [
   // --- account (rendered via topbar menu, not the main sidebar) ---
   { path: "/app/profile", label: "Profile", icon: "user", roles: ALL_ROLES, group: "account" },
+  { path: "/app/settings", label: "Settings", icon: "settings", roles: ALL_ROLES, group: "account" },
 
   // --- overview ---
   {
@@ -116,13 +118,6 @@ export const navRegistry: NavItem[] = [
   { path: "/app/clubs", label: "Clubs", icon: "users", roles: CAMPUS_ROLES, group: "campus" },
   { path: "/app/events", label: "Events", icon: "calendar", roles: CAMPUS_ROLES, group: "campus" },
   { path: "/app/badges", label: "Badges", icon: "award", roles: CAMPUS_ROLES, group: "campus" },
-  {
-    path: "/app/certificates",
-    label: "Certificates",
-    icon: "file-badge",
-    roles: [UserRole.STUDENT], // route-verified: GET .../certificates "mine" is STUDENT-only
-    group: "campus",
-  },
 
   // --- academic ---
   // Consolidated: Activities, Submissions, Attendance, Assessments,
@@ -149,9 +144,9 @@ export const navRegistry: NavItem[] = [
     group: "community",
   },
   {
-    path: "/app/point-history",
-    label: "Point History",
-    icon: "coins",
+    path: "/app/certificates",
+    label: "Achievements",
+    icon: "trophy",
     roles: [UserRole.STUDENT],
     group: "community",
   },
@@ -180,6 +175,64 @@ export const navRegistry: NavItem[] = [
     // requests either (enforced server-side too, see
     // GetConnectableUsersUseCase and SendConnectionRequestUseCase).
     roles: [UserRole.FACULTY, UserRole.STUDENT, UserRole.ALUMNI],
+    group: "community",
+  },
+
+  // --- growth ---
+  {
+    path: "/app/growth",
+    label: "Overview",
+    icon: "trending-up",
+    roles: [UserRole.STUDENT],
+    group: "growth",
+  },
+  {
+    path: "/app/growth/skills",
+    label: "Skills",
+    icon: "sparkles",
+    roles: [UserRole.STUDENT],
+    group: "growth",
+  },
+  {
+    path: "/app/growth/projects",
+    label: "Projects",
+    icon: "folder-kanban",
+    roles: [UserRole.STUDENT],
+    group: "growth",
+  },
+  {
+    path: "/app/growth/experience",
+    label: "Experience & Education",
+    icon: "briefcase",
+    roles: [UserRole.STUDENT],
+    group: "growth",
+  },
+  {
+    path: "/app/growth/certifications",
+    label: "Certifications",
+    icon: "badge-check",
+    roles: [UserRole.STUDENT],
+    group: "growth",
+  },
+  {
+    path: "/app/growth/achievements",
+    label: "Achievements",
+    icon: "medal",
+    roles: [UserRole.STUDENT],
+    group: "growth",
+  },
+  {
+    path: "/app/growth/roadmap",
+    label: "Roadmap",
+    icon: "compass",
+    roles: [UserRole.STUDENT],
+    group: "growth",
+  },
+  {
+    path: "/app/calendar",
+    label: "Calendar",
+    icon: "calendar",
+    roles: [UserRole.STUDENT],
     group: "community",
   },
 

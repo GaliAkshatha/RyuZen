@@ -95,10 +95,19 @@ function EvaluationForm({ round, applicationId }: { round: InterviewRoundRespons
   );
 }
 
-function RoundRow({ round, applicationId }: { round: InterviewRoundResponseDto; applicationId: string }) {
+function RoundRow({
+  round,
+  applicationId,
+  readOnly,
+}: {
+  round: InterviewRoundResponseDto;
+  applicationId: string;
+  readOnly: boolean;
+}) {
   const [evaluating, setEvaluating] = useState(false);
   const canEvaluate =
-    round.status === InterviewRoundStatus.SCHEDULED || round.status === InterviewRoundStatus.COMPLETED;
+    !readOnly &&
+    (round.status === InterviewRoundStatus.SCHEDULED || round.status === InterviewRoundStatus.COMPLETED);
 
   return (
     <li className="flex flex-col gap-2 rounded-md border border-border p-3">
@@ -144,7 +153,13 @@ function RoundRow({ round, applicationId }: { round: InterviewRoundResponseDto; 
  * entirely server-side (ScheduleInterviewRoundUseCase) - never
  * guessed here, since a real drive might skip a round.
  */
-export function InterviewRoundsPanel({ applicationId }: { applicationId: string }) {
+export function InterviewRoundsPanel({
+  applicationId,
+  readOnly = false,
+}: {
+  applicationId: string;
+  readOnly?: boolean;
+}) {
   const { toast } = useToast();
   const [showScheduleForm, setShowScheduleForm] = useState(false);
 
@@ -182,12 +197,26 @@ export function InterviewRoundsPanel({ applicationId }: { applicationId: string 
     );
   }
 
+  if (readOnly) {
+    return rounds && rounds.length > 0 ? (
+      <ul className="flex flex-col gap-2">
+        {rounds.map((round) => (
+          <RoundRow key={round.id} round={round} applicationId={applicationId} readOnly />
+        ))}
+      </ul>
+    ) : (
+      <p className="font-body text-sm text-muted-foreground">
+        No interview rounds scheduled yet.
+      </p>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-2">
       {rounds && rounds.length > 0 && (
         <ul className="flex flex-col gap-2">
           {rounds.map((round) => (
-            <RoundRow key={round.id} round={round} applicationId={applicationId} />
+            <RoundRow key={round.id} round={round} applicationId={applicationId} readOnly={false} />
           ))}
         </ul>
       )}

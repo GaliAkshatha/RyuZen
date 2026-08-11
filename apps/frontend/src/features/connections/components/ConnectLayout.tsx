@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { Users, UserPlus, Contact, MessageCircle } from "lucide-react";
+import { Users, UserPlus, Contact, MessageCircle, UsersRound } from "lucide-react";
 
 import { cn } from "@/utils/cn";
 import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
@@ -10,6 +10,7 @@ const TABS = [
   { to: "/app/connect/people", label: "People", icon: Users },
   { to: "/app/connect/requests", label: "Requests", icon: UserPlus },
   { to: "/app/connect/connections", label: "My Connections", icon: Contact },
+  { to: "/app/clubs", label: "Groups", icon: UsersRound },
   { to: "/app/chat", label: "Messages", icon: MessageCircle },
 ];
 

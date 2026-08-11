@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Sparkles } from "lucide-react";
 
 import { WidgetCard } from "@/widgets/shared/WidgetCard";
-import { Spinner } from "@/shared/components/Spinner";
+import { SkeletonLoader } from "@/shared/components/SkeletonLoader";
 
 import { useCareerScore } from "@/features/career-score/hooks/useCareerScore";
 
@@ -18,7 +18,12 @@ export function AIInsightWidget() {
   return (
     <WidgetCard title="AI Insight" icon={Sparkles} wired>
       {isLoading ? (
-        <Spinner size="sm" />
+        <div className="flex flex-col gap-2">
+          <SkeletonLoader className="h-3.5 w-full" />
+          <SkeletonLoader className="h-3.5 w-full" />
+          <SkeletonLoader className="h-3.5 w-2/3" />
+          <SkeletonLoader className="mt-1 h-3 w-24" />
+        </div>
       ) : isError || !score?.narrative ? (
         <p className="font-body text-sm text-muted-foreground">
           Your AI insight will appear here once there's enough activity to analyze.

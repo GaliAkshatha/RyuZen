@@ -6,15 +6,31 @@ import { ErrorState } from "@/shared/components/ErrorState";
 import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
 
 import { useMyAssessmentAttempts } from "@/features/assessments/hooks/useMyAssessmentAttempts";
+import { useAssessments } from "@/features/assessments/hooks/useAssessments";
 import type { AssessmentAttemptResponseDto } from "@/features/assessments/types/assessment.types";
 
 export function MyAssessmentAttemptsPage() {
   const { data: attempts, isLoading, isError, error, refetch } = useMyAssessmentAttempts();
+  const { data: assessments } = useAssessments();
+
+  const assessmentById = new Map((assessments ?? []).map((a) => [a.id, a]));
 
   const columns: DataGridColumn<AssessmentAttemptResponseDto>[] = [
-    { key: "assessmentId", header: "Assessment", render: (a) => a.assessmentId },
+    {
+      key: "assessmentId",
+      header: "Assessment",
+      render: (a) => assessmentById.get(a.assessmentId)?.title ?? a.assessmentId,
+    },
     { key: "status", header: "Status", render: (a) => <StatusBadge status={a.status} /> },
-    { key: "score", header: "Score", render: (a) => a.score ?? "—" },
+    {
+      key: "score",
+      header: "Score",
+      render: (a) => {
+        if (a.score === undefined) return "—";
+        const totalMarks = assessmentById.get(a.assessmentId)?.totalMarks;
+        return totalMarks ? `${a.score} / ${totalMarks}` : a.score;
+      },
+    },
     {
       key: "submittedAt",
       header: "Submitted",
@@ -42,7 +58,7 @@ export function MyAssessmentAttemptsPage() {
         isLoading={isLoading}
         searchable
         searchPlaceholder="Search…"
-        getSearchableText={(a) => a.assessmentId}
+        getSearchableText={(a) => assessmentById.get(a.assessmentId)?.title ?? a.assessmentId}
         emptyTitle="No attempts yet"
         emptyDescription="Assessments you've taken will appear here."
       />

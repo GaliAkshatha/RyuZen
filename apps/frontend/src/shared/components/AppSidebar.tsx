@@ -7,6 +7,7 @@ import type { UserRole } from "@/types/enums";
 
 const GROUP_ORDER: NavGroup[] = [
   "overview",
+  "growth",
   "campus",
   "academic",
   "community",
@@ -19,6 +20,7 @@ const GROUP_ORDER: NavGroup[] = [
 ];
 
 const GROUP_LABELS: Partial<Record<NavGroup, string>> = {
+  growth: "Growth",
   campus: "Campus",
   academic: "Academic",
   community: "Community",

@@ -59,9 +59,13 @@ export function AssessmentListPage() {
           <ClipboardList className="h-6 w-6 text-primary" aria-hidden="true" />
           Assessments
         </h1>
-        {isFaculty && (
+        {isFaculty ? (
           <Button asChild>
             <Link to="/app/assessments/create">Create Assessment</Link>
+          </Button>
+        ) : (
+          <Button asChild variant="outline">
+            <Link to="/app/assessments/me">My Results</Link>
           </Button>
         )}
       </div>

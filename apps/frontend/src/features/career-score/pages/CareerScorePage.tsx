@@ -36,7 +36,10 @@ export function CareerScorePage() {
           <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 via-card to-card">
             <CardContent className="flex flex-col items-center gap-3 p-8 text-center">
               <LevelProgressRing level={score.careerScore} progress={score.careerScore / 100} size={128} label="Score" />
-              <p className="font-display text-lg font-medium text-primary">{score.label}</p>
+              <p className="font-display text-lg font-medium text-primary">
+                {score.label}
+                <span className="ml-1 text-sm font-normal text-muted-foreground">/ 100</span>
+              </p>
             </CardContent>
           </Card>
 

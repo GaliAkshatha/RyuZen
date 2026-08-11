@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { LogOut, UserRound } from "lucide-react";
+import { LogOut, UserRound, Settings as SettingsIcon } from "lucide-react";
 
 import { cn } from "@/utils/cn";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/Avatar";
@@ -72,6 +72,12 @@ export function AppTopbar({
               <Link to="/app/profile" className="flex items-center gap-2">
                 <UserRound className="h-4 w-4" aria-hidden="true" />
                 Profile
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/app/settings" className="flex items-center gap-2">
+                <SettingsIcon className="h-4 w-4" aria-hidden="true" />
+                Settings
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />

@@ -14,6 +14,7 @@ import { RoleLayoutSwitch } from "@/routes/RoleLayoutSwitch";
 import { DashboardRoleSwitch } from "@/routes/DashboardRoleSwitch";
 import { RouteStubPage } from "@/routes/pages/RouteStubPage";
 import { AcademicLayout } from "@/features/academic-hub/components/AcademicLayout";
+import { AchievementsHubLayout } from "@/features/achievements-hub/components/AchievementsHubLayout";
 import { ForbiddenPage } from "@/features/errors/pages/ForbiddenPage";
 import { NotFoundPage } from "@/features/errors/pages/NotFoundPage";
 import { ServerErrorPage } from "@/features/errors/pages/ServerErrorPage";
@@ -98,6 +99,9 @@ const AcceptInvitationPage = lazy(() =>
 );
 const ProfilePage = lazy(() =>
   import("@/features/profile/pages/ProfilePage").then((m) => ({ default: m.ProfilePage })),
+);
+const SettingsPage = lazy(() =>
+  import("@/features/settings/pages/SettingsPage").then((m) => ({ default: m.SettingsPage })),
 );
 const ChangePasswordPage = lazy(() =>
   import("@/features/profile/pages/ChangePasswordPage").then((m) => ({
@@ -265,6 +269,46 @@ const ResumeTemplateListPage = lazy(() =>
 const MyPortfolioPage = lazy(() =>
   import("@/features/portfolio/pages/MyPortfolioPage").then((m) => ({
     default: m.MyPortfolioPage,
+  })),
+);
+const GrowthOverviewPage = lazy(() =>
+  import("@/features/growth/pages/GrowthOverviewPage").then((m) => ({
+    default: m.GrowthOverviewPage,
+  })),
+);
+const GrowthSkillsPage = lazy(() =>
+  import("@/features/growth/pages/GrowthSkillsPage").then((m) => ({
+    default: m.GrowthSkillsPage,
+  })),
+);
+const GrowthProjectsPage = lazy(() =>
+  import("@/features/growth/pages/GrowthProjectsPage").then((m) => ({
+    default: m.GrowthProjectsPage,
+  })),
+);
+const GrowthExperiencePage = lazy(() =>
+  import("@/features/growth/pages/GrowthExperiencePage").then((m) => ({
+    default: m.GrowthExperiencePage,
+  })),
+);
+const GrowthCertificationsPage = lazy(() =>
+  import("@/features/growth/pages/GrowthCertificationsPage").then((m) => ({
+    default: m.GrowthCertificationsPage,
+  })),
+);
+const GrowthAchievementsPage = lazy(() =>
+  import("@/features/growth/pages/GrowthAchievementsPage").then((m) => ({
+    default: m.GrowthAchievementsPage,
+  })),
+);
+const GrowthRoadmapPage = lazy(() =>
+  import("@/features/growth/pages/GrowthRoadmapPage").then((m) => ({
+    default: m.GrowthRoadmapPage,
+  })),
+);
+const CalendarPage = lazy(() =>
+  import("@/features/calendar/pages/CalendarPage").then((m) => ({
+    default: m.CalendarPage,
   })),
 );
 const UserPortfolioViewPage = lazy(() =>
@@ -575,7 +619,16 @@ export function AppRoutes() {
               (item) =>
                 ![
                   "/app/profile",
+                  "/app/settings",
                   "/app/dashboard",
+                  "/app/growth",
+                  "/app/growth/skills",
+                  "/app/growth/projects",
+                  "/app/growth/experience",
+                  "/app/growth/certifications",
+                  "/app/growth/achievements",
+                  "/app/growth/roadmap",
+                  "/app/calendar",
                   "/app/admin/departments",
                   "/app/admin/faculty",
                   "/app/admin/students",
@@ -638,6 +691,7 @@ export function AppRoutes() {
             here instead of through the generic stub map above. */}
           <Route path="/app/dashboard" element={<DashboardRoleSwitch />} />
           <Route path="/app/profile" element={<ProfilePage />} />
+          <Route path="/app/settings" element={<SettingsPage />} />
           <Route path="/app/profile/change-password" element={<ChangePasswordPage />} />
           <Route path="/app/profile/sessions" element={<SessionsPage />} />
 
@@ -904,7 +958,9 @@ export function AppRoutes() {
             path="/app/point-history"
             element={
               <RoleRoute allowedRoles={[UserRole.STUDENT]}>
-                <PointHistoryPage />
+                <AchievementsHubLayout>
+                  <PointHistoryPage />
+                </AchievementsHubLayout>
               </RoleRoute>
             }
           />
@@ -929,7 +985,9 @@ export function AppRoutes() {
             path="/app/badges"
             element={
               <RoleRoute allowedRoles={CAMPUS_ROLES}>
-                <BadgeListPage />
+                <AchievementsHubLayout>
+                  <BadgeListPage />
+                </AchievementsHubLayout>
               </RoleRoute>
             }
           />
@@ -953,7 +1011,9 @@ export function AppRoutes() {
             path="/app/certificates"
             element={
               <RoleRoute allowedRoles={[UserRole.STUDENT]}>
-                <MyCertificatesPage />
+                <AchievementsHubLayout>
+                  <MyCertificatesPage />
+                </AchievementsHubLayout>
               </RoleRoute>
             }
           />
@@ -1078,6 +1138,82 @@ export function AppRoutes() {
             element={
               <RoleRoute allowedRoles={[UserRole.STUDENT]}>
                 <MyPortfolioPage />
+              </RoleRoute>
+            }
+          />
+          {/* Growth - real read-focused progression views, built from
+            the same real portfolio aggregate (GET /portfolio/me) and
+            career score (GET /ai/career-score) used elsewhere.
+            Distinct from My Portfolio, which is settings + project
+            CRUD. Converted from local tab state to real routes per the
+            Student Frontend Specification's nav structure and the
+            Global Design System's own Rule 67 (use the URL for
+            workflow state, not temporary React state). */}
+          <Route
+            path="/app/growth"
+            element={
+              <RoleRoute allowedRoles={[UserRole.STUDENT]}>
+                <GrowthOverviewPage />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/app/growth/skills"
+            element={
+              <RoleRoute allowedRoles={[UserRole.STUDENT]}>
+                <GrowthSkillsPage />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/app/growth/projects"
+            element={
+              <RoleRoute allowedRoles={[UserRole.STUDENT]}>
+                <GrowthProjectsPage />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/app/growth/experience"
+            element={
+              <RoleRoute allowedRoles={[UserRole.STUDENT]}>
+                <GrowthExperiencePage />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/app/growth/certifications"
+            element={
+              <RoleRoute allowedRoles={[UserRole.STUDENT]}>
+                <GrowthCertificationsPage />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/app/growth/achievements"
+            element={
+              <RoleRoute allowedRoles={[UserRole.STUDENT]}>
+                <GrowthAchievementsPage />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/app/growth/roadmap"
+            element={
+              <RoleRoute allowedRoles={[UserRole.STUDENT]}>
+                <GrowthRoadmapPage />
+              </RoleRoute>
+            }
+          />
+          {/* Calendar - built from the same 3 real sources UpcomingWidget
+            uses (Events, Placement Drive deadlines, Assessment windows).
+            Interview Rounds and mentorship "sessions" deliberately not
+            included - see CalendarPage's own comment for why. */}
+          <Route
+            path="/app/calendar"
+            element={
+              <RoleRoute allowedRoles={[UserRole.STUDENT]}>
+                <CalendarPage />
               </RoleRoute>
             }
           />
