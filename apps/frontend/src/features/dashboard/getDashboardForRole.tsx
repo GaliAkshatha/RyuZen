@@ -24,9 +24,9 @@ const AlumniDashboardPage = lazy(() =>
     default: m.AlumniDashboardPage,
   })),
 );
-const RecruiterDashboardPage = lazy(() =>
-  import("@/features/dashboard/pages/RecruiterDashboardPage").then((m) => ({
-    default: m.RecruiterDashboardPage,
+const RecruiterOverviewPage = lazy(() =>
+  import("@/features/recruiter-portal/pages/RecruiterOverviewPage").then((m) => ({
+    default: m.RecruiterOverviewPage,
   })),
 );
 const OrganizationAdminDashboardPage = lazy(() =>
@@ -49,7 +49,7 @@ const DASHBOARD_BY_ROLE: Record<UserRole, ComponentType> = {
   [UserRole.STUDENT]: StudentDashboardPage,
   [UserRole.FACULTY]: FacultyDashboardPage,
   [UserRole.ALUMNI]: AlumniDashboardPage,
-  [UserRole.RECRUITER]: RecruiterDashboardPage,
+  [UserRole.RECRUITER]: RecruiterOverviewPage,
   [UserRole.ORG_ADMIN]: OrganizationAdminDashboardPage,
   [UserRole.PLACEMENT_ADMIN]: PlacementAdminDashboardPage,
   [UserRole.SUPER_ADMIN]: SuperAdminDashboardPage,

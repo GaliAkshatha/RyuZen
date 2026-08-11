@@ -103,6 +103,16 @@ const ProfilePage = lazy(() =>
 const SettingsPage = lazy(() =>
   import("@/features/settings/pages/SettingsPage").then((m) => ({ default: m.SettingsPage })),
 );
+const RecruiterApplicantsPage = lazy(() =>
+  import("@/features/recruiter-portal/pages/RecruiterApplicantsPage").then((m) => ({
+    default: m.RecruiterApplicantsPage,
+  })),
+);
+const RecruiterCandidateSearchPage = lazy(() =>
+  import("@/features/recruiter-portal/pages/RecruiterCandidateSearchPage").then((m) => ({
+    default: m.RecruiterCandidateSearchPage,
+  })),
+);
 const ChangePasswordPage = lazy(() =>
   import("@/features/profile/pages/ChangePasswordPage").then((m) => ({
     default: m.ChangePasswordPage,
@@ -690,6 +700,22 @@ export function AppRoutes() {
             both in navRegistry (all roles) but rendered explicitly
             here instead of through the generic stub map above. */}
           <Route path="/app/dashboard" element={<DashboardRoleSwitch />} />
+          <Route
+            path="/app/recruiter/applicants"
+            element={
+              <RoleRoute allowedRoles={[UserRole.RECRUITER]}>
+                <RecruiterApplicantsPage />
+              </RoleRoute>
+            }
+          />
+          <Route
+            path="/app/recruiter/search"
+            element={
+              <RoleRoute allowedRoles={[UserRole.RECRUITER]}>
+                <RecruiterCandidateSearchPage />
+              </RoleRoute>
+            }
+          />
           <Route path="/app/profile" element={<ProfilePage />} />
           <Route path="/app/settings" element={<SettingsPage />} />
           <Route path="/app/profile/change-password" element={<ChangePasswordPage />} />
