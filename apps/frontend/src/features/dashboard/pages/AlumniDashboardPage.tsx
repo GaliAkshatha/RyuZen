@@ -6,6 +6,7 @@ import { NotificationsWidget } from "@/widgets/shared/NotificationsWidget";
 import { AiLauncherWidget } from "@/widgets/shared/AiLauncherWidget";
 import { MentorshipOverviewWidget } from "@/widgets/alumni/MentorshipOverviewWidget";
 import { PlacementsBrowsingWidget } from "@/widgets/alumni/PlacementsBrowsingWidget";
+import { NetworkWidget } from "@/widgets/alumni/NetworkWidget";
 
 export function AlumniDashboardPage() {
   return (
@@ -13,8 +14,9 @@ export function AlumniDashboardPage() {
       <PageAtmosphere variant="constellation" />
       <DashboardHero />
       <DashboardGrid>
-        <MentorshipOverviewWidget />
+        <NetworkWidget />
         <PlacementsBrowsingWidget />
+        <MentorshipOverviewWidget />
         <NotificationsWidget />
         <AiLauncherWidget />
       </DashboardGrid>
