@@ -4,6 +4,14 @@ import {
     FacultyRepository,
 } from "../../../faculty/infrastructure/repositories/FacultyRepository.js";
 
+import {
+    StudentRepository,
+} from "../../../students/infrastructure/repositories/StudentRepository.js";
+
+import {
+    UserRepository,
+} from "../../../../identity/infrastructure/repositories/UserRepository.js";
+
 import { GetMentorshipUseCase } from "../use-cases/GetMentorshipUseCase.js";
 import { GetMentorshipsUseCase } from "../use-cases/GetMentorshipsUseCase.js";
 import { UpdateMentorshipUseCase } from "../use-cases/UpdateMentorshipUseCase.js";
@@ -14,19 +22,27 @@ const mentorshipRepository = new MentorshipRepository();
 
 const facultyRepository = new FacultyRepository();
 
+const studentRepository = new StudentRepository();
+
+const userRepository = new UserRepository();
+
 export const mentorshipContainer = {
 
     getMentorship:
 
         new GetMentorshipUseCase(
-            mentorshipRepository
+            mentorshipRepository,
+            studentRepository,
+            userRepository
         ),
 
     getMentorships:
 
         new GetMentorshipsUseCase(
             mentorshipRepository,
-            facultyRepository
+            facultyRepository,
+            studentRepository,
+            userRepository
         ),
 
     updateMentorship:

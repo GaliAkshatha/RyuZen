@@ -16,6 +16,8 @@ export interface MentorshipResponseDto {
   organizationId: string;
   facultyId: string;
   studentId: string;
+  studentName?: string;
+  studentUsn?: string;
   assignedBy: string;
   assignedDate: string;
   status: MentorshipStatus;

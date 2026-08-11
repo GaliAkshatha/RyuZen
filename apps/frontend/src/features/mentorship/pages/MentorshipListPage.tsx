@@ -9,8 +9,6 @@ import { UserRole } from "@/types/enums";
 import { useMentorships } from "@/features/mentorship/hooks/useMentorships";
 import type { MentorshipResponseDto } from "@/features/mentorship/types/mentorship.types";
 
-import { useStudents } from "@/features/students/hooks/useStudents";
-import { studentLabel } from "@/features/students/utils/studentLabels";
 import { useFaculty } from "@/features/faculty/hooks/useFaculty";
 import { useMyFacultyProfile } from "@/features/faculty/hooks/useMyFacultyProfile";
 import { facultyLabel } from "@/features/faculty/utils/facultyLabels";
@@ -27,29 +25,37 @@ export function MentorshipListPage() {
   const { data: mentorships, isLoading, isError, error, refetch } = useMentorships(
     isFaculty && myFacultyProfile ? { facultyId: myFacultyProfile.id } : undefined,
   );
-  const { data: students } = useStudents();
-  const { data: faculty } = useFaculty();
+  // useFaculty() (GET /faculty) is SUPER_ADMIN/ORG_ADMIN-only - only
+  // fetched for Org Admin's view, which genuinely needs to resolve
+  // multiple different mentors' names. A Faculty caller's own
+  // mentorships are always their own mentor identity, so the Mentor
+  // column is redundant for them and hidden entirely below, rather
+  // than calling an endpoint that would just 403 for no real reason.
+  const { data: faculty } = useFaculty({ enabled: !isFaculty });
 
-  const studentById = new Map((students ?? []).map((s) => [s.id, s]));
   const facultyById = new Map((faculty ?? []).map((f) => [f.id, f]));
 
   const columns: DataGridColumn<MentorshipResponseDto>[] = [
     {
       key: "student",
       header: "Student",
-      render: (m) => {
-        const student = studentById.get(m.studentId);
-        return student ? studentLabel(student) : m.studentId;
-      },
+      // Enriched server-side (GetMentorshipsUseCase) - Faculty cannot
+      // call GET /students to resolve this themselves, the same real
+      // gap already fixed for Leaderboard.
+      render: (m) => m.studentName ?? m.studentId,
     },
-    {
-      key: "faculty",
-      header: "Mentor",
-      render: (m) => {
-        const mentor = facultyById.get(m.facultyId);
-        return mentor ? facultyLabel(mentor) : m.facultyId;
-      },
-    },
+    ...(isFaculty
+      ? []
+      : [
+          {
+            key: "faculty",
+            header: "Mentor",
+            render: (m: MentorshipResponseDto) => {
+              const mentor = facultyById.get(m.facultyId);
+              return mentor ? facultyLabel(mentor) : m.facultyId;
+            },
+          } satisfies DataGridColumn<MentorshipResponseDto>,
+        ]),
     { key: "status", header: "Status", render: (m) => <StatusBadge status={m.status} /> },
   ];
 

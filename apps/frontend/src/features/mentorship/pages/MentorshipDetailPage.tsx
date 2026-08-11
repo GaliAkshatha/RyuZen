@@ -12,18 +12,25 @@ import { MentorshipRemarksForm } from "@/features/mentorship/components/Mentorsh
 import { CompleteMentorshipAction } from "@/features/mentorship/components/CompleteMentorshipAction";
 import { CancelMentorshipAction } from "@/features/mentorship/components/CancelMentorshipAction";
 
-import { useStudents } from "@/features/students/hooks/useStudents";
-import { studentLabel } from "@/features/students/utils/studentLabels";
+import { useAuth } from "@/contexts/AuthContext";
+import { UserRole } from "@/types/enums";
+
 import { useFaculty } from "@/features/faculty/hooks/useFaculty";
 import { facultyLabel } from "@/features/faculty/utils/facultyLabels";
 
 export function MentorshipDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
+  const { user } = useAuth();
+  const isFaculty = user?.role === UserRole.FACULTY;
 
   const { data: mentorship, isLoading, isError, error, refetch } = useMentorship(id ?? "");
-  const { data: students } = useStudents();
-  const { data: faculty } = useFaculty();
+  // GET /faculty (admin-only, confirmed directly) would 403 for a
+  // Faculty caller - the same real bug already fixed on the list page,
+  // now fixed here too. A Faculty caller viewing their own mentorship
+  // already knows they're the mentor, so this is never fetched for
+  // them - not just deferred, genuinely unneeded.
+  const { data: faculty } = useFaculty({ enabled: !isFaculty });
   const { mutate: updateMentorship, isPending, error: updateError } = useUpdateMentorship(id ?? "");
 
   if (isLoading) {
@@ -34,7 +41,6 @@ export function MentorshipDetailPage() {
     return <ErrorState error={error} onRetry={() => refetch()} />;
   }
 
-  const student = students?.find((s) => s.id === mentorship.studentId);
   const mentor = faculty?.find((f) => f.id === mentorship.facultyId);
 
   return (
@@ -42,12 +48,12 @@ export function MentorshipDetailPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-2xl font-semibold text-foreground">
-            {student ? studentLabel(student) : mentorship.studentId}
+            {mentorship.studentName ?? mentorship.studentId}
           </h1>
           <div className="mt-1 flex items-center gap-2">
             <StatusBadge status={mentorship.status} />
             <span className="font-body text-sm text-muted-foreground">
-              Mentor: {mentor ? facultyLabel(mentor) : mentorship.facultyId}
+              Mentor: {isFaculty ? "You" : mentor ? facultyLabel(mentor) : mentorship.facultyId}
             </span>
           </div>
         </div>

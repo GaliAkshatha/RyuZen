@@ -27,7 +27,14 @@ describe("Mentorship: Faculty scope cannot be bypassed by id manipulation", () =
         return [];
       },
     };
-    const useCase = new GetMentorshipsUseCase(mentorshipRepo as any, facultyRepo as any);
+    const studentRepo = { async findById() { return null; } };
+    const userRepo = { async findById() { return null; } };
+    const useCase = new GetMentorshipsUseCase(
+      mentorshipRepo as any,
+      facultyRepo as any,
+      studentRepo as any,
+      userRepo as any,
+    );
     return { useCase, calls };
   }
 
@@ -67,5 +74,35 @@ describe("Mentorship: Faculty scope cannot be bypassed by id manipulation", () =
     await useCase.execute("org-1", {}, "user-fac-real", UserRole.FACULTY);
 
     expect(calls[0].filters.facultyId).toBe("fac-real");
+  });
+
+  it("enriches each mentorship with the real student's name and usn - Faculty cannot call GET /students to resolve this themselves", async () => {
+    const mentorshipRepo = {
+      async findByOrganization() {
+        return [{ id: "m-1", studentId: "student-1", facultyId: "fac-real", toObject: () => ({}) }];
+      },
+    };
+    const studentRepo = {
+      async findById(id: string) {
+        return id === "student-1" ? { id: "student-1", userId: "user-student-1", usn: "1RV20CS001" } : null;
+      },
+    };
+    const userRepo = {
+      async findById(id: string) {
+        return id === "user-student-1" ? { id, name: "Real Student Name" } : null;
+      },
+    };
+
+    const useCase = new GetMentorshipsUseCase(
+      mentorshipRepo as any,
+      facultyRepo as any,
+      studentRepo as any,
+      userRepo as any,
+    );
+
+    const result = await useCase.execute("org-1", {}, "user-fac-real", UserRole.FACULTY);
+
+    expect(result[0].studentName).toBe("Real Student Name");
+    expect(result[0].studentUsn).toBe("1RV20CS001");
   });
 });
