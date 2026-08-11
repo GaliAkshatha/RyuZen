@@ -1244,7 +1244,7 @@ export function AppRoutes() {
           <Route
             path="/app/placements"
             element={
-              <RoleRoute allowedRoles={[UserRole.ORG_ADMIN, UserRole.STUDENT, UserRole.ALUMNI]}>
+              <RoleRoute allowedRoles={[UserRole.ORG_ADMIN, UserRole.PLACEMENT_ADMIN, UserRole.STUDENT, UserRole.ALUMNI]}>
                 <PlacementsLayout />
               </RoleRoute>
             }
@@ -1254,35 +1254,37 @@ export function AppRoutes() {
             {/* Companies (PL1) — real pages. List/detail (browse)
               require only authentication on the backend (no role
               restriction), matching navRegistry's ALL_ROLES.
-              Create/Update/UpdateStatus/Delete are ORG_ADMIN ONLY, with
-              SUPER_ADMIN explicitly excluded — the backend's own
-              route-file comment states this outright ("Per the Role &
-              Permission Matrix, company management is ORG_ADMIN
-              only"). The inverse of almost every other admin resource
-              in this app. Management controls are gated inside
-              CompanyDetailPage via canManageCompanies(). */}
+              Create/Update/UpdateStatus/Delete are ORG_ADMIN and
+              PLACEMENT_ADMIN, with SUPER_ADMIN explicitly excluded -
+              confirmed directly against company.routes.ts, correcting
+              a stale route guard that had granted this to ORG_ADMIN
+              only despite canManageCompanies() already being correct.
+              Management controls are gated inside CompanyDetailPage
+              via canManageCompanies(). */}
             <Route path="companies" element={<CompanyListPage />} />
             <Route path="companies/:id" element={<CompanyDetailPage />} />
             <Route
               path="companies/new"
               element={
-                <RoleRoute allowedRoles={[UserRole.ORG_ADMIN]}>
+                <RoleRoute allowedRoles={[UserRole.ORG_ADMIN, UserRole.PLACEMENT_ADMIN]}>
                   <CreateCompanyPage />
                 </RoleRoute>
               }
             />
 
             {/* Placement Drives (PL2) — real pages, browse open to the
-              same roles as Companies. Same ORG_ADMIN-only (SUPER_ADMIN
-              explicitly excluded) management pattern as Companies
-              (PL1). companyId is required on create but immutable
-              after — no companyId field in UpdatePlacementDriveSchema. */}
+              same roles as Companies. Same ORG_ADMIN + PLACEMENT_ADMIN
+              (SUPER_ADMIN explicitly excluded) management pattern as
+              Companies (PL1), confirmed against
+              placement-drive.routes.ts directly. companyId is required
+              on create but immutable after — no companyId field in
+              UpdatePlacementDriveSchema. */}
             <Route path="drives" element={<PlacementDriveListPage />} />
             <Route path="drives/:id" element={<PlacementDriveDetailPage />} />
             <Route
               path="drives/new"
               element={
-                <RoleRoute allowedRoles={[UserRole.ORG_ADMIN]}>
+                <RoleRoute allowedRoles={[UserRole.ORG_ADMIN, UserRole.PLACEMENT_ADMIN]}>
                   <CreatePlacementDrivePage />
                 </RoleRoute>
               }

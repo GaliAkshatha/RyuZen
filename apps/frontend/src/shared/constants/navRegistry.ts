@@ -307,7 +307,7 @@ export const navRegistry: NavItem[] = [
     // not in Faculty's stated scope - students/mentoring/attendance/
     // submissions/approvals/activities/guidance. Placement Admin is
     // the real designated role for placement operations.
-    roles: [UserRole.ORG_ADMIN, UserRole.STUDENT, UserRole.ALUMNI],
+    roles: [UserRole.ORG_ADMIN, UserRole.PLACEMENT_ADMIN, UserRole.STUDENT, UserRole.ALUMNI],
     group: "placements",
   },
 
