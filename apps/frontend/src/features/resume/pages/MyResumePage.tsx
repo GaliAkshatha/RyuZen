@@ -5,6 +5,7 @@ import { Button } from "@/shared/ui/Button";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { SkeletonCard } from "@/shared/components/SkeletonLoader";
 import { PageAtmosphere } from "@/shared/components/PageAtmosphere";
+import { LevelProgressRing } from "@/shared/components/LevelProgressRing";
 import { useToast } from "@/hooks/useToast";
 
 import { useMyResume } from "@/features/resume/hooks/useMyResume";
@@ -52,31 +53,41 @@ export function MyResumePage() {
           <CardHeader>
             <CardTitle>Current Resume</CardTitle>
           </CardHeader>
-          <CardContent className="flex flex-col gap-3">
-            <p className="font-body text-sm text-muted-foreground">
-              {templateName ? `Template: ${templateName}` : null}
-              {resume.lastGeneratedAt && (
-                <> · Last updated {new Date(resume.lastGeneratedAt).toLocaleDateString()}</>
-              )}
-            </p>
-            <div className="flex items-center gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={isDownloading}
-                onClick={() =>
-                  downloadResume(undefined, {
-                    onSuccess: (downloaded) => {
-                      if (downloaded.resumeUrl)
-                        window.open(downloaded.resumeUrl, "_blank", "noopener");
-                    },
-                  })
-                }
-              >
-                <ExternalLink className="mr-2 h-4 w-4" aria-hidden="true" />
-                {isDownloading ? "Opening…" : "Download"}
-              </Button>
-              <ResumeVisibilityToggle visibility={resume.visibility} />
+          <CardContent className="flex items-center gap-4">
+            {resume.atsScore !== undefined && (
+              <LevelProgressRing
+                level={resume.atsScore}
+                progress={resume.atsScore / 100}
+                size={64}
+                label="ATS Score"
+              />
+            )}
+            <div className="flex flex-1 flex-col gap-3">
+              <p className="font-body text-sm text-muted-foreground">
+                {templateName ? `Template: ${templateName}` : null}
+                {resume.lastGeneratedAt && (
+                  <> · Last updated {new Date(resume.lastGeneratedAt).toLocaleDateString()}</>
+                )}
+              </p>
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={isDownloading}
+                  onClick={() =>
+                    downloadResume(undefined, {
+                      onSuccess: (downloaded) => {
+                        if (downloaded.resumeUrl)
+                          window.open(downloaded.resumeUrl, "_blank", "noopener");
+                      },
+                    })
+                  }
+                >
+                  <ExternalLink className="mr-2 h-4 w-4" aria-hidden="true" />
+                  {isDownloading ? "Opening…" : "Download"}
+                </Button>
+                <ResumeVisibilityToggle visibility={resume.visibility} />
+              </div>
             </div>
           </CardContent>
         </Card>

@@ -14,6 +14,14 @@ import { useAIChat } from "@/features/ai-chat/hooks/useAIChat";
 import { useSendAIChatMessage } from "@/features/ai-chat/hooks/useSendAIChatMessage";
 import { AIChatComposer } from "@/features/ai-chat/components/AIChatComposer";
 
+const SUGGESTED_QUESTIONS = [
+  "Review my resume and suggest improvements",
+  "What skills should I learn next?",
+  "How should I prepare for interviews?",
+  "Analyze my skill gaps for my target role",
+  "Suggest project ideas for my portfolio",
+];
+
 function formatTime(timestamp: string) {
   return new Date(timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
@@ -28,6 +36,20 @@ export function AIChatPage() {
   const { mutate: sendMessage, isPending, error } = useSendAIChatMessage();
 
   const messages = activeChat?.messages ?? [];
+
+  function handleSend(message: string, context?: string) {
+    setPendingOutgoing(message);
+    sendMessage(
+      { chatId: activeChatId, message, context },
+      {
+        onSuccess: (chat) => {
+          setActiveChatId(chat.id);
+          setPendingOutgoing(null);
+        },
+        onError: () => setPendingOutgoing(null),
+      },
+    );
+  }
 
   // Real auto-scroll - without this, a person sending several messages
   // in a row has to manually scroll down every time to see the reply.
@@ -87,9 +109,23 @@ export function AIChatPage() {
               <Spinner size="sm" />
             </div>
           ) : messages.length === 0 && !pendingOutgoing ? (
-            <p className="font-body text-sm text-muted-foreground">
-              Ask a question to start a new conversation.
-            </p>
+            <div className="flex flex-1 flex-col items-center justify-center gap-4 py-6">
+              <p className="font-body text-sm text-muted-foreground">
+                Ask a question to start a new conversation.
+              </p>
+              <div className="flex flex-wrap justify-center gap-2 px-4">
+                {SUGGESTED_QUESTIONS.map((question) => (
+                  <button
+                    key={question}
+                    type="button"
+                    onClick={() => handleSend(question)}
+                    className="rounded-full border border-border bg-card/60 px-3 py-1.5 font-body text-xs text-foreground transition-colors hover:border-primary/40 hover:bg-accent/60"
+                  >
+                    {question}
+                  </button>
+                ))}
+              </div>
+            </div>
           ) : (
             <>
               {messages.map((message, index) => {
@@ -158,19 +194,7 @@ export function AIChatPage() {
         isSubmitting={isPending}
         error={error}
         showContextField={!activeChatId}
-        onSubmit={(values) => {
-          setPendingOutgoing(values.message);
-          sendMessage(
-            { chatId: activeChatId, message: values.message, context: values.context },
-            {
-              onSuccess: (chat) => {
-                setActiveChatId(chat.id);
-                setPendingOutgoing(null);
-              },
-              onError: () => setPendingOutgoing(null),
-            },
-          );
-        }}
+        onSubmit={(values) => handleSend(values.message, values.context)}
       />
     </div>
   );
