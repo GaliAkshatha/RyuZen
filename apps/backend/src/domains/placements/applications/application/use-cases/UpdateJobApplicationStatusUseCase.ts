@@ -21,6 +21,9 @@ import { RecordSystemNotificationUseCase } from "../../../../communication/notif
 import { RecordGrowthEventUseCase } from "../../../../../shared/infrastructure/growth/RecordGrowthEventUseCase.js";
 import { JobApplicationStatus } from "../../domain/constants/JobApplicationStatus.js";
 
+import { RecruiterCandidateAccessService } from "../../../../../shared/services/RecruiterCandidateAccessService.js";
+import { UserRole } from "../../../../identity/domain/constants/UserRole.js";
+
 const STATUS_MESSAGES: Record<string, string> = {
 
     SHORTLISTED: "You've been shortlisted",
@@ -43,10 +46,20 @@ export class UpdateJobApplicationStatusUseCase {
 
         private readonly recordSystemNotification: RecordSystemNotificationUseCase,
 
-        private readonly recordGrowthEvent: RecordGrowthEventUseCase
+        private readonly recordGrowthEvent: RecordGrowthEventUseCase,
+
+        private readonly recruiterCandidateAccessService: RecruiterCandidateAccessService
 
     ) {}
 
+    /**
+     * RECRUITER access is real, but genuinely scoped: a recruiter may
+     * only update the status of an application to one of their own
+     * company's real drives, checked here every call via
+     * canRecruiterManageDrive - without this, opening the route to
+     * RECRUITER at all would let any recruiter update any company's
+     * applications in the organization.
+     */
     async execute(
 
         id: string,
@@ -55,7 +68,9 @@ export class UpdateJobApplicationStatusUseCase {
 
         dto: UpdateJobApplicationStatusDto,
 
-        updatedBy: string
+        updatedBy: string,
+
+        updatedByRole: UserRole
 
     ): Promise<JobApplicationResponseDto> {
 
@@ -97,6 +112,30 @@ export class UpdateJobApplicationStatusUseCase {
                 HttpStatus.NOT_FOUND
 
             );
+
+        }
+
+        if (updatedByRole === UserRole.RECRUITER) {
+
+            const canManage =
+
+                await this.recruiterCandidateAccessService.canRecruiterManageDrive(
+                    updatedBy,
+                    organizationId,
+                    drive.id!
+                );
+
+            if (!canManage) {
+
+                throw new ApiError(
+
+                    "This drive does not belong to your company.",
+
+                    HttpStatus.FORBIDDEN
+
+                );
+
+            }
 
         }
 

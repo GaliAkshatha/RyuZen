@@ -236,7 +236,9 @@ export class JobApplicationController {
 
                     req.body,
 
-                    req.user!.userId
+                    req.user!.userId,
+
+                    req.user!.role
 
                 );
 

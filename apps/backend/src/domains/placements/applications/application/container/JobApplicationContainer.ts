@@ -23,6 +23,7 @@ import { GetJobApplicationsForPlacementUseCase } from "../use-cases/GetJobApplic
 import { UpdateJobApplicationStatusUseCase } from "../use-cases/UpdateJobApplicationStatusUseCase.js";
 
 import { growthEventRecorder } from "../../../../../shared/infrastructure/growth/growthEventRecorder.js";
+import { recruiterCandidateAccessService } from "../../../../../shared/container/RecruiterCandidateAccessContainer.js";
 
 import {
     notificationContainer,
@@ -102,7 +103,9 @@ export const jobApplicationContainer = {
 
             notificationContainer.recordSystemNotification,
 
-            growthEventRecorder
+            growthEventRecorder,
+
+            recruiterCandidateAccessService
 
         )
 

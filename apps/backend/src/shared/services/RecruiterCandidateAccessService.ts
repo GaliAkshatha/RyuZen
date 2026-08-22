@@ -39,4 +39,22 @@ export class RecruiterCandidateAccessService {
     const applications = await this.jobApplicationRepository.findByStudent(student.id!);
     return applications.some((app) => companyDriveIds.has(app.placementId));
   }
+
+  /**
+   * The related, but genuinely distinct, rule behind letting a
+   * recruiter update an application's status: does this specific
+   * placement drive belong to the recruiter's own company? Without
+   * this, extending status-update access to RECRUITER would let any
+   * recruiter update any company's applications in the organization -
+   * a real security hole, not a theoretical one.
+   */
+  async canRecruiterManageDrive(recruiterUserId: string, organizationId: string, placementId: string): Promise<boolean> {
+    const recruiter = await this.recruiterRepository.findByUserId(recruiterUserId);
+    if (!recruiter) return false;
+
+    const companyDrives = await this.placementDriveRepository.findByOrganization(organizationId, {
+      companyId: recruiter.companyId,
+    });
+    return companyDrives.some((d) => d.id === placementId);
+  }
 }

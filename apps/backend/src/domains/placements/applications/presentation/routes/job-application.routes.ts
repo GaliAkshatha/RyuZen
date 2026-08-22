@@ -136,7 +136,9 @@ router.patch(
 
         UserRole.ORG_ADMIN,
 
-        UserRole.PLACEMENT_ADMIN
+        UserRole.PLACEMENT_ADMIN,
+
+        UserRole.RECRUITER
 
     ),
 

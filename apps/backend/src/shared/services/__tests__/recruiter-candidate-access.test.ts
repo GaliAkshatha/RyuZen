@@ -105,4 +105,36 @@ describe("RecruiterCandidateAccessService", () => {
     const result = await service.canRecruiterViewCandidate("user-recruiter", "org-1", "user-not-a-student");
     expect(result).toBe(false);
   });
+
+  describe("canRecruiterManageDrive", () => {
+    it("grants access when the drive genuinely belongs to the recruiter's own company", async () => {
+      const service = makeService({
+        recruiter: { id: "rec-1", companyId: "company-A" },
+        companyDrives: [{ id: "drive-A1" }, { id: "drive-A2" }],
+      });
+
+      const result = await service.canRecruiterManageDrive("user-recruiter", "org-1", "drive-A2");
+      expect(result).toBe(true);
+    });
+
+    it("denies access when the drive belongs to a different company", async () => {
+      const service = makeService({
+        recruiter: { id: "rec-1", companyId: "company-A" },
+        companyDrives: [{ id: "drive-A1" }],
+      });
+
+      const result = await service.canRecruiterManageDrive("user-recruiter", "org-1", "drive-B1");
+      expect(result).toBe(false);
+    });
+
+    it("denies access when the caller does not resolve to a real recruiter", async () => {
+      const service = makeService({
+        recruiter: null,
+        companyDrives: [{ id: "drive-A1" }],
+      });
+
+      const result = await service.canRecruiterManageDrive("user-not-a-recruiter", "org-1", "drive-A1");
+      expect(result).toBe(false);
+    });
+  });
 });
