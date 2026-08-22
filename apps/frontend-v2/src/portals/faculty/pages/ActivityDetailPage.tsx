@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { Send, Lock, Trash2, ClipboardList, Clock, CheckCircle2, XCircle, ArrowLeft } from "lucide-react";
+import { Send, Lock, Trash2, ClipboardList, Clock, CheckCircle2, XCircle, ArrowLeft, Download } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/Card";
 import { Button } from "@/shared/ui/Button";
@@ -8,6 +8,7 @@ import { EmptyState } from "@/shared/components/EmptyState";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { StatusBadge } from "@/shared/components/StatusBadge";
 import { StatCard } from "@/shared/components/StatCard";
+import { downloadCsv } from "@/shared/utils/csv";
 import { useActivity } from "@/domains/activities/hooks/useActivity";
 import { usePublishActivity } from "@/domains/activities/hooks/usePublishActivity";
 import { useCloseActivity } from "@/domains/activities/hooks/useCloseActivity";
@@ -114,7 +115,33 @@ export function ActivityDetailPage() {
       </Card>
 
       <div>
-        <h2 className="mb-3 text-lg font-semibold text-foreground">Submissions</h2>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-foreground">Submissions</h2>
+          {submissions && submissions.length > 0 && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="flex items-center gap-1.5"
+              onClick={() =>
+                downloadCsv(
+                  `${activity.title.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}-submissions.csv`,
+                  ["Student", "USN", "Status", "Points Awarded", "Feedback", "Submitted At"],
+                  submissions.map((s) => [
+                    s.submittedByName ?? "Unknown",
+                    s.submittedByUsn ?? "",
+                    s.status,
+                    s.review.pointsAwarded,
+                    s.review.feedback,
+                    new Date(s.submittedAt).toLocaleString(),
+                  ]),
+                )
+              }
+            >
+              <Download className="h-3.5 w-3.5" aria-hidden="true" />
+              Download CSV
+            </Button>
+          )}
+        </div>
 
         {submissions && submissions.length > 0 && (
           <div className="mb-4 grid grid-cols-4 gap-3">

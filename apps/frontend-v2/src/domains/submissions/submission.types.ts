@@ -18,6 +18,9 @@ export interface Submission {
   activityId: string;
   organizationId: string;
   submittedBy: string;
+  /** Real server-side enrichment, added this pass - closes a gap where a reviewer only ever saw a raw user id. */
+  submittedByName?: string;
+  submittedByUsn?: string;
   status: SubmissionStatus;
   remarks: string;
   attachments: { name: string; url: string; mimeType: string }[];
