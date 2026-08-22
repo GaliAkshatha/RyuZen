@@ -32,6 +32,8 @@ export interface SeededOrganization {
   code: string;
   orgAdmin: SeededUser;
   departments: SeededDepartment[];
+  /** True when this organization already existed from a previous run (matched by its real, unique code) - the orchestrator uses this to skip re-seeding all of its dependent data, not just the organization itself. */
+  alreadyExisted: boolean;
 }
 
 export interface SeededFaculty {

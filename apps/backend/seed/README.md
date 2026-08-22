@@ -21,6 +21,22 @@ Running it twice will create a second, duplicate set of organizations
 (there's no "already seeded" check) - point at an empty database, or a
 disposable one, not one you want to keep clean.
 
+## If seeding succeeds but the credentials file write fails
+
+Every seeded account shares one known password (`Seed@1234`), so if data
+creation completes but the final credentials-file write fails for any
+reason (as happened once during development - a Windows-specific path
+bug, since fixed), you don't need to re-run the whole seed and create a
+second, duplicate set of organizations. Instead:
+
+```bash
+npm run seed:credentials
+```
+
+This is read-only - it queries the organizations and users that already
+exist and regenerates `SEED_CREDENTIALS.md` from them, creating or
+modifying nothing.
+
 ## How this was verified, and the one honest limitation
 
 This sandbox's network access does not reach either a real MongoDB

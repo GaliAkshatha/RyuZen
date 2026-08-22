@@ -1,3 +1,5 @@
+import { fileURLToPath } from "url";
+
 import { connectForSeed, disconnectAfterSeed } from "./utils/connection.js";
 import { seedOrganizations } from "./data/organizations.js";
 import { seedFaculty } from "./data/faculty.js";
@@ -13,6 +15,7 @@ import { seedApplications } from "./data/applications.js";
 import { seedConnections } from "./data/connections.js";
 import { seedLeaderboard } from "./data/leaderboard.js";
 import { generateCredentialsFile } from "./generateCredentialsFile.js";
+import { recordExistingOrgCredentials } from "./utils/recordExistingCredentials.js";
 
 /**
  * Full seed run, one organization at a time, in real dependency
@@ -32,6 +35,12 @@ async function main(): Promise<void> {
   const organizations = await seedOrganizations();
 
   for (const org of organizations) {
+    if (org.alreadyExisted) {
+      console.log(`\n--- "${org.name}" already exists - skipping data creation, recording its existing accounts ---`);
+      await recordExistingOrgCredentials(org.id, org.name);
+      continue;
+    }
+
     console.log(`\n--- Seeding "${org.name}" ---`);
 
     const faculty = await seedFaculty(org);
@@ -48,7 +57,8 @@ async function main(): Promise<void> {
     await seedLeaderboard(org.id, students, pointsByUserId);
   }
 
-  await generateCredentialsFile(new URL("../SEED_CREDENTIALS.md", import.meta.url).pathname);
+  const credentialsPath = fileURLToPath(new URL("../SEED_CREDENTIALS.md", import.meta.url));
+  await generateCredentialsFile(credentialsPath);
 
   await disconnectAfterSeed();
 
