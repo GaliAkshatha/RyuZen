@@ -70,6 +70,16 @@ export const UpdateActivitySchema = z.object({
         z.array(z.string())
             .optional(),
 
+    semesters:
+
+        z.array(z.number().int().min(1).max(12))
+            .optional(),
+
+    sections:
+
+        z.array(z.string())
+            .optional(),
+
     points:
 
         z.number().min(0)

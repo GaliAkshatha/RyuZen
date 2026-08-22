@@ -16,6 +16,8 @@ export interface StudentResponseDto {
 
     batch: string;
 
+    section?: string;
+
     semester: number;
 
     cgpa?: number;

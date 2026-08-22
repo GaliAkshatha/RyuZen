@@ -130,6 +130,22 @@ const activitySchema = new Schema(
 
         },
 
+        semesters: {
+
+            type: [Number],
+
+            default: undefined
+
+        },
+
+        sections: {
+
+            type: [String],
+
+            default: undefined
+
+        },
+
         points: {
 
             type: Number,

@@ -5,9 +5,10 @@ import type {
   CreateStudentRequest,
   UpdateStudentRequest,
   AssignMentorRequest,
+  BulkImportReport,
 } from "@/domains/students/student.types";
 
-/** Every call maps 1:1 to a real, confirmed SUPER_ADMIN/ORG_ADMIN route (student.routes.ts). No DELETE - students are archived, never deleted, same real business rule as Faculty. Bulk import deliberately not wrapped here - a genuinely separate file-upload feature, not built this pass. */
+/** Every call maps 1:1 to a real, confirmed SUPER_ADMIN/ORG_ADMIN route (student.routes.ts). No DELETE - students are archived, never deleted, same real business rule as Faculty. */
 export const studentService = {
   async list(): Promise<Student[]> {
     const res = await apiClient.get<ApiSuccessResponse<Student[]>>("/students");
@@ -43,6 +44,23 @@ export const studentService = {
   /** No body - confirmed directly against ArchiveStudentUseCase. */
   async archive(id: string): Promise<Student> {
     const res = await apiClient.patch<ApiSuccessResponse<Student>>(`/students/${id}/archive`);
+    return res.data.data;
+  },
+
+  /**
+   * Real multipart CSV upload (confirmed: csvUpload.single("file") on
+   * the backend, field name "file", no JSON body). Content-Type is
+   * explicitly cleared here - apiClient's instance-level default
+   * (application/json) would otherwise persist and break the
+   * multipart boundary axios's FormData auto-detection would
+   * otherwise set correctly.
+   */
+  async bulkImport(file: File): Promise<BulkImportReport> {
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await apiClient.post<ApiSuccessResponse<BulkImportReport>>("/students/bulk-import", formData, {
+      headers: { "Content-Type": undefined },
+    });
     return res.data.data;
   },
 };

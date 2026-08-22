@@ -50,3 +50,25 @@ export interface UpdateStudentRequest {
 export interface AssignMentorRequest {
   facultyId: string;
 }
+
+/** Matches the real backend BulkImportReportDto exactly. */
+export interface BulkImportSuccessRow {
+  row: number;
+  name: string;
+  email: string;
+  userId: string;
+}
+
+export interface BulkImportFailureRow {
+  row: number;
+  email?: string;
+  reason: string;
+}
+
+export interface BulkImportReport {
+  totalRows: number;
+  successfulImports: BulkImportSuccessRow[];
+  duplicates: BulkImportFailureRow[];
+  validationFailures: BulkImportFailureRow[];
+  skippedRecords: BulkImportFailureRow[];
+}

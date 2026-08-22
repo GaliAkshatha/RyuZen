@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { Send, Lock, Trash2 } from "lucide-react";
+import { Send, Lock, Trash2, ClipboardList, Clock, CheckCircle2, XCircle } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/Card";
 import { Button } from "@/shared/ui/Button";
@@ -7,6 +7,7 @@ import { Skeleton } from "@/shared/components/Skeleton";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { StatusBadge } from "@/shared/components/StatusBadge";
+import { StatCard } from "@/shared/components/StatCard";
 import { useActivity } from "@/domains/activities/hooks/useActivity";
 import { usePublishActivity } from "@/domains/activities/hooks/usePublishActivity";
 import { useCloseActivity } from "@/domains/activities/hooks/useCloseActivity";
@@ -14,6 +15,7 @@ import { useDeleteActivity } from "@/domains/activities/hooks/useDeleteActivity"
 import { useSubmissionsForActivity } from "@/domains/submissions/hooks/useSubmissionsForActivity";
 import { SubmissionReviewRow } from "@/domains/submissions/components/SubmissionReviewRow";
 import { ActivityStatus } from "@/domains/activities/activity.types";
+import { SubmissionStatus } from "@/domains/submissions/submission.types";
 
 export function ActivityDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -36,6 +38,10 @@ export function ActivityDetailPage() {
   if (isError || !activity) {
     return <ErrorState error={error} onRetry={() => refetch()} />;
   }
+
+  const pending = (submissions ?? []).filter((s) => s.status === SubmissionStatus.PENDING).length;
+  const approved = (submissions ?? []).filter((s) => s.status === SubmissionStatus.APPROVED).length;
+  const rejected = (submissions ?? []).filter((s) => s.status === SubmissionStatus.REJECTED).length;
 
   return (
     <div className="flex flex-col gap-6">
@@ -99,6 +105,15 @@ export function ActivityDetailPage() {
 
       <div>
         <h2 className="mb-3 text-lg font-semibold text-foreground">Submissions</h2>
+
+        {submissions && submissions.length > 0 && (
+          <div className="mb-4 grid grid-cols-4 gap-3">
+            <StatCard icon={ClipboardList} value={submissions.length} label="Total" tone="primary" />
+            <StatCard icon={Clock} value={pending} label="Pending" tone="warning" />
+            <StatCard icon={CheckCircle2} value={approved} label="Approved" tone="success" />
+            <StatCard icon={XCircle} value={rejected} label="Rejected" tone="destructive" />
+          </div>
+        )}
         {isLoadingSubmissions ? (
           <div className="flex flex-col gap-2">
             {Array.from({ length: 2 }).map((_, i) => (

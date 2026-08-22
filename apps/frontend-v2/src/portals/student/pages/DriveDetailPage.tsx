@@ -17,7 +17,7 @@ import type { AppApiError } from "@/shared/types/api.types";
 /**
  * Real eligibility signal, closing the previously-confirmed
  * "no student-facing eligibility check" backend gap - GET
- * /placement-drives/:id/my-eligibility reuses the exact same
+ * /placements/:id/my-eligibility reuses the exact same
  * isStudentEligibleForDrive() logic the backend uses to gate the
  * actual apply action, so what's shown here is guaranteed to match
  * what happens on submit, not a separate, potentially-drifting

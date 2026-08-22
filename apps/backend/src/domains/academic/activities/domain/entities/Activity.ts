@@ -90,6 +90,18 @@ export class Activity {
 
     }
 
+    get semesters() {
+
+        return this.props.semesters;
+
+    }
+
+    get sections() {
+
+        return this.props.sections;
+
+    }
+
     get points() {
 
         return this.props.points;
@@ -204,6 +216,10 @@ export class Activity {
 
             batches?: string[];
 
+            semesters?: number[];
+
+            sections?: string[];
+
             points?: number;
 
             penaltyPoints?: number;
@@ -273,6 +289,30 @@ export class Activity {
             this.props.batches =
 
                 values.batches;
+
+        }
+
+        if (
+
+            values.semesters !== undefined
+
+        ) {
+
+            this.props.semesters =
+
+                values.semesters;
+
+        }
+
+        if (
+
+            values.sections !== undefined
+
+        ) {
+
+            this.props.sections =
+
+                values.sections;
 
         }
 

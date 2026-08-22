@@ -68,4 +68,42 @@ describe("SubmissionEligibilityService: department/batch targeting", () => {
       statusCode: 403,
     });
   });
+
+  it("rejects a student from a different semester than the activity's real target", async () => {
+    const activity = { ...baseActivity, semesters: [6] };
+    const service = makeService(activity, {
+      "user-student-1": { id: "student-1", departmentId: "dept-cse", cgpa: 8, semester: 4, batch: "2022-2026", section: "B" },
+    });
+    await expect(service.validateSubmission("activity-1", "org-1", "user-student-1")).rejects.toMatchObject({
+      statusCode: 403,
+    });
+  });
+
+  it("allows a student from the activity's real target semester and section", async () => {
+    const activity = { ...baseActivity, semesters: [6], sections: ["B"] };
+    const service = makeService(activity, {
+      "user-student-1": { id: "student-1", departmentId: "dept-cse", cgpa: 8, semester: 6, batch: "2022-2026", section: "B" },
+    });
+    await expect(service.validateSubmission("activity-1", "org-1", "user-student-1")).resolves.toBeUndefined();
+  });
+
+  it("rejects a student from a different section than the activity's real target", async () => {
+    const activity = { ...baseActivity, sections: ["A"] };
+    const service = makeService(activity, {
+      "user-student-1": { id: "student-1", departmentId: "dept-cse", cgpa: 8, semester: 6, batch: "2022-2026", section: "B" },
+    });
+    await expect(service.validateSubmission("activity-1", "org-1", "user-student-1")).rejects.toMatchObject({
+      statusCode: 403,
+    });
+  });
+
+  it("rejects a student with no section set when the activity targets a specific section", async () => {
+    const activity = { ...baseActivity, sections: ["B"] };
+    const service = makeService(activity, {
+      "user-student-1": { id: "student-1", departmentId: "dept-cse", cgpa: 8, semester: 6, batch: "2022-2026" },
+    });
+    await expect(service.validateSubmission("activity-1", "org-1", "user-student-1")).rejects.toMatchObject({
+      statusCode: 403,
+    });
+  });
 });

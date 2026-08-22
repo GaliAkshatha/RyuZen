@@ -16,6 +16,10 @@ export interface CreateActivityDto {
 
     batches?: string[];
 
+    semesters?: number[];
+
+    sections?: string[];
+
     points: number;
 
     penaltyPoints: number;

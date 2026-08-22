@@ -27,6 +27,13 @@ export interface Submission {
   updatedAt?: string;
 }
 
+/** Matches CreateSubmissionSchema exactly - attachments genuinely requires at least one entry, not optional; remarks defaults to empty string. */
+export interface CreateSubmissionRequest {
+  activityId: string;
+  remarks?: string;
+  attachments: { name: string; url: string; mimeType: string }[];
+}
+
 /** Matches ApproveSubmissionSchema exactly - both fields are genuinely required, not optional (feedback must be non-empty, confirmed directly). */
 export interface ApproveSubmissionRequest {
   feedback: string;

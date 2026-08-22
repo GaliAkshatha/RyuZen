@@ -1,19 +1,20 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import { AppShell } from "@/app/layouts/AppShell";
 import { ProtectedRoute } from "@/app/router/ProtectedRoute";
 import { RoleRoute } from "@/app/router/RoleRoute";
 import { NotFoundPage } from "@/app/pages/NotFoundPage";
 import { ForbiddenPage } from "@/app/pages/ForbiddenPage";
-import { PortalRedirect } from "@/app/pages/PortalRedirect";
 import { LoginPage } from "@/domains/auth/pages/LoginPage";
+import { LandingPage } from "@/app/pages/LandingPage";
 
 import { SuperAdminLayout } from "@/portals/super-admin/layout/SuperAdminLayout";
+import { SuperAdminHomePage } from "@/portals/super-admin/pages/SuperAdminHomePage";
 import { OrganizationListPage } from "@/portals/super-admin/pages/OrganizationListPage";
 import { OrganizationDetailPage } from "@/portals/super-admin/pages/OrganizationDetailPage";
 import { CreateOrganizationPage } from "@/portals/super-admin/pages/CreateOrganizationPage";
 
 import { OrgAdminLayout } from "@/portals/org-admin/layout/OrgAdminLayout";
+import { OrgAdminHomePage } from "@/portals/org-admin/pages/OrgAdminHomePage";
 import { DepartmentListPage } from "@/portals/org-admin/pages/DepartmentListPage";
 import { DepartmentDetailPage } from "@/portals/org-admin/pages/DepartmentDetailPage";
 import { CreateDepartmentPage } from "@/portals/org-admin/pages/CreateDepartmentPage";
@@ -23,19 +24,29 @@ import { CreateFacultyPage } from "@/portals/org-admin/pages/CreateFacultyPage";
 import { StudentListPage } from "@/portals/org-admin/pages/StudentListPage";
 import { StudentDetailPage } from "@/portals/org-admin/pages/StudentDetailPage";
 import { CreateStudentPage } from "@/portals/org-admin/pages/CreateStudentPage";
+import { BulkImportPage } from "@/portals/org-admin/pages/BulkImportPage";
+import { InvitationsPage } from "@/portals/org-admin/pages/InvitationsPage";
+import { AlumniListPage } from "@/portals/org-admin/pages/AlumniListPage";
+import { SettingsPage } from "@/portals/org-admin/pages/SettingsPage";
+import { AuditLogsPage } from "@/portals/org-admin/pages/AuditLogsPage";
 
 import { FacultyLayout } from "@/portals/faculty/layout/FacultyLayout";
+import { FacultyHomePage } from "@/portals/faculty/pages/FacultyHomePage";
+import { MyStudentsPage } from "@/portals/faculty/pages/MyStudentsPage";
 import { ActivityListPage } from "@/portals/faculty/pages/ActivityListPage";
 import { ActivityDetailPage } from "@/portals/faculty/pages/ActivityDetailPage";
 import { CreateActivityPage } from "@/portals/faculty/pages/CreateActivityPage";
 
 import { AlumniLayout } from "@/portals/alumni/layout/AlumniLayout";
-import { PeoplePage } from "@/portals/alumni/pages/PeoplePage";
-import { MyConnectionsPage } from "@/portals/alumni/pages/MyConnectionsPage";
-import { RequestsPage } from "@/portals/alumni/pages/RequestsPage";
-import { NotificationsPage } from "@/portals/alumni/pages/NotificationsPage";
+import { AlumniHomePage } from "@/portals/alumni/pages/AlumniHomePage";
+import { ConnectPage } from "@/domains/connections/components/ConnectPage";
+import { ProfilePage } from "@/domains/auth/pages/ProfilePage";
+import { AIAssistantPage } from "@/portals/student/pages/AIAssistantPage";
 
 import { StudentLayout } from "@/portals/student/layout/StudentLayout";
+import { StudentHomePage } from "@/portals/student/pages/StudentHomePage";
+import { StudentActivityListPage } from "@/portals/student/pages/StudentActivityListPage";
+import { StudentActivityDetailPage } from "@/portals/student/pages/StudentActivityDetailPage";
 import { DriveListPage } from "@/portals/student/pages/DriveListPage";
 import { DriveDetailPage } from "@/portals/student/pages/DriveDetailPage";
 import { MyApplicationsPage } from "@/portals/student/pages/MyApplicationsPage";
@@ -43,7 +54,9 @@ import { CareerScorePage } from "@/portals/student/pages/CareerScorePage";
 import { PortfolioPage } from "@/portals/student/pages/PortfolioPage";
 
 import { PlacementAdminLayout } from "@/portals/placement-admin/layout/PlacementAdminLayout";
+import { PlacementAdminHomePage } from "@/portals/placement-admin/pages/PlacementAdminHomePage";
 import { CompanyListPage } from "@/portals/placement-admin/pages/CompanyListPage";
+import { PlacementAnalyticsPage } from "@/portals/placement-admin/pages/PlacementAnalyticsPage";
 import { CreateCompanyPage } from "@/portals/placement-admin/pages/CreateCompanyPage";
 import { DriveListPage as PlacementAdminDriveListPage } from "@/portals/placement-admin/pages/DriveListPage";
 import { DriveDetailPage as PlacementAdminDriveDetailPage } from "@/portals/placement-admin/pages/DriveDetailPage";
@@ -52,6 +65,7 @@ import { CreateDrivePage } from "@/portals/placement-admin/pages/CreateDrivePage
 import { RecruiterLayout } from "@/portals/recruiter/layout/RecruiterLayout";
 import { ApplicantsPage } from "@/portals/recruiter/pages/ApplicantsPage";
 import { CandidateSearchPage } from "@/portals/recruiter/pages/CandidateSearchPage";
+import { RecruiterHomePage } from "@/portals/recruiter/pages/RecruiterHomePage";
 import { MyDrivesPage } from "@/portals/recruiter/pages/MyDrivesPage";
 import { MyCompanyPage } from "@/portals/recruiter/pages/MyCompanyPage";
 
@@ -78,10 +92,11 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <OrganizationListPage /> },
+      { index: true, element: <SuperAdminHomePage /> },
       { path: "organizations", element: <OrganizationListPage /> },
       { path: "organizations/new", element: <CreateOrganizationPage /> },
       { path: "organizations/:id", element: <OrganizationDetailPage /> },
+      { path: "audit-logs", element: <AuditLogsPage /> },
     ],
   },
   {
@@ -94,7 +109,7 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <DepartmentListPage /> },
+      { index: true, element: <OrgAdminHomePage /> },
       { path: "departments", element: <DepartmentListPage /> },
       { path: "departments/new", element: <CreateDepartmentPage /> },
       { path: "departments/:id", element: <DepartmentDetailPage /> },
@@ -104,6 +119,12 @@ export const router = createBrowserRouter([
       { path: "students", element: <StudentListPage /> },
       { path: "students/new", element: <CreateStudentPage /> },
       { path: "students/:id", element: <StudentDetailPage /> },
+      { path: "students/bulk-import", element: <BulkImportPage /> },
+      { path: "invitations", element: <InvitationsPage /> },
+      { path: "alumni", element: <AlumniListPage /> },
+      { path: "settings", element: <SettingsPage /> },
+      { path: "audit-logs", element: <AuditLogsPage /> },
+      { path: "placement-analytics", element: <PlacementAnalyticsPage /> },
     ],
   },
   {
@@ -116,10 +137,12 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <ActivityListPage /> },
+      { index: true, element: <FacultyHomePage /> },
       { path: "activities", element: <ActivityListPage /> },
       { path: "activities/new", element: <CreateActivityPage /> },
       { path: "activities/:id", element: <ActivityDetailPage /> },
+      { path: "students", element: <MyStudentsPage /> },
+      { path: "connect", element: <ConnectPage /> },
     ],
   },
   {
@@ -132,11 +155,8 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <PeoplePage /> },
-      { path: "people", element: <PeoplePage /> },
-      { path: "connections", element: <MyConnectionsPage /> },
-      { path: "requests", element: <RequestsPage /> },
-      { path: "notifications", element: <NotificationsPage /> },
+      { index: true, element: <AlumniHomePage /> },
+      { path: "connect", element: <ConnectPage /> },
     ],
   },
   {
@@ -149,16 +169,16 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <DriveListPage /> },
+      { index: true, element: <StudentHomePage /> },
       { path: "drives", element: <DriveListPage /> },
+      { path: "activities", element: <StudentActivityListPage /> },
+      { path: "activities/:id", element: <StudentActivityDetailPage /> },
       { path: "drives/:id", element: <DriveDetailPage /> },
       { path: "applications", element: <MyApplicationsPage /> },
       { path: "career-score", element: <CareerScorePage /> },
       { path: "portfolio", element: <PortfolioPage /> },
-      { path: "people", element: <PeoplePage /> },
-      { path: "connections", element: <MyConnectionsPage /> },
-      { path: "requests", element: <RequestsPage /> },
-      { path: "notifications", element: <NotificationsPage /> },
+      { path: "connect", element: <ConnectPage /> },
+      { path: "ai-assistant", element: <AIAssistantPage /> },
     ],
   },
   {
@@ -171,12 +191,13 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <CompanyListPage /> },
+      { index: true, element: <PlacementAdminHomePage /> },
       { path: "companies", element: <CompanyListPage /> },
       { path: "companies/new", element: <CreateCompanyPage /> },
       { path: "drives", element: <PlacementAdminDriveListPage /> },
       { path: "drives/new", element: <CreateDrivePage /> },
       { path: "drives/:id", element: <PlacementAdminDriveDetailPage /> },
+      { path: "analytics", element: <PlacementAnalyticsPage /> },
     ],
   },
   {
@@ -189,7 +210,7 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <MyDrivesPage /> },
+      { index: true, element: <RecruiterHomePage /> },
       { path: "drives", element: <MyDrivesPage /> },
       { path: "applicants", element: <ApplicantsPage /> },
       { path: "search", element: <CandidateSearchPage /> },
@@ -197,13 +218,16 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "/",
+    path: "/profile",
     element: (
       <ProtectedRoute>
-        <AppShell />
+        <ProfilePage />
       </ProtectedRoute>
     ),
-    children: [{ index: true, element: <PortalRedirect /> }],
+  },
+  {
+    path: "/",
+    element: <LandingPage />,
   },
   { path: "*", element: <NotFoundPage /> },
 ]);

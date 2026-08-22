@@ -126,7 +126,22 @@ export class SubmissionEligibilityService {
 
             (activity.batches?.length ?? 0) > 0;
 
-        if (hasDepartmentRestriction || hasBatchRestriction) {
+        const hasSemesterRestriction =
+
+            (activity.semesters?.length ?? 0) > 0;
+
+        const hasSectionRestriction =
+
+            (activity.sections?.length ?? 0) > 0;
+
+        if (
+
+            hasDepartmentRestriction ||
+            hasBatchRestriction ||
+            hasSemesterRestriction ||
+            hasSectionRestriction
+
+        ) {
 
             const student =
 
@@ -176,6 +191,41 @@ export class SubmissionEligibilityService {
                 throw new ApiError(
 
                     "This activity is not available to your batch.",
+
+                    HttpStatus.FORBIDDEN
+
+                );
+
+            }
+
+            if (
+
+                hasSemesterRestriction &&
+                !activity.semesters!.includes(student.semester)
+
+            ) {
+
+                throw new ApiError(
+
+                    "This activity is not available to your semester.",
+
+                    HttpStatus.FORBIDDEN
+
+                );
+
+            }
+
+            if (
+
+                hasSectionRestriction &&
+                (!student.section ||
+                    !activity.sections!.includes(student.section))
+
+            ) {
+
+                throw new ApiError(
+
+                    "This activity is not available to your section.",
 
                     HttpStatus.FORBIDDEN
 

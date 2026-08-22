@@ -1,19 +1,23 @@
 import { Link } from "react-router-dom";
-import { Plus, GraduationCap } from "lucide-react";
+import { Plus, GraduationCap, UserCheck, UserX } from "lucide-react";
 
 import { Button } from "@/shared/ui/Button";
 import { Skeleton } from "@/shared/components/Skeleton";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { StatusBadge } from "@/shared/components/StatusBadge";
+import { StatCard } from "@/shared/components/StatCard";
 import { useFacultyList } from "@/domains/faculty/hooks/useFacultyList";
 import { useDepartments } from "@/domains/departments/hooks/useDepartments";
+import { FacultyStatus } from "@/domains/faculty/faculty.types";
 
 export function FacultyListPage() {
   const { data: faculty, isLoading, isError, error, refetch } = useFacultyList();
   const { data: departments } = useDepartments();
 
   const departmentById = new Map((departments ?? []).map((d) => [d.id, d]));
+  const active = (faculty ?? []).filter((f) => f.status === FacultyStatus.ACTIVE).length;
+  const inactive = (faculty ?? []).filter((f) => f.status === FacultyStatus.INACTIVE).length;
 
   return (
     <div className="flex flex-col gap-6">
@@ -29,6 +33,14 @@ export function FacultyListPage() {
           </Link>
         </Button>
       </div>
+
+      {!isLoading && !isError && faculty && faculty.length > 0 && (
+        <div className="grid grid-cols-3 gap-3">
+          <StatCard icon={GraduationCap} value={faculty.length} label="Total faculty" tone="primary" />
+          <StatCard icon={UserCheck} value={active} label="Active" tone="success" />
+          <StatCard icon={UserX} value={inactive} label="Inactive" tone="warning" />
+        </div>
+      )}
 
       {isLoading ? (
         <div className="flex flex-col gap-2">

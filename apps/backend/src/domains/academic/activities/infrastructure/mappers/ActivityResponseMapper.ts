@@ -42,6 +42,12 @@ export class ActivityResponseMapper {
             batches:
                 activity.batches,
 
+            semesters:
+                activity.semesters,
+
+            sections:
+                activity.sections,
+
             points:
                 activity.points,
 

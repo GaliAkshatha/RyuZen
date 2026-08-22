@@ -27,6 +27,12 @@ export interface IActivity {
     /** Which batches this activity is scoped to. Empty/undefined means no batch restriction. */
     batches?: string[];
 
+    /** Which semesters this activity is scoped to (e.g. [6] for 6th semester only). Empty/undefined means no semester restriction. */
+    semesters?: number[];
+
+    /** Which sections this activity is scoped to (e.g. ["B"]). Empty/undefined means no section restriction. */
+    sections?: string[];
+
     points: number;
 
     penaltyPoints: number;

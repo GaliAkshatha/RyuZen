@@ -33,6 +33,9 @@ export class StudentResponseMapper {
             batch:
                 student.batch,
 
+            section:
+                student.section,
+
             semester:
                 student.semester,
 

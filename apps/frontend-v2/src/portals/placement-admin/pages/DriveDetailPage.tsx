@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { Send, Lock } from "lucide-react";
+import { Send, Lock, FileText, CheckCircle2, Award, XCircle } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/Card";
 import { Button } from "@/shared/ui/Button";
@@ -7,6 +7,7 @@ import { Skeleton } from "@/shared/components/Skeleton";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { StatusBadge } from "@/shared/components/StatusBadge";
+import { StatCard } from "@/shared/components/StatCard";
 import { usePlacementDrive } from "@/domains/placement-drives/hooks/usePlacementDrive";
 import { usePublishPlacementDrive } from "@/domains/placement-drives/hooks/usePublishPlacementDrive";
 import { useClosePlacementDrive } from "@/domains/placement-drives/hooks/useClosePlacementDrive";
@@ -14,6 +15,7 @@ import { useCompanies } from "@/domains/companies/hooks/useCompanies";
 import { useApplicationsForDrive } from "@/domains/job-applications/hooks/useApplicationsForDrive";
 import { ApplicationReviewRow } from "@/domains/job-applications/components/ApplicationReviewRow";
 import { PlacementDriveStatus } from "@/domains/placement-drives/placementDrive.types";
+import { JobApplicationStatus } from "@/domains/job-applications/jobApplication.types";
 
 export function DriveDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -37,6 +39,9 @@ export function DriveDetailPage() {
   }
 
   const company = companies?.find((c) => c.id === drive.companyId);
+  const shortlisted = (applications ?? []).filter((a) => a.status === JobApplicationStatus.SHORTLISTED).length;
+  const selected = (applications ?? []).filter((a) => a.status === JobApplicationStatus.SELECTED).length;
+  const rejected = (applications ?? []).filter((a) => a.status === JobApplicationStatus.REJECTED).length;
 
   return (
     <div className="flex flex-col gap-6">
@@ -87,6 +92,15 @@ export function DriveDetailPage() {
 
       <div>
         <h2 className="mb-3 text-lg font-semibold text-foreground">Applications</h2>
+
+        {applications && applications.length > 0 && (
+          <div className="mb-4 grid grid-cols-4 gap-3">
+            <StatCard icon={FileText} value={applications.length} label="Total" tone="primary" />
+            <StatCard icon={CheckCircle2} value={shortlisted} label="Shortlisted" tone="warning" />
+            <StatCard icon={Award} value={selected} label="Selected" tone="success" />
+            <StatCard icon={XCircle} value={rejected} label="Rejected" tone="destructive" />
+          </div>
+        )}
         {isLoadingApplications ? (
           <div className="flex flex-col gap-2">
             {Array.from({ length: 2 }).map((_, i) => (

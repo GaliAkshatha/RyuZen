@@ -1,0 +1,27 @@
+import { apiClient } from "@/shared/api/apiClient";
+import type { ApiSuccessResponse } from "@/shared/types/api.types";
+import type {
+  MockInterviewSession,
+  StartMockInterviewRequest,
+  AnswerMockInterviewRequest,
+} from "@/domains/mock-interview/mockInterview.types";
+
+/** Confirmed real mount /api/v1/ai/interview, open to any authenticated user. */
+export const mockInterviewService = {
+  async start(payload: StartMockInterviewRequest): Promise<MockInterviewSession> {
+    const res = await apiClient.post<ApiSuccessResponse<MockInterviewSession>>("/ai/interview", payload);
+    return res.data.data;
+  },
+  async list(): Promise<MockInterviewSession[]> {
+    const res = await apiClient.get<ApiSuccessResponse<MockInterviewSession[]>>("/ai/interview");
+    return res.data.data;
+  },
+  async getById(id: string): Promise<MockInterviewSession> {
+    const res = await apiClient.get<ApiSuccessResponse<MockInterviewSession>>(`/ai/interview/${id}`);
+    return res.data.data;
+  },
+  async answer(id: string, payload: AnswerMockInterviewRequest): Promise<MockInterviewSession> {
+    const res = await apiClient.post<ApiSuccessResponse<MockInterviewSession>>(`/ai/interview/${id}/answer`, payload);
+    return res.data.data;
+  },
+};

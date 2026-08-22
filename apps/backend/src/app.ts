@@ -8,6 +8,7 @@ import authRoutes from "../src/domains/identity/presentation/routes/auth.routes.
 import userRoutes from "./domains/identity/presentation/routes/user.routes.js";
 import invitationRoutes from "./domains/identity/presentation/routes/invitation.routes.js";
 import organizationRoutes from "./domains/organizations/presentation/routes/organization.routes.js";
+import organizationSettingsRoutes from "./domains/organizations/presentation/routes/organization-settings.routes.js";
 import activityRoutes from "./domains/academic/activities/presentation/routes/activity.routes.js";
 import submissionRoutes from "./domains/academic/submissions/presentation/routes/submission.routes.js";
 import auditLogRoutes from "./domains/platform/audit/presentation/routes/audit-log.routes.js";
@@ -58,6 +59,7 @@ bootstrap(app);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/invitations", invitationRoutes);
+app.use("/api/v1/organizations/settings", organizationSettingsRoutes);
 app.use("/api/v1/organizations", organizationRoutes);
 app.use("/api/v1/activities", activityRoutes);
 app.use("/api/v1/submissions",submissionRoutes);

@@ -55,6 +55,12 @@ export class CreateActivityUseCase {
             batches:
                 dto.batches,
 
+            semesters:
+                dto.semesters,
+
+            sections:
+                dto.sections,
+
             points:
                 dto.points,
 

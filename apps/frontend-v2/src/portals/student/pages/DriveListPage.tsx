@@ -14,7 +14,7 @@ import { PlacementDriveStatus } from "@/domains/placement-drives/placementDrive.
  * itself still shows every open drive, since checking real
  * eligibility per-drive here would mean an eligibility API call per
  * row. The now-real per-drive eligibility signal (GET
- * /placement-drives/:id/my-eligibility, closing a previously-confirmed
+ * /placements/:id/my-eligibility, closing a previously-confirmed
  * backend gap) lives on the drive's own detail page instead.
  */
 export function DriveListPage() {

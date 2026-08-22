@@ -1,19 +1,23 @@
 import { Link } from "react-router-dom";
-import { Plus, Users } from "lucide-react";
+import { Plus, Upload, Users, UserCheck, Archive } from "lucide-react";
 
 import { Button } from "@/shared/ui/Button";
 import { Skeleton } from "@/shared/components/Skeleton";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { StatusBadge } from "@/shared/components/StatusBadge";
+import { StatCard } from "@/shared/components/StatCard";
 import { useStudentList } from "@/domains/students/hooks/useStudentList";
 import { useDepartments } from "@/domains/departments/hooks/useDepartments";
+import { StudentStatus } from "@/domains/students/student.types";
 
 export function StudentListPage() {
   const { data: students, isLoading, isError, error, refetch } = useStudentList();
   const { data: departments } = useDepartments();
 
   const departmentById = new Map((departments ?? []).map((d) => [d.id, d]));
+  const active = (students ?? []).filter((s) => s.status === StudentStatus.ACTIVE).length;
+  const archived = (students ?? []).filter((s) => s.status === StudentStatus.ARCHIVED).length;
 
   return (
     <div className="flex flex-col gap-6">
@@ -22,13 +26,29 @@ export function StudentListPage() {
           <h1 className="text-2xl font-semibold text-foreground">Students</h1>
           <p className="text-sm text-muted-foreground">Every student profile in your organization.</p>
         </div>
-        <Button asChild size="sm">
-          <Link to="/organization/students/new" className="flex items-center gap-2">
-            <Plus className="h-4 w-4" aria-hidden="true" />
-            New student
-          </Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button asChild size="sm" variant="outline">
+            <Link to="/organization/students/bulk-import" className="flex items-center gap-2">
+              <Upload className="h-4 w-4" aria-hidden="true" />
+              Bulk import
+            </Link>
+          </Button>
+          <Button asChild size="sm">
+            <Link to="/organization/students/new" className="flex items-center gap-2">
+              <Plus className="h-4 w-4" aria-hidden="true" />
+              New student
+            </Link>
+          </Button>
+        </div>
       </div>
+
+      {!isLoading && !isError && students && students.length > 0 && (
+        <div className="grid grid-cols-3 gap-3">
+          <StatCard icon={Users} value={students.length} label="Total students" tone="primary" />
+          <StatCard icon={UserCheck} value={active} label="Active" tone="success" />
+          <StatCard icon={Archive} value={archived} label="Archived" tone="warning" />
+        </div>
+      )}
 
       {isLoading ? (
         <div className="flex flex-col gap-2">

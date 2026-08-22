@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Plus, Briefcase } from "lucide-react";
+import { Plus, Briefcase, Send, Lock, Pencil } from "lucide-react";
 
 import { Button } from "@/shared/ui/Button";
 import { Card, CardContent } from "@/shared/ui/Card";
@@ -7,14 +7,19 @@ import { Skeleton } from "@/shared/components/Skeleton";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { StatusBadge } from "@/shared/components/StatusBadge";
+import { StatCard } from "@/shared/components/StatCard";
 import { usePlacementDrives } from "@/domains/placement-drives/hooks/usePlacementDrives";
 import { useCompanies } from "@/domains/companies/hooks/useCompanies";
+import { PlacementDriveStatus } from "@/domains/placement-drives/placementDrive.types";
 
 export function DriveListPage() {
   const { data: drives, isLoading, isError, error, refetch } = usePlacementDrives();
   const { data: companies } = useCompanies();
 
   const companyById = new Map((companies ?? []).map((c) => [c.id, c]));
+  const draft = (drives ?? []).filter((d) => d.status === PlacementDriveStatus.DRAFT).length;
+  const published = (drives ?? []).filter((d) => d.status === PlacementDriveStatus.PUBLISHED).length;
+  const closed = (drives ?? []).filter((d) => d.status === PlacementDriveStatus.CLOSED).length;
 
   return (
     <div className="flex flex-col gap-6">
@@ -30,6 +35,15 @@ export function DriveListPage() {
           </Link>
         </Button>
       </div>
+
+      {!isLoading && !isError && drives && drives.length > 0 && (
+        <div className="grid grid-cols-4 gap-3">
+          <StatCard icon={Briefcase} value={drives.length} label="Total drives" tone="primary" />
+          <StatCard icon={Pencil} value={draft} label="Draft" tone="warning" />
+          <StatCard icon={Send} value={published} label="Published" tone="success" />
+          <StatCard icon={Lock} value={closed} label="Closed" tone="info" />
+        </div>
+      )}
 
       {isLoading ? (
         <div className="flex flex-col gap-2">
