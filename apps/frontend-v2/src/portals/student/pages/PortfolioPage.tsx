@@ -1,31 +1,50 @@
 import { useState } from "react";
-import { Pencil, Trophy, Sparkles, Link2, Globe, Code2, GraduationCap, Briefcase, Award, FolderGit2 } from "lucide-react";
+import {
+  Pencil,
+  Trophy,
+  Sparkles,
+  Link2,
+  Globe,
+  Code2,
+  GraduationCap,
+  Briefcase,
+  Award,
+  FolderGit2,
+  type LucideIcon,
+} from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/Card";
 import { Button } from "@/shared/ui/Button";
 import { Skeleton } from "@/shared/components/Skeleton";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { EmptyState } from "@/shared/components/EmptyState";
+import { cn } from "@/shared/utils/cn";
 import { usePortfolio } from "@/domains/portfolio/hooks/usePortfolio";
 import { useUpdatePortfolioSettings } from "@/domains/portfolio/hooks/useUpdatePortfolioSettings";
 import { PortfolioSettingsForm } from "@/domains/portfolio/components/PortfolioSettingsForm";
 
-const SECTIONS = ["skills", "projects", "experience", "education", "certifications", "achievements"] as const;
+type SectionKey = "skills" | "projects" | "achievements" | "experience" | "education" | "certifications";
+
+const TILE_TONE: Record<SectionKey, { icon: LucideIcon; bg: string; fg: string }> = {
+  skills: { icon: Code2, bg: "bg-success/10", fg: "text-success" },
+  projects: { icon: FolderGit2, bg: "bg-primary/10", fg: "text-primary" },
+  achievements: { icon: Trophy, bg: "bg-warning/10", fg: "text-warning" },
+  experience: { icon: Briefcase, bg: "bg-info/10", fg: "text-info" },
+  education: { icon: GraduationCap, bg: "bg-primary/10", fg: "text-primary" },
+  certifications: { icon: Award, bg: "bg-success/10", fg: "text-success" },
+};
 
 /**
- * Real, read-only display of the 6 aggregated sub-domains - a
- * "profile card" treatment built entirely from real counts, not
- * invented gamification. "Sections complete" is an honest ratio (how
- * many of the 6 real sections have at least one entry) - not a fake
- * XP/level system with numbers that don't map to anything real.
- * Skills/achievements/certifications get colored chip/badge treatment
- * since those are genuinely list-of-tags data; projects and
- * experience stay as real cards since they carry real prose.
+ * Real icon-tile grid landing (matching the approved wireframe),
+ * click a tile to expand that section's real detail below - avoids
+ * needing 6 separate routes while staying true to "tap tile to view
+ * that section." Every count is real, no invented XP/level system.
  */
 export function PortfolioPage() {
   const { data: portfolio, isLoading, isError, error, refetch } = usePortfolio();
   const { mutate: updateSettings, isPending } = useUpdatePortfolioSettings();
   const [isEditing, setIsEditing] = useState(false);
+  const [activeSection, setActiveSection] = useState<SectionKey | null>(null);
 
   if (isLoading) {
     return (
@@ -40,15 +59,14 @@ export function PortfolioPage() {
     return <ErrorState error={error} onRetry={() => refetch()} />;
   }
 
-  const sectionCounts: Record<(typeof SECTIONS)[number], number> = {
+  const sectionCounts: Record<SectionKey, number> = {
     skills: portfolio.skills.length,
     projects: portfolio.projects.length,
+    achievements: portfolio.achievements.length,
     experience: portfolio.experience.length,
     education: portfolio.education.length,
     certifications: portfolio.certifications.length,
-    achievements: portfolio.achievements.length,
   };
-  const completedSections = SECTIONS.filter((s) => sectionCounts[s] > 0).length;
 
   const socialLinks = [
     { icon: FolderGit2, url: portfolio.github, label: "GitHub" },
@@ -82,15 +100,7 @@ export function PortfolioPage() {
           <div className="flex flex-wrap items-center gap-3 pt-1">
             <span className="flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              {completedSections}/6 sections complete
-            </span>
-            <span className="flex items-center gap-1.5 rounded-full bg-warning/10 px-3 py-1 text-xs font-semibold text-warning">
-              <Trophy className="h-3.5 w-3.5" aria-hidden="true" />
-              {portfolio.achievements.length} achievements unlocked
-            </span>
-            <span className="flex items-center gap-1.5 rounded-full bg-success/10 px-3 py-1 text-xs font-semibold text-success">
-              <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
-              {portfolio.skills.length} skills verified
+              {Object.values(sectionCounts).filter((c) => c > 0).length}/6 sections complete
             </span>
             {socialLinks.map((link) => (
               <a
@@ -123,134 +133,131 @@ export function PortfolioPage() {
         </Card>
       )}
 
-      {/* Skills as unlocked badges */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Code2 className="h-4 w-4 text-success" aria-hidden="true" />
-            Skills
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {portfolio.skills.length === 0 ? (
-            <EmptyState title="No skills yet" />
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {portfolio.skills.map((skill) => (
-                <span
-                  key={skill.id}
-                  className="rounded-lg border border-success/30 bg-success/10 px-3 py-1.5 text-sm font-medium text-success"
-                >
-                  {skill.name}
-                </span>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      {/* Icon-tile grid */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        {(Object.keys(TILE_TONE) as SectionKey[]).map((key) => {
+          const tone = TILE_TONE[key];
+          return (
+            <button
+              key={key}
+              onClick={() => setActiveSection(activeSection === key ? null : key)}
+              className={cn(
+                "flex flex-col items-center gap-2 rounded-2xl border p-5 text-center transition-colors",
+                activeSection === key ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/40",
+              )}
+            >
+              <div className={cn("flex h-11 w-11 items-center justify-center rounded-xl", tone.bg, tone.fg)}>
+                <tone.icon className="h-5 w-5" aria-hidden="true" />
+              </div>
+              <span className="text-sm font-semibold capitalize text-foreground">{key}</span>
+              <span className="text-xs text-muted-foreground">{sectionCounts[key]} {sectionCounts[key] === 1 ? "entry" : "entries"}</span>
+            </button>
+          );
+        })}
+      </div>
 
-      {/* Achievements as trophy cards */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Trophy className="h-4 w-4 text-warning" aria-hidden="true" />
-            Achievements
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {portfolio.achievements.length === 0 ? (
-            <EmptyState title="No verified achievements yet" />
-          ) : (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {portfolio.achievements.map((achievement) => (
-                <div key={achievement.id} className="flex items-start gap-3 rounded-lg border border-warning/30 bg-warning/5 p-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-warning/15 text-warning">
-                    <Trophy className="h-4 w-4" aria-hidden="true" />
+      {/* Expanded section detail */}
+      {activeSection === "skills" && (
+        <Card>
+          <CardHeader><CardTitle>Skills</CardTitle></CardHeader>
+          <CardContent>
+            {portfolio.skills.length === 0 ? (
+              <EmptyState title="No skills yet" />
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {portfolio.skills.map((skill) => (
+                  <span key={skill.id} className="rounded-lg border border-success/30 bg-success/10 px-3 py-1.5 text-sm font-medium text-success">
+                    {skill.name}
+                  </span>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {activeSection === "achievements" && (
+        <Card>
+          <CardHeader><CardTitle>Achievements</CardTitle></CardHeader>
+          <CardContent>
+            {portfolio.achievements.length === 0 ? (
+              <EmptyState title="No verified achievements yet" />
+            ) : (
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {portfolio.achievements.map((achievement) => (
+                  <div key={achievement.id} className="flex items-start gap-3 rounded-lg border border-warning/30 bg-warning/5 p-3">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-warning/15 text-warning">
+                      <Trophy className="h-4 w-4" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground">{achievement.title}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(achievement.achievementDate).toLocaleDateString()}
+                        {achievement.position ? ` · ${achievement.position}` : ""}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-medium text-foreground">{achievement.title}</p>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {activeSection === "projects" && (
+        <Card>
+          <CardHeader><CardTitle>Projects</CardTitle></CardHeader>
+          <CardContent>
+            {portfolio.projects.length === 0 ? (
+              <EmptyState title="No projects yet" />
+            ) : (
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {portfolio.projects.map((project) => (
+                  <div key={project.id} className="rounded-lg border border-border p-3">
+                    <p className="font-medium text-foreground">{project.title}</p>
+                    {project.description && <p className="mt-1 text-sm text-muted-foreground">{project.description}</p>}
+                    {project.techStack.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {project.techStack.map((tech) => (
+                          <span key={tech} className="rounded bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {activeSection === "experience" && (
+        <Card>
+          <CardHeader><CardTitle>Experience</CardTitle></CardHeader>
+          <CardContent>
+            {portfolio.experience.length === 0 ? (
+              <EmptyState title="No experience yet" />
+            ) : (
+              <div className="flex flex-col gap-3">
+                {portfolio.experience.map((exp) => (
+                  <div key={exp.id}>
+                    <p className="font-medium text-foreground">{exp.role} · {exp.company}</p>
                     <p className="text-xs text-muted-foreground">
-                      {new Date(achievement.achievementDate).toLocaleDateString()}
-                      {achievement.position ? ` · ${achievement.position}` : ""}
+                      {new Date(exp.startDate).getFullYear()} - {exp.currentlyWorking ? "Present" : exp.endDate ? new Date(exp.endDate).getFullYear() : ""}
                     </p>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
-      {/* Projects */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FolderGit2 className="h-4 w-4 text-primary" aria-hidden="true" />
-            Projects
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {portfolio.projects.length === 0 ? (
-            <EmptyState title="No projects yet" />
-          ) : (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {portfolio.projects.map((project) => (
-                <div key={project.id} className="rounded-lg border border-border p-3">
-                  <p className="font-medium text-foreground">{project.title}</p>
-                  {project.description && <p className="mt-1 text-sm text-muted-foreground">{project.description}</p>}
-                  {project.techStack.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1.5">
-                      {project.techStack.map((tech) => (
-                        <span key={tech} className="rounded bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Experience */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Briefcase className="h-4 w-4 text-info" aria-hidden="true" />
-            Experience
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {portfolio.experience.length === 0 ? (
-            <EmptyState title="No experience yet" />
-          ) : (
-            <div className="flex flex-col gap-3">
-              {portfolio.experience.map((exp) => (
-                <div key={exp.id}>
-                  <p className="font-medium text-foreground">
-                    {exp.role} · {exp.company}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {new Date(exp.startDate).getFullYear()} - {exp.currentlyWorking ? "Present" : exp.endDate ? new Date(exp.endDate).getFullYear() : ""}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Education + Certifications side by side */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {activeSection === "education" && (
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <GraduationCap className="h-4 w-4 text-secondary" aria-hidden="true" />
-              Education
-            </CardTitle>
-          </CardHeader>
+          <CardHeader><CardTitle>Education</CardTitle></CardHeader>
           <CardContent>
             {portfolio.education.length === 0 ? (
               <EmptyState title="No education records yet" />
@@ -260,9 +267,7 @@ export function PortfolioPage() {
                   <div key={edu.id}>
                     <p className="font-medium text-foreground">{edu.degree}</p>
                     <p className="text-xs text-muted-foreground">
-                      {edu.institution} · {edu.startYear}
-                      {edu.endYear ? `-${edu.endYear}` : ""}
-                      {edu.cgpa ? ` · CGPA ${edu.cgpa}` : ""}
+                      {edu.institution} · {edu.startYear}{edu.endYear ? `-${edu.endYear}` : ""}{edu.cgpa ? ` · CGPA ${edu.cgpa}` : ""}
                     </p>
                   </div>
                 ))}
@@ -270,14 +275,11 @@ export function PortfolioPage() {
             )}
           </CardContent>
         </Card>
+      )}
 
+      {activeSection === "certifications" && (
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Award className="h-4 w-4 text-accent" aria-hidden="true" />
-              Certifications
-            </CardTitle>
-          </CardHeader>
+          <CardHeader><CardTitle>Certifications</CardTitle></CardHeader>
           <CardContent>
             {portfolio.certifications.length === 0 ? (
               <EmptyState title="No certifications yet" />
@@ -286,16 +288,14 @@ export function PortfolioPage() {
                 {portfolio.certifications.map((cert) => (
                   <div key={cert.id}>
                     <p className="font-medium text-foreground">{cert.title}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {cert.issuer} · {new Date(cert.issueDate).getFullYear()}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{cert.issuer} · {new Date(cert.issueDate).getFullYear()}</p>
                   </div>
                 ))}
               </div>
             )}
           </CardContent>
         </Card>
-      </div>
+      )}
     </div>
   );
 }

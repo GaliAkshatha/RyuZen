@@ -7,14 +7,29 @@ import { Label } from "@/shared/ui/Label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/Select";
 import { createActivitySchema, type CreateActivityFormValues } from "@/domains/activities/activitySchemas";
 import { useDepartments } from "@/domains/departments/hooks/useDepartments";
-import type { CreateActivityRequest } from "@/domains/activities/activity.types";
+import type { CreateActivityRequest, ActivityType } from "@/domains/activities/activity.types";
 import type { AppApiError } from "@/shared/types/api.types";
 
+function parseCsvList(value?: string): string[] | undefined {
+  if (!value) return undefined;
+  const items = value.split(",").map((v) => v.trim()).filter(Boolean);
+  return items.length > 0 ? items : undefined;
+}
+
+/**
+ * The real form (step 2 of the wizard) - `type` comes from step 1 as
+ * a prop, not a field here. Targeting is 4 real, independent inputs
+ * (department/batch/semester/section) shown together, not gated
+ * behind the visibility dropdown - confirmed the backend enforces
+ * whichever ones are populated regardless of visibility's value.
+ */
 export function CreateActivityForm({
+  type,
   onSubmit,
   isSubmitting,
   submitError,
 }: {
+  type: ActivityType;
   onSubmit: (values: CreateActivityRequest) => void;
   isSubmitting: boolean;
   submitError?: AppApiError | null;
@@ -25,26 +40,22 @@ export function CreateActivityForm({
     register,
     handleSubmit,
     control,
-    watch,
     formState: { errors },
   } = useForm<CreateActivityFormValues>({
     resolver: zodResolver(createActivitySchema),
     defaultValues: { visibility: "PUBLIC", points: 0, penaltyPoints: 0 },
   });
 
-  const visibility = watch("visibility");
-
   function handleFormSubmit(values: CreateActivityFormValues) {
     onSubmit({
       title: values.title,
       description: values.description,
-      type: values.type,
+      type,
       visibility: values.visibility,
-      departmentIds: values.visibility === "DEPARTMENT" ? values.departmentIds : undefined,
-      batches:
-        values.visibility === "SEMESTER" || values.visibility === "YEAR"
-          ? values.batches?.split(",").map((b) => b.trim()).filter(Boolean)
-          : undefined,
+      departmentIds: values.departmentIds,
+      batches: parseCsvList(values.batches),
+      semesters: parseCsvList(values.semesters)?.map(Number).filter((n) => !Number.isNaN(n)),
+      sections: parseCsvList(values.sections),
       points: values.points,
       penaltyPoints: values.penaltyPoints,
       startDate: new Date(values.startDate).toISOString(),
@@ -73,87 +84,75 @@ export function CreateActivityForm({
         {errors.description && <p className="text-xs text-destructive">{errors.description.message}</p>}
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1.5">
-          <Label>Type</Label>
-          <Controller
-            control={control}
-            name="type"
-            render={({ field }) => (
-              <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {["ASSIGNMENT", "WORKSHOP", "EVENT", "HACKATHON", "QUIZ", "FORM", "SURVEY"].map((t) => (
-                    <SelectItem key={t} value={t}>
-                      {t}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          />
-          {errors.type && <p className="text-xs text-destructive">Type is required</p>}
-        </div>
-
-        <div className="flex flex-col gap-1.5">
-          <Label>Visibility</Label>
-          <Controller
-            control={control}
-            name="visibility"
-            render={({ field }) => (
-              <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {["PUBLIC", "DEPARTMENT", "SEMESTER", "YEAR", "PRIVATE"].map((v) => (
-                    <SelectItem key={v} value={v}>
-                      {v}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          />
-        </div>
+      <div className="flex flex-col gap-1.5">
+        <Label>Visibility</Label>
+        <Controller
+          control={control}
+          name="visibility"
+          render={({ field }) => (
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {["PUBLIC", "DEPARTMENT", "SEMESTER", "YEAR", "PRIVATE"].map((v) => (
+                  <SelectItem key={v} value={v}>
+                    {v}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
       </div>
 
-      {visibility === "DEPARTMENT" && (
-        <div className="flex flex-col gap-1.5">
-          <Label>Department</Label>
-          <Controller
-            control={control}
-            name="departmentIds"
-            render={({ field }) => (
-              <Select value={field.value?.[0]} onValueChange={(v) => field.onChange([v])}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Restrict to a department" />
-                </SelectTrigger>
-                <SelectContent>
-                  {(departments ?? []).map((dept) => (
-                    <SelectItem key={dept.id} value={dept.id}>
-                      {dept.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          />
-          <p className="text-xs text-muted-foreground">Only students in this department will be able to submit.</p>
-        </div>
-      )}
+      <div className="rounded-lg border border-border p-4">
+        <p className="mb-1 text-sm font-medium text-foreground">Target groups (optional)</p>
+        <p className="mb-3 text-xs text-muted-foreground">
+          Leave any of these empty for no restriction on that dimension. A student must match every
+          restriction you set to be eligible.
+        </p>
 
-      {(visibility === "SEMESTER" || visibility === "YEAR") && (
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="activity-batches">Batches</Label>
-          <Input id="activity-batches" placeholder="e.g. 2022-2026, 2023-2027" {...register("batches")} />
-          <p className="text-xs text-muted-foreground">
-            Comma-separated. Only students in these batches will be able to submit.
-          </p>
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1.5">
+            <Label>Department</Label>
+            <Controller
+              control={control}
+              name="departmentIds"
+              render={({ field }) => (
+                <Select value={field.value?.[0]} onValueChange={(v) => field.onChange([v])}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Any department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {(departments ?? []).map((dept) => (
+                      <SelectItem key={dept.id} value={dept.id}>
+                        {dept.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
+
+          <div className="grid grid-cols-3 gap-3">
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="activity-batches">Batches</Label>
+              <Input id="activity-batches" placeholder="e.g. 2022-2026" {...register("batches")} />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="activity-semesters">Semesters</Label>
+              <Input id="activity-semesters" placeholder="e.g. 6, 8" {...register("semesters")} />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="activity-sections">Sections</Label>
+              <Input id="activity-sections" placeholder="e.g. B" {...register("sections")} />
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground">Comma-separated for multiple values.</p>
         </div>
-      )}
+      </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">

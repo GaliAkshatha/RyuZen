@@ -44,6 +44,8 @@ export interface Activity {
   visibility: ActivityVisibility;
   departmentIds?: string[];
   batches?: string[];
+  semesters?: number[];
+  sections?: string[];
   points: number;
   penaltyPoints: number;
   startDate: string;
@@ -61,6 +63,8 @@ export interface CreateActivityRequest {
   visibility: ActivityVisibility;
   departmentIds?: string[];
   batches?: string[];
+  semesters?: number[];
+  sections?: string[];
   points: number;
   penaltyPoints: number;
   startDate: string;
@@ -76,6 +80,8 @@ export interface UpdateActivityRequest {
   visibility?: ActivityVisibility;
   departmentIds?: string[];
   batches?: string[];
+  semesters?: number[];
+  sections?: string[];
   points?: number;
   penaltyPoints?: number;
   startDate?: string;
