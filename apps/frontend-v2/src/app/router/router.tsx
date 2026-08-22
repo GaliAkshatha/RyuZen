@@ -11,7 +11,6 @@ import { SuperAdminLayout } from "@/portals/super-admin/layout/SuperAdminLayout"
 import { SuperAdminHomePage } from "@/portals/super-admin/pages/SuperAdminHomePage";
 import { OrganizationListPage } from "@/portals/super-admin/pages/OrganizationListPage";
 import { OrganizationDetailPage } from "@/portals/super-admin/pages/OrganizationDetailPage";
-import { OrgAnalyticsPage } from "@/portals/super-admin/pages/OrgAnalyticsPage";
 import { CreateOrganizationPage } from "@/portals/super-admin/pages/CreateOrganizationPage";
 
 import { OrgAdminLayout } from "@/portals/org-admin/layout/OrgAdminLayout";
@@ -28,7 +27,6 @@ import { CreateStudentPage } from "@/portals/org-admin/pages/CreateStudentPage";
 import { BulkImportPage } from "@/portals/org-admin/pages/BulkImportPage";
 import { InvitationsPage } from "@/portals/org-admin/pages/InvitationsPage";
 import { AlumniListPage } from "@/portals/org-admin/pages/AlumniListPage";
-import { SettingsPage } from "@/portals/org-admin/pages/SettingsPage";
 import { AuditLogsPage } from "@/portals/org-admin/pages/AuditLogsPage";
 
 import { FacultyLayout } from "@/portals/faculty/layout/FacultyLayout";
@@ -98,7 +96,6 @@ export const router = createBrowserRouter([
       { path: "organizations/new", element: <CreateOrganizationPage /> },
       { path: "organizations/:id", element: <OrganizationDetailPage /> },
       { path: "audit-logs", element: <AuditLogsPage /> },
-      { path: "analytics", element: <OrgAnalyticsPage /> },
     ],
   },
   {
@@ -124,8 +121,6 @@ export const router = createBrowserRouter([
       { path: "students/bulk-import", element: <BulkImportPage /> },
       { path: "invitations", element: <InvitationsPage /> },
       { path: "alumni", element: <AlumniListPage /> },
-      { path: "settings", element: <SettingsPage /> },
-      { path: "audit-logs", element: <AuditLogsPage /> },
       { path: "placement-analytics", element: <PlacementAnalyticsPage /> },
     ],
   },

@@ -10,7 +10,7 @@ import { useChangePassword } from "@/domains/auth/hooks/useChangePassword";
 import { changePasswordSchema, type ChangePasswordFormValues } from "@/domains/auth/updateProfileSchema";
 import type { AppApiError } from "@/shared/types/api.types";
 
-export function ChangePasswordForm() {
+export function ChangePasswordForm({ onDone }: { onDone?: () => void }) {
   const { mutate: changePassword, isPending } = useChangePassword();
   const [submitError, setSubmitError] = useState<AppApiError | null>(null);
   const [success, setSuccess] = useState(false);
@@ -43,10 +43,17 @@ export function ChangePasswordForm() {
         <p className="rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">{submitError.message}</p>
       )}
       {success && (
-        <p className="flex items-center gap-2 rounded-md border border-success/30 bg-success/5 p-3 text-sm text-success">
-          <Check className="h-4 w-4" aria-hidden="true" />
-          Password updated
-        </p>
+        <div className="flex flex-col gap-2 rounded-md border border-success/30 bg-success/5 p-3 text-sm text-success">
+          <p className="flex items-center gap-2">
+            <Check className="h-4 w-4" aria-hidden="true" />
+            Password updated. A confirmation email was sent to your account.
+          </p>
+          {onDone && (
+            <Button type="button" size="sm" variant="outline" className="w-fit" onClick={onDone}>
+              Done
+            </Button>
+          )}
+        </div>
       )}
 
       <div className="flex flex-col gap-1.5">
@@ -68,9 +75,16 @@ export function ChangePasswordForm() {
         {errors.confirmPassword && <p className="text-xs text-destructive">{errors.confirmPassword.message}</p>}
       </div>
 
-      <Button type="submit" size="sm" disabled={isPending} className="w-fit">
-        {isPending ? "Updating…" : "Update password"}
-      </Button>
+      <div className="flex gap-2">
+        <Button type="submit" size="sm" disabled={isPending} className="w-fit">
+          {isPending ? "Updating…" : "Update password"}
+        </Button>
+        {onDone && (
+          <Button type="button" size="sm" variant="ghost" onClick={onDone}>
+            Cancel
+          </Button>
+        )}
+      </div>
     </form>
   );
 }

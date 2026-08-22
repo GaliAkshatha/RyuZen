@@ -136,7 +136,9 @@ export const identityContainer = {
 
             passwordHasher,
 
-            organizationSettingsRepository
+            organizationSettingsRepository,
+
+            emailService
 
         ),
 

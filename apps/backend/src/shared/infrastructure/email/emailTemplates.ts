@@ -28,6 +28,24 @@ export function buildPasswordResetEmail(resetUrl: string): { subject: string; ht
     };
 }
 
+/**
+ * Sent after a real, successful password change (ChangePasswordUseCase)
+ * as a genuine security notification, per explicit product direction -
+ * closes a real gap: previously a password could be changed with no
+ * signal at all to the account's own inbox, so a genuine account
+ * compromise (attacker who obtained the current password) would go
+ * completely unnoticed by the real owner.
+ */
+export function buildPasswordChangedEmail(): { subject: string; html: string } {
+    return {
+        subject: "Your RyuZen password was changed",
+        html: renderEmailShell(`
+            <p>Your password was just changed.</p>
+            <p style="font-size: 13px; color: #666;">If this was you, no action is needed. If you did not make this change, someone else may have access to your account — reset your password immediately using the link on the sign-in page.</p>
+        `)
+    };
+}
+
 export function buildInvitationEmail(params: {
     inviteeName: string;
     organizationName: string;

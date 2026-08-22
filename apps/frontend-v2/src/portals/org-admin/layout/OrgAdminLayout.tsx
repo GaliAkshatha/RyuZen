@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Network, GraduationCap, Users, Home, Mail, UserCheck, Settings, ScrollText, BarChart3 } from "lucide-react";
+import { Network, GraduationCap, Users, Home, Mail, UserCheck, BarChart3 } from "lucide-react";
 
 import { TopNav, type TopNavItem } from "@/shared/layout/TopNav";
 
@@ -10,15 +10,16 @@ const NAV_ITEMS: TopNavItem[] = [
   { to: "/organization/students", label: "Students", icon: Users },
   { to: "/organization/invitations", label: "Invitations", icon: Mail },
   { to: "/organization/alumni", label: "Alumni", icon: UserCheck },
-  { to: "/organization/settings", label: "Settings", icon: Settings },
-  { to: "/organization/audit-logs", label: "Audit Logs", icon: ScrollText },
   { to: "/organization/placement-analytics", label: "Analytics", icon: BarChart3 },
 ];
 
 /**
  * Real Org Admin shell - topbar, not sidebar. Departments, Faculty,
- * Students, Invitations, Alumni, Settings (all 18 real config
- * groups), Audit Logs, and Placement Analytics are all built.
+ * Students, Invitations, Alumni, and Placement Analytics are built.
+ * Settings and Audit Logs are deliberately not in this portal's nav,
+ * per explicit product direction - both remain real, reachable
+ * backend capabilities (still genuinely ORG_ADMIN-accessible
+ * server-side), just not surfaced here.
  */
 export function OrgAdminLayout() {
   return (

@@ -66,6 +66,10 @@ export class GetLeaderboardUseCase {
 
                 dto.studentUsn = student.usn;
 
+                dto.departmentId = student.departmentId;
+
+                dto.batch = student.batch;
+
                 const user =
 
                     await this.userRepository.findById(

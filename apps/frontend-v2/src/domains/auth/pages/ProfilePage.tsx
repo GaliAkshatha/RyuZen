@@ -39,6 +39,7 @@ export function ProfilePage() {
   const navigate = useNavigate();
   const { mutate: updateProfile, isPending } = useUpdateProfile();
   const [isEditing, setIsEditing] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [saved, setSaved] = useState(false);
   const [current, setCurrent] = useState(user);
 
@@ -178,11 +179,20 @@ export function ProfilePage() {
 
         <Card className="mb-8 mt-4">
           <CardHeader>
-            <CardTitle>Password</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle>Password</CardTitle>
+              {!isChangingPassword && (
+                <Button size="sm" variant="outline" onClick={() => setIsChangingPassword(true)}>
+                  Reset password
+                </Button>
+              )}
+            </div>
           </CardHeader>
-          <CardContent>
-            <ChangePasswordForm />
-          </CardContent>
+          {isChangingPassword && (
+            <CardContent>
+              <ChangePasswordForm onDone={() => setIsChangingPassword(false)} />
+            </CardContent>
+          )}
         </Card>
       </div>
     </div>

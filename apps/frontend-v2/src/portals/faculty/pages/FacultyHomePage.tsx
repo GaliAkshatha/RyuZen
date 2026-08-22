@@ -1,6 +1,8 @@
-import { FileText, Send, Lock, Pencil } from "lucide-react";
+import { FileText, Send, Lock, Pencil, Trophy } from "lucide-react";
 
 import { StatCard } from "@/shared/components/StatCard";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/Card";
+import { LeaderboardPanel } from "@/domains/leaderboard/components/LeaderboardPanel";
 import { useAuth } from "@/domains/auth/AuthContext";
 import { useActivityList } from "@/domains/activities/hooks/useActivityList";
 import { ActivityStatus } from "@/domains/activities/activity.types";
@@ -28,6 +30,18 @@ export function FacultyHomePage() {
         <StatCard icon={Pencil} value={draft} label="Drafts" tone="warning" />
         <StatCard icon={Lock} value={closed} label="Closed" tone="info" />
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Trophy className="h-4 w-4 text-warning" aria-hidden="true" />
+            Leaderboard
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <LeaderboardPanel />
+        </CardContent>
+      </Card>
     </div>
   );
 }

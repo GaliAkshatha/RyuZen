@@ -15,6 +15,11 @@ export interface LeaderboardEntryResponseDto {
 
     studentUsn?: string;
 
+    /** Enriched server-side, same real pattern as studentName/studentUsn - closes a real gap: previously no field existed to filter a leaderboard view by department/batch at all, tenant isolation (organizationId) was the only real boundary. */
+    departmentId?: string;
+
+    batch?: string;
+
     activityPoints: number;
 
     clubPoints: number;

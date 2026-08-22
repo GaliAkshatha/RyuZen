@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { ClipboardList, Star, Clock, Briefcase, Users, CheckCircle2 } from "lucide-react";
+import { ClipboardList, Star, Clock, Briefcase, Users, CheckCircle2, Trophy } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/Card";
+import { LeaderboardPanel } from "@/domains/leaderboard/components/LeaderboardPanel";
 import { StatCard } from "@/shared/components/StatCard";
 import { ScoreRing } from "@/shared/components/ScoreRing";
 import { Skeleton } from "@/shared/components/Skeleton";
@@ -102,6 +103,18 @@ export function StudentHomePage() {
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Trophy className="h-4 w-4 text-warning" aria-hidden="true" />
+            Leaderboard
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <LeaderboardPanel />
+        </CardContent>
+      </Card>
 
       {openDrivesCount > 0 && (
         <Link to="/student/drives">
