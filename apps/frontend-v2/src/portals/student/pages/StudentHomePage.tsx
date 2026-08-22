@@ -3,6 +3,7 @@ import { ClipboardList, Star, Clock, Briefcase, Users, CheckCircle2, Trophy } fr
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/Card";
 import { LeaderboardPanel } from "@/domains/leaderboard/components/LeaderboardPanel";
+import { MyRankCard } from "@/domains/leaderboard/components/MyRankCard";
 import { StatCard } from "@/shared/components/StatCard";
 import { ScoreRing } from "@/shared/components/ScoreRing";
 import { Skeleton } from "@/shared/components/Skeleton";
@@ -48,10 +49,10 @@ export function StudentHomePage() {
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard icon={ClipboardList} value={unsubmittedOpen.length} label="Open activities" tone="primary" />
-        <StatCard icon={Clock} value={pendingReview} label="Pending review" tone="warning" />
-        <StatCard icon={CheckCircle2} value={approved} label="Approved" tone="success" />
-        <StatCard icon={Users} value={pendingRequests?.length ?? 0} label="Pending requests" tone="info" />
+        <StatCard icon={ClipboardList} value={unsubmittedOpen.length} label="Open activities" tone="primary" to="/student/activities" />
+        <StatCard icon={Clock} value={pendingReview} label="Pending review" tone="warning" to="/student/activities" />
+        <StatCard icon={CheckCircle2} value={approved} label="Approved" tone="success" to="/student/activities" />
+        <StatCard icon={Users} value={pendingRequests?.length ?? 0} label="Pending requests" tone="info" to="/student/connect?tab=requests" />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[280px_1fr]">
@@ -103,6 +104,8 @@ export function StudentHomePage() {
           </CardContent>
         </Card>
       </div>
+
+      <MyRankCard />
 
       <Card>
         <CardHeader>

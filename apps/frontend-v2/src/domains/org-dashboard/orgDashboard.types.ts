@@ -1,4 +1,4 @@
-/** Matches the real backend DashboardResponseDto exactly - confirmed directly, including which AI domains are genuinely countable (Chat, Mock Interview - persisted) vs which aren't (Resume Review, Career Score, Recommendations - computed fresh every request, never stored). */
+/** Matches the real backend DashboardResponseDto exactly. */
 export interface DashboardUserCounts {
   total: number;
   students: number;
@@ -13,19 +13,9 @@ export interface DashboardActivityCounts {
   pendingReviews: number;
 }
 
-export interface DashboardEventCounts {
-  total: number;
-  published: number;
-}
-
 export interface DashboardAiUsage {
   chatConversations: number;
   mockInterviews: number;
-}
-
-export interface DashboardTrendPoint {
-  period: string;
-  points: number;
 }
 
 export interface DashboardDepartmentStat {
@@ -50,7 +40,6 @@ export interface OrgDashboard {
   departments: number;
   activities: DashboardActivityCounts;
   clubs: number;
-  events: DashboardEventCounts;
   placements: PlacementAnalyticsSummary;
   activeStudents: number;
   studentEngagementPercent: number;
@@ -58,7 +47,5 @@ export interface OrgDashboard {
   activitiesCompleted: number;
   certificatesEarned: number;
   aiUsage: DashboardAiUsage;
-  weeklyTrend: DashboardTrendPoint[];
-  monthlyTrend: DashboardTrendPoint[];
   departmentComparison: DashboardDepartmentStat[];
 }

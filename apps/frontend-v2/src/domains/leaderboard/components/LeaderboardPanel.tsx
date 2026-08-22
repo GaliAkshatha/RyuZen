@@ -17,7 +17,12 @@ const RANK_COLOR = ["text-warning", "text-muted-foreground", "text-accent"];
  * this pass - closing a previously-confirmed gap where no way to
  * filter by either existed at all. Filtering itself happens
  * client-side since the real backend endpoint doesn't take filter
- * query params, only returns the full tenant-scoped list.
+ * query params, only returns the full tenant-scoped list. Rank shown
+ * is always recomputed from position within the CURRENT filtered
+ * view (displayRank), not the raw org-wide `rank` field - a real fix
+ * this pass: filtering to one department previously still showed each
+ * student's org-wide rank (e.g. "5th, 12th, 19th"), not their real
+ * 1st/2nd/3rd standing within that department.
  */
 export function LeaderboardPanel() {
   const { data: entries, isLoading, isError, error, refetch } = useLeaderboard();
@@ -33,7 +38,8 @@ export function LeaderboardPanel() {
   const filtered = (entries ?? [])
     .filter((e) => departmentFilter === "ALL" || e.departmentId === departmentFilter)
     .filter((e) => batchFilter === "ALL" || e.batch === batchFilter)
-    .sort((a, b) => a.rank - b.rank);
+    .sort((a, b) => b.totalPoints - a.totalPoints)
+    .map((entry, index) => ({ ...entry, displayRank: index + 1 }));
 
   if (isLoading) {
     return (
@@ -87,10 +93,10 @@ export function LeaderboardPanel() {
           {filtered.slice(0, 10).map((entry) => (
             <div key={entry.id} className="flex items-center justify-between rounded-md border border-border px-3 py-2 text-sm">
               <div className="flex items-center gap-2.5">
-                {entry.rank <= 3 ? (
-                  <Medal className={`h-4 w-4 ${RANK_COLOR[entry.rank - 1]}`} aria-hidden="true" />
+                {entry.displayRank <= 3 ? (
+                  <Medal className={`h-4 w-4 ${RANK_COLOR[entry.displayRank - 1]}`} aria-hidden="true" />
                 ) : (
-                  <span className="w-4 text-center text-xs text-muted-foreground">{entry.rank}</span>
+                  <span className="w-4 text-center text-xs text-muted-foreground">{entry.displayRank}</span>
                 )}
                 <span className="font-medium text-foreground">{entry.studentName ?? entry.studentUsn ?? "Student"}</span>
               </div>

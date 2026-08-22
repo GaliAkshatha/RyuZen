@@ -25,10 +25,10 @@ export function FacultyHomePage() {
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard icon={FileText} value={myActivities.length} label="Total activities" tone="primary" />
-        <StatCard icon={Send} value={published} label="Published" tone="success" />
-        <StatCard icon={Pencil} value={draft} label="Drafts" tone="warning" />
-        <StatCard icon={Lock} value={closed} label="Closed" tone="info" />
+        <StatCard icon={FileText} value={myActivities.length} label="Total activities" tone="primary" to="/faculty/activities" />
+        <StatCard icon={Send} value={published} label="Published" tone="success" to="/faculty/activities" />
+        <StatCard icon={Pencil} value={draft} label="Drafts" tone="warning" to="/faculty/activities" />
+        <StatCard icon={Lock} value={closed} label="Closed" tone="info" to="/faculty/activities" />
       </div>
 
       <Card>

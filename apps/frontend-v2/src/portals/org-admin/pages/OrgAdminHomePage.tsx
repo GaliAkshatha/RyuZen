@@ -22,10 +22,10 @@ export function OrgAdminHomePage() {
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard icon={Network} value={departments?.length ?? 0} label="Departments" tone="primary" />
-        <StatCard icon={GraduationCap} value={faculty?.length ?? 0} label="Faculty" tone="info" trend={`${activeFaculty} active`} />
-        <StatCard icon={Users} value={students?.length ?? 0} label="Students" tone="success" />
-        <StatCard icon={UserCheck} value={activeFaculty} label="Active faculty" tone="warning" />
+        <StatCard icon={Network} value={departments?.length ?? 0} label="Departments" tone="primary" to="/organization/departments" />
+        <StatCard icon={GraduationCap} value={faculty?.length ?? 0} label="Faculty" tone="info" trend={`${activeFaculty} active`} to="/organization/faculty" />
+        <StatCard icon={Users} value={students?.length ?? 0} label="Students" tone="success" to="/organization/students" />
+        <StatCard icon={UserCheck} value={activeFaculty} label="Active faculty" tone="warning" to="/organization/faculty" />
       </div>
     </div>
   );

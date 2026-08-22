@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Network, GraduationCap, Users, Home, Mail, UserCheck, BarChart3 } from "lucide-react";
+import { Network, GraduationCap, Users, Home, Mail, UserCheck, BarChart3, Briefcase } from "lucide-react";
 
 import { TopNav, type TopNavItem } from "@/shared/layout/TopNav";
 
@@ -10,16 +10,21 @@ const NAV_ITEMS: TopNavItem[] = [
   { to: "/organization/students", label: "Students", icon: Users },
   { to: "/organization/invitations", label: "Invitations", icon: Mail },
   { to: "/organization/alumni", label: "Alumni", icon: UserCheck },
-  { to: "/organization/placement-analytics", label: "Analytics", icon: BarChart3 },
+  { to: "/organization/analytics", label: "Analytics", icon: BarChart3 },
+  { to: "/organization/placements", label: "Placements", icon: Briefcase },
 ];
 
 /**
- * Real Org Admin shell - topbar, not sidebar. Departments, Faculty,
- * Students, Invitations, Alumni, and Placement Analytics are built.
- * Settings and Audit Logs are deliberately not in this portal's nav,
- * per explicit product direction - both remain real, reachable
- * backend capabilities (still genuinely ORG_ADMIN-accessible
- * server-side), just not surfaced here.
+ * Real Org Admin shell - topbar, not sidebar. "Analytics" is
+ * genuinely different from Placement Admin's view - real gap fixed
+ * this pass: it previously pointed at the exact same narrow
+ * placement-only page Placement Admin uses. It's now the org-wide
+ * GET /dashboard aggregate (confirmed real, shared with SUPER_ADMIN)
+ * - users, departments, activities, AI usage, department comparison -
+ * with "Placements" kept as its own separate, clearly-labeled link
+ * for the finer-grained drive-level detail Org Admin still has real
+ * access to. Settings and Audit Logs are deliberately not in this
+ * portal's nav, per explicit product direction.
  */
 export function OrgAdminLayout() {
   return (

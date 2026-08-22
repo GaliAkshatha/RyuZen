@@ -56,6 +56,7 @@ import { PlacementAdminLayout } from "@/portals/placement-admin/layout/Placement
 import { PlacementAdminHomePage } from "@/portals/placement-admin/pages/PlacementAdminHomePage";
 import { CompanyListPage } from "@/portals/placement-admin/pages/CompanyListPage";
 import { PlacementAnalyticsPage } from "@/portals/placement-admin/pages/PlacementAnalyticsPage";
+import { OrgAnalyticsPage } from "@/portals/org-admin/pages/OrgAnalyticsPage";
 import { CreateCompanyPage } from "@/portals/placement-admin/pages/CreateCompanyPage";
 import { DriveListPage as PlacementAdminDriveListPage } from "@/portals/placement-admin/pages/DriveListPage";
 import { DriveDetailPage as PlacementAdminDriveDetailPage } from "@/portals/placement-admin/pages/DriveDetailPage";
@@ -121,7 +122,8 @@ export const router = createBrowserRouter([
       { path: "students/bulk-import", element: <BulkImportPage /> },
       { path: "invitations", element: <InvitationsPage /> },
       { path: "alumni", element: <AlumniListPage /> },
-      { path: "placement-analytics", element: <PlacementAnalyticsPage /> },
+      { path: "placements", element: <PlacementAnalyticsPage /> },
+      { path: "analytics", element: <OrgAnalyticsPage /> },
     ],
   },
   {
