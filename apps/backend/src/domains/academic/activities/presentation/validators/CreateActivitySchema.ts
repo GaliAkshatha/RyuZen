@@ -52,6 +52,16 @@ export const CreateActivitySchema = z.object({
 
         ]),
 
+    departmentIds:
+
+        z.array(z.string())
+            .optional(),
+
+    batches:
+
+        z.array(z.string())
+            .optional(),
+
     points:
 
         z.number().min(0),

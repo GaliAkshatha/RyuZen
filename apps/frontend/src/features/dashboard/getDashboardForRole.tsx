@@ -9,9 +9,9 @@ import { UserRole } from "@/types/enums";
  * Already covered by the single <Suspense> boundary in router.tsx,
  * since DashboardRoleSwitch renders inside the routed tree.
  */
-const StudentDashboardPage = lazy(() =>
-  import("@/features/dashboard/pages/StudentDashboardPage").then((m) => ({
-    default: m.StudentDashboardPage,
+const StudentDashboardV2 = lazy(() =>
+  import("@/app-shell/student/dashboard/StudentDashboardV2").then((m) => ({
+    default: m.StudentDashboardV2,
   })),
 );
 const FacultyDashboardPage = lazy(() =>
@@ -46,7 +46,7 @@ const SuperAdminDashboardPage = lazy(() =>
 );
 
 const DASHBOARD_BY_ROLE: Record<UserRole, ComponentType> = {
-  [UserRole.STUDENT]: StudentDashboardPage,
+  [UserRole.STUDENT]: StudentDashboardV2,
   [UserRole.FACULTY]: FacultyDashboardPage,
   [UserRole.ALUMNI]: AlumniDashboardPage,
   [UserRole.RECRUITER]: RecruiterOverviewPage,

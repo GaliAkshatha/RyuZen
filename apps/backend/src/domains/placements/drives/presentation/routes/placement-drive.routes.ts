@@ -206,6 +206,32 @@ router.get(
 );
 
 /*
+ Check My Eligibility - closes the previously-flagged "no
+ student-facing eligibility signal" gap. Reuses the exact real
+ isStudentEligibleForDrive() check, not a second copy of the rule.
+*/
+
+router.get(
+
+    "/:id/my-eligibility",
+
+    authenticate,
+
+    authorizePermission(
+
+        UserRole.STUDENT
+
+    ),
+
+    asyncHandler(
+
+        controller.checkMyEligibility.bind(controller)
+
+    )
+
+);
+
+/*
  Delete Placement Drive
 */
 

@@ -1,13 +1,14 @@
-import { AppShell } from "@/layouts/AppShell";
+import { AppShellV2 } from "@/app-shell/layout/AppShellV2";
+import { STUDENT_SIDEBAR_SECTIONS } from "@/app-shell/config/studentNavigation";
+import { StudentIdentity } from "@/app-shell/config/StudentIdentity";
 
 /**
- * AppShell already adapts fully to the current user's role (nav
- * filtering via AppSidebar, topbar content) by reading AuthContext
- * directly — this file exists as a named, stable mounting point in the
- * router (per F8's explicit "one file per layout" deliverable) and as
- * a home for any future student-specific chrome, without needing to
- * restructure the router if that need arises later.
+ * Real Student shell integration - Student is the only role using
+ * AppShellV2 so far. Every other role layout in this folder still
+ * uses the original AppShell, untouched. AppShellV2 renders <Outlet />
+ * internally here (no children passed), matching how every other role
+ * layout already works as a nested-route parent.
  */
 export function StudentLayout() {
-  return <AppShell />;
+  return <AppShellV2 sections={STUDENT_SIDEBAR_SECTIONS} identity={<StudentIdentity />} />;
 }

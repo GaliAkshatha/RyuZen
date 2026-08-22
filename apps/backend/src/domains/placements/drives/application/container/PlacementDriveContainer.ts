@@ -12,6 +12,7 @@ import { DeletePlacementDriveUseCase } from "../use-cases/DeletePlacementDriveUs
 import { PublishPlacementDriveUseCase } from "../use-cases/PublishPlacementDriveUseCase.js";
 import { ClosePlacementDriveUseCase } from "../use-cases/ClosePlacementDriveUseCase.js";
 import { GetEligibleStudentsUseCase } from "../use-cases/GetEligibleStudentsUseCase.js";
+import { CheckMyEligibilityUseCase } from "../use-cases/CheckMyEligibilityUseCase.js";
 
 import {
     StudentRepository,
@@ -74,6 +75,16 @@ export const placementDriveContainer = {
     getEligibleStudents:
 
         new GetEligibleStudentsUseCase(
+
+            placementDriveRepository,
+
+            studentRepository
+
+        ),
+
+    checkMyEligibility:
+
+        new CheckMyEligibilityUseCase(
 
             placementDriveRepository,
 

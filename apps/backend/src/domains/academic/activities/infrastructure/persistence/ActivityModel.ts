@@ -114,6 +114,22 @@ const activitySchema = new Schema(
 
         },
 
+        departmentIds: {
+
+            type: [String],
+
+            default: undefined
+
+        },
+
+        batches: {
+
+            type: [String],
+
+            default: undefined
+
+        },
+
         points: {
 
             type: Number,

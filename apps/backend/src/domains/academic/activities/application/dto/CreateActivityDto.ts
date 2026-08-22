@@ -12,6 +12,10 @@ export interface CreateActivityDto {
 
     visibility: ActivityVisibility;
 
+    departmentIds?: string[];
+
+    batches?: string[];
+
     points: number;
 
     penaltyPoints: number;

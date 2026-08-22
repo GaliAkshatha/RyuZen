@@ -78,6 +78,18 @@ export class Activity {
 
     }
 
+    get departmentIds() {
+
+        return this.props.departmentIds;
+
+    }
+
+    get batches() {
+
+        return this.props.batches;
+
+    }
+
     get points() {
 
         return this.props.points;
@@ -188,6 +200,10 @@ export class Activity {
 
             visibility?: ActivityVisibility;
 
+            departmentIds?: string[];
+
+            batches?: string[];
+
             points?: number;
 
             penaltyPoints?: number;
@@ -233,6 +249,30 @@ export class Activity {
             this.props.visibility =
 
                 values.visibility;
+
+        }
+
+        if (
+
+            values.departmentIds !== undefined
+
+        ) {
+
+            this.props.departmentIds =
+
+                values.departmentIds;
+
+        }
+
+        if (
+
+            values.batches !== undefined
+
+        ) {
+
+            this.props.batches =
+
+                values.batches;
 
         }
 

@@ -36,6 +36,12 @@ export class ActivityResponseMapper {
             visibility:
                 activity.visibility,
 
+            departmentIds:
+                activity.departmentIds,
+
+            batches:
+                activity.batches,
+
             points:
                 activity.points,
 

@@ -60,6 +60,16 @@ export const UpdateActivitySchema = z.object({
 
             .optional(),
 
+    departmentIds:
+
+        z.array(z.string())
+            .optional(),
+
+    batches:
+
+        z.array(z.string())
+            .optional(),
+
     points:
 
         z.number().min(0)

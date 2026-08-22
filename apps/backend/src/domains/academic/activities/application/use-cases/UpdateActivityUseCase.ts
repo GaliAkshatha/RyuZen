@@ -7,6 +7,16 @@ import { ActivityResponseMapper } from "../../infrastructure/mappers/ActivityRes
 
 import { IActivityRepository } from "../../infrastructure/repositories/IActivityRepository.js";
 
+import { UserRole } from "../../../../identity/domain/constants/UserRole.js";
+
+/**
+ * SECURITY FIX: previously took only (id, dto) - no organizationId, no
+ * ownership check at all. Any Faculty member in any organization could
+ * edit any other organization's activities. Now enforces the same real
+ * pattern already proven in ReviewSubmissionUseCase: organization
+ * match, and only the activity's own creator or a SUPER_ADMIN may
+ * modify it.
+ */
 export class UpdateActivityUseCase {
 
     constructor(
@@ -19,6 +29,12 @@ export class UpdateActivityUseCase {
 
         id: string,
 
+        organizationId: string,
+
+        requesterId: string,
+
+        requesterRole: UserRole,
+
         dto: UpdateActivityDto
 
     ): Promise<ActivityResponseDto> {
@@ -27,7 +43,29 @@ export class UpdateActivityUseCase {
 
             await this.repository.findById(id);
 
-        if (!activity) {
+        if (
+
+            !activity ||
+            activity.organizationId !== organizationId
+
+        ) {
+
+            throw new ApiError(
+
+                "Activity not found.",
+
+                HttpStatus.NOT_FOUND
+
+            );
+
+        }
+
+        if (
+
+            requesterRole !== UserRole.SUPER_ADMIN &&
+            activity.createdBy !== requesterId
+
+        ) {
 
             throw new ApiError(
 

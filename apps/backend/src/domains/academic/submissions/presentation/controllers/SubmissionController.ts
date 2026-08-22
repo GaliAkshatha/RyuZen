@@ -84,7 +84,7 @@ export class SubmissionController {
                             ? (status as SubmissionStatus)
                             : undefined
 
-                });
+                }, req.user!.userId, req.user!.role);
 
         return ApiResponse.success(
 
@@ -216,7 +216,11 @@ export class SubmissionController {
 
                     req.params.submissionId as string,
 
+                    req.user!.organizationId,
+
                     req.user!.userId,
+
+                    req.user!.role,
 
                     req.body
 
@@ -266,7 +270,11 @@ export class SubmissionController {
 
                     submissionId,
 
+                    req.user!.organizationId,
+
                     req.user!.userId,
+
+                    req.user!.role,
 
                     {
 
@@ -327,7 +335,11 @@ export class SubmissionController {
 
                     submissionId,
 
+                    req.user!.organizationId,
+
                     req.user!.userId,
+
+                    req.user!.role,
 
                     {
 

@@ -3,8 +3,11 @@ import { Router } from "express";
 import { SubmissionController } from "../controllers/SubmissionController.js";
 
 import { authenticate } from "../../../../../shared/core/middleware/authenticate.js";
+import { authorizePermission } from "../../../../../shared/core/middleware/authorizePermission.js";
 import { asyncHandler } from "../../../../../shared/core/middleware/asyncHandler.js";
 import { validate } from "../../../../../shared/core/validation/validate.js";
+
+import { UserRole } from "../../../../identity/domain/constants/UserRole.js";
 
 import { CreateSubmissionSchema } from "../validators/CreateSubmissionSchema.js";
 import { ReviewSubmissionSchema } from "../validators/ReviewSubmissionSchema.js";
@@ -41,6 +44,18 @@ router.get(
     "/",
 
     authenticate,
+
+    authorizePermission(
+
+        UserRole.SUPER_ADMIN,
+
+        UserRole.ORG_ADMIN,
+
+        UserRole.FACULTY,
+
+        UserRole.STUDENT
+
+    ),
 
     asyncHandler(
 
@@ -94,6 +109,14 @@ router.patch(
 
     authenticate,
 
+    authorizePermission(
+
+        UserRole.SUPER_ADMIN,
+
+        UserRole.FACULTY
+
+    ),
+
     validate(ReviewSubmissionSchema),
 
     asyncHandler(
@@ -114,6 +137,14 @@ router.patch(
 
     authenticate,
 
+    authorizePermission(
+
+        UserRole.SUPER_ADMIN,
+
+        UserRole.FACULTY
+
+    ),
+
     validate(ApproveSubmissionSchema),
 
     asyncHandler(
@@ -133,6 +164,14 @@ router.patch(
     "/:submissionId/reject",
 
     authenticate,
+
+    authorizePermission(
+
+        UserRole.SUPER_ADMIN,
+
+        UserRole.FACULTY
+
+    ),
 
     validate(RejectSubmissionSchema),
 

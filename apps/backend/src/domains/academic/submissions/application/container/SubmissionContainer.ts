@@ -38,7 +38,9 @@ const submissionEligibilityService =
 
         activityRepository,
 
-        submissionRepository
+        submissionRepository,
+
+        studentRepository
 
     );
 
@@ -62,6 +64,8 @@ export const submissionContainer = {
 
             studentRepository,
 
+            activityRepository,
+
             pointLedgerContainer.recordPointTransaction,
 
             notificationContainer.recordSystemNotification,
@@ -82,7 +86,9 @@ export const submissionContainer = {
 
         new ListSubmissionsUseCase(
 
-            submissionRepository
+            submissionRepository,
+
+            activityRepository
 
         ),
 

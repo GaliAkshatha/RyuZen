@@ -27,6 +27,7 @@ import {
 import { CreateRecruiterUseCase } from "../use-cases/CreateRecruiterUseCase.js";
 import { GetApplicantsForRecruiterUseCase } from "../use-cases/GetApplicantsForRecruiterUseCase.js";
 import { SearchApplicantsUseCase } from "../use-cases/SearchApplicantsUseCase.js";
+import { GetMyRecruiterProfileUseCase } from "../use-cases/GetMyRecruiterProfileUseCase.js";
 
 const recruiterRepository = new RecruiterRepository();
 
@@ -87,6 +88,14 @@ export const recruiterContainer = {
             skillRepository,
 
             userRepository
+
+        ),
+
+    getMyProfile:
+
+        new GetMyRecruiterProfileUseCase(
+
+            recruiterRepository
 
         )
 

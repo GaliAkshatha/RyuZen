@@ -14,12 +14,31 @@ import {
     IStudentRepository,
 } from "../../../students/infrastructure/repositories/IStudentRepository.js";
 
+import {
+    IActivityRepository,
+} from "../../../activities/infrastructure/repositories/IActivityRepository.js";
+
+import { UserRole } from "../../../../identity/domain/constants/UserRole.js";
+
 import { RecordPointTransactionUseCase } from "../../../../campus/point-ledger/application/use-cases/RecordPointTransactionUseCase.js";
 import { RecordSystemNotificationUseCase } from "../../../../communication/notifications/application/use-cases/RecordSystemNotificationUseCase.js";
 
 import { RecordGrowthEventUseCase } from "../../../../../shared/infrastructure/growth/RecordGrowthEventUseCase.js";
 
 /**
+ * SECURITY FIX: previously had no organizationId parameter and no
+ * role/ownership check at all - any authenticated user of any role,
+ * in any organization, could approve or reject any submission,
+ * including the real point-award side effect this triggers. Now
+ * enforces exactly what SubmissionEligibilityService already proves
+ * out on the submit side (organization match), plus a real ownership
+ * check: only the Activity's own creator (a real Faculty member,
+ * confirmed - activity.createdBy is the creating user's real id, the
+ * same value reviewerId already carries) or a SUPER_ADMIN may review
+ * it. Route-level authorizePermission(SUPER_ADMIN, FACULTY) narrows
+ * the caller's role before this even runs; this use case narrows
+ * further to genuine ownership.
+ *
  * The real point-transaction moment for activity points — a ledger
  * entry is recorded here (not in RecalculateLeaderboardUseCase, which
  * only ever re-aggregates totals from records like this one, never
@@ -41,6 +60,8 @@ export class ReviewSubmissionUseCase {
 
         private readonly studentRepository: IStudentRepository,
 
+        private readonly activityRepository: IActivityRepository,
+
         private readonly recordPointTransaction: RecordPointTransactionUseCase,
 
         private readonly recordSystemNotification: RecordSystemNotificationUseCase,
@@ -53,7 +74,11 @@ export class ReviewSubmissionUseCase {
 
         submissionId: string,
 
+        organizationId: string,
+
         reviewerId: string,
+
+        requesterRole: UserRole,
 
         dto: ReviewSubmissionDto
 
@@ -67,7 +92,52 @@ export class ReviewSubmissionUseCase {
 
             );
 
-        if (!submission) {
+        if (
+
+            !submission ||
+            submission.organizationId !== organizationId
+
+        ) {
+
+            throw new ApiError(
+
+                "Submission not found.",
+
+                HttpStatus.NOT_FOUND
+
+            );
+
+        }
+
+        const activity =
+
+            await this.activityRepository.findById(
+                submission.activityId
+            );
+
+        if (
+
+            !activity ||
+            activity.organizationId !== organizationId
+
+        ) {
+
+            throw new ApiError(
+
+                "Submission not found.",
+
+                HttpStatus.NOT_FOUND
+
+            );
+
+        }
+
+        if (
+
+            requesterRole !== UserRole.SUPER_ADMIN &&
+            activity.createdBy !== reviewerId
+
+        ) {
 
             throw new ApiError(
 

@@ -180,6 +180,12 @@ export class ActivityController {
 
                     id,
 
+                    req.user!.organizationId,
+
+                    req.user!.userId,
+
+                    req.user!.role,
+
                     req.body
 
                 );
@@ -226,7 +232,13 @@ export class ActivityController {
 
                 .execute(
 
-                    id
+                    id,
+
+                    req.user!.organizationId,
+
+                    req.user!.userId,
+
+                    req.user!.role
 
                 );
 
@@ -272,7 +284,13 @@ export class ActivityController {
 
                 .execute(
 
-                    id
+                    id,
+
+                    req.user!.organizationId,
+
+                    req.user!.userId,
+
+                    req.user!.role
 
                 );
 
@@ -316,7 +334,13 @@ export class ActivityController {
 
             .execute(
 
-                id
+                id,
+
+                req.user!.organizationId,
+
+                req.user!.userId,
+
+                req.user!.role
 
             );
 

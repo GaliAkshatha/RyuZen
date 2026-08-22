@@ -49,6 +49,33 @@ router.post(
 );
 
 /*
+ Get My Recruiter Profile - closes the previously-flagged
+ "no GET /recruiters/me self-lookup" gap. Enables a real "My Drives"
+ and "My Company" frontend experience without approximating the
+ recruiter's own companyId from applicant data.
+*/
+
+router.get(
+
+    "/me",
+
+    authenticate,
+
+    authorizePermission(
+
+        UserRole.RECRUITER
+
+    ),
+
+    asyncHandler(
+
+        controller.getMyProfile.bind(controller)
+
+    )
+
+);
+
+/*
  Get My Applicants - RECRUITER-only, resolved from their own real
  Recruiter profile -> real Company -> real Drives -> real Applications.
  Never takes a companyId parameter - a recruiter cannot ask for

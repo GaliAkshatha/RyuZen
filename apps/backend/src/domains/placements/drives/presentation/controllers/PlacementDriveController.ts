@@ -380,4 +380,54 @@ export class PlacementDriveController {
 
     }
 
+    async checkMyEligibility(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const { id } = req.params;
+
+        if (!id || Array.isArray(id)) {
+
+            throw new ApiError(
+
+                "Invalid placement drive id.",
+
+                HttpStatus.BAD_REQUEST
+
+            );
+
+        }
+
+        const result =
+
+            await placementDriveContainer
+
+                .checkMyEligibility
+
+                .execute(
+
+                    id,
+
+                    req.user!.organizationId,
+
+                    req.user!.userId
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            result,
+
+            "Eligibility checked successfully."
+
+        );
+
+    }
+
 }

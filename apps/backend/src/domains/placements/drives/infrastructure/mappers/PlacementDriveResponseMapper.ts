@@ -36,6 +36,9 @@ export class PlacementDriveResponseMapper {
             eligibility:
                 drive.eligibility,
 
+            eligibilityCriteria:
+                drive.eligibilityCriteria,
+
             deadline:
                 drive.deadline,
 

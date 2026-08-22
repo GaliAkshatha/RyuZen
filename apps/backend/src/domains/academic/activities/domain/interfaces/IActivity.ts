@@ -21,6 +21,12 @@ export interface IActivity {
 
     visibility: ActivityVisibility;
 
+    /** Which departments this activity is scoped to when visibility is DEPARTMENT. Empty/undefined means no department restriction. */
+    departmentIds?: string[];
+
+    /** Which batches this activity is scoped to. Empty/undefined means no batch restriction. */
+    batches?: string[];
+
     points: number;
 
     penaltyPoints: number;

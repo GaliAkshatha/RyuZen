@@ -126,4 +126,38 @@ export class RecruiterController {
 
     }
 
+    async getMyProfile(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const recruiter =
+
+            await recruiterContainer
+
+                .getMyProfile
+
+                .execute(
+
+                    req.user!.userId,
+
+                    req.user!.organizationId
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            recruiter,
+
+            "Recruiter profile fetched successfully."
+
+        );
+
+    }
+
 }

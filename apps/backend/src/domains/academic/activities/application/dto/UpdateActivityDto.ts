@@ -12,6 +12,10 @@ export interface UpdateActivityDto {
 
     visibility?: ActivityVisibility;
 
+    departmentIds?: string[];
+
+    batches?: string[];
+
     points?: number;
 
     penaltyPoints?: number;

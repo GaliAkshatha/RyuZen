@@ -6,6 +6,9 @@ import { ActivityResponseMapper } from "../../infrastructure/mappers/ActivityRes
 
 import { IActivityRepository } from "../../infrastructure/repositories/IActivityRepository.js";
 
+import { UserRole } from "../../../../identity/domain/constants/UserRole.js";
+
+/** SECURITY FIX: same real org+ownership gap as UpdateActivityUseCase, same fix. */
 export class CloseActivityUseCase {
 
     constructor(
@@ -16,7 +19,13 @@ export class CloseActivityUseCase {
 
     async execute(
 
-        id: string
+        id: string,
+
+        organizationId: string,
+
+        requesterId: string,
+
+        requesterRole: UserRole
 
     ): Promise<ActivityResponseDto> {
 
@@ -28,7 +37,29 @@ export class CloseActivityUseCase {
 
             );
 
-        if (!activity) {
+        if (
+
+            !activity ||
+            activity.organizationId !== organizationId
+
+        ) {
+
+            throw new ApiError(
+
+                "Activity not found.",
+
+                HttpStatus.NOT_FOUND
+
+            );
+
+        }
+
+        if (
+
+            requesterRole !== UserRole.SUPER_ADMIN &&
+            activity.createdBy !== requesterId
+
+        ) {
 
             throw new ApiError(
 

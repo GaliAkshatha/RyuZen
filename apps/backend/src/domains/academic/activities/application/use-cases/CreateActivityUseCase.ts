@@ -49,6 +49,12 @@ export class CreateActivityUseCase {
             visibility:
                 dto.visibility,
 
+            departmentIds:
+                dto.departmentIds,
+
+            batches:
+                dto.batches,
+
             points:
                 dto.points,
 
