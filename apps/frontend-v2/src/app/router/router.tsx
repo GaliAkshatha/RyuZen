@@ -11,6 +11,7 @@ import { SuperAdminLayout } from "@/portals/super-admin/layout/SuperAdminLayout"
 import { SuperAdminHomePage } from "@/portals/super-admin/pages/SuperAdminHomePage";
 import { OrganizationListPage } from "@/portals/super-admin/pages/OrganizationListPage";
 import { OrganizationDetailPage } from "@/portals/super-admin/pages/OrganizationDetailPage";
+import { OrgAnalyticsPage } from "@/portals/super-admin/pages/OrgAnalyticsPage";
 import { CreateOrganizationPage } from "@/portals/super-admin/pages/CreateOrganizationPage";
 
 import { OrgAdminLayout } from "@/portals/org-admin/layout/OrgAdminLayout";
@@ -97,6 +98,7 @@ export const router = createBrowserRouter([
       { path: "organizations/new", element: <CreateOrganizationPage /> },
       { path: "organizations/:id", element: <OrganizationDetailPage /> },
       { path: "audit-logs", element: <AuditLogsPage /> },
+      { path: "analytics", element: <OrgAnalyticsPage /> },
     ],
   },
   {
