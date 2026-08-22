@@ -13,6 +13,8 @@ export interface JobApplication {
   studentId: string;
   studentName?: string;
   studentUsn?: string;
+  /** Real server-side enrichment, added this pass - the student's actual User id, distinct from studentId (a Student document id) - required to call the recruiter-facing Career Score/Resume/AI Interview candidate routes, which all take the real User id. */
+  studentUserId?: string;
   resume?: string;
   status: JobApplicationStatus;
   remarks?: string;
