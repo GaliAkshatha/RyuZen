@@ -8,6 +8,8 @@
     "dev": "tsx watch src/server.ts",
     "type-check": "tsc --noEmit",
     "type-check:tests": "tsc --noEmit -p tsconfig.test.json",
+    "type-check:seed": "tsc --noEmit -p seed/tsconfig.json",
+    "seed": "tsx seed/index.ts",
     "build": "tsc",
     "start": "node dist/server.js"
   },
