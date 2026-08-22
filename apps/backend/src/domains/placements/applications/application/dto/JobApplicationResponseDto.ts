@@ -18,6 +18,9 @@ export interface JobApplicationResponseDto {
 
     studentUsn?: string;
 
+    /** Enriched alongside studentName/studentUsn - closes a real gap: the recruiter-facing Career Score/Resume/AI Interview candidate routes all take the student's real USER id, not this application's studentId (a different, Student-document id, confirmed against the entities that create each) - without this field there was no way to call any of them from an application record at all. */
+    studentUserId?: string;
+
     resume?: string;
 
     status: JobApplicationStatus;
