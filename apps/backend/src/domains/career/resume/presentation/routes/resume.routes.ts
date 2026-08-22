@@ -49,6 +49,30 @@ router.get(
 );
 
 /*
+ Get A Candidate's Resume - RECRUITER only, and only for a real
+ candidate who has genuinely applied to one of the recruiter's own
+ company's drives (checked dynamically, same real rule as Career
+ Score's candidate route). Uses a distinct "/candidate/:userId" path,
+ not a bare "/:userId", since this router already has real sibling
+ routes ("/download", "/templates") that a bare single-segment
+ wildcard could collide with depending on declaration order.
+*/
+
+router.get(
+
+    "/candidate/:userId",
+
+    authenticate,
+
+    asyncHandler(
+
+        controller.getForCandidate.bind(controller)
+
+    )
+
+);
+
+/*
  Update Resume Visibility
 */
 

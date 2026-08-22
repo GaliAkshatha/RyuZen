@@ -75,6 +75,31 @@ router.get(
 );
 
 /*
+ List A Candidate's Mock Interview Sessions - RECRUITER only, and
+ only for a real candidate who has genuinely applied to one of the
+ recruiter's own company's drives (checked dynamically, same real
+ rule as Career Score's and Resume's candidate routes). Uses
+ "/candidate/:userId" (two segments), genuinely distinct from the
+ real "/:id" (one segment) and "/:id/answer" (id + literal "answer")
+ routes already on this router - no collision possible regardless of
+ declaration order.
+*/
+
+router.get(
+
+    "/candidate/:userId",
+
+    authenticate,
+
+    asyncHandler(
+
+        controller.listForCandidate.bind(controller)
+
+    )
+
+);
+
+/*
  Answer Mock Interview Question
 */
 

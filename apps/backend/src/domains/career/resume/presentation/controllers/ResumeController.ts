@@ -5,6 +5,8 @@ import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
 import { resumeContainer } from "../../application/container/ResumeContainer.js";
+import { recruiterCandidateAccessService } from "../../../../../shared/container/RecruiterCandidateAccessContainer.js";
+import { UserRole } from "../../../../identity/domain/constants/UserRole.js";
 
 export class ResumeController {
 
@@ -225,6 +227,81 @@ export class ResumeController {
                 .execute(
 
                     req.user!.userId
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            resume,
+
+            "Resume fetched successfully."
+
+        );
+
+    }
+
+    /**
+     * Real RECRUITER-only access to a specific candidate's resume -
+     * same real check as CareerScoreController.getForCandidate (has
+     * this exact candidate applied to one of my own company's real
+     * drives?), via the same shared RecruiterCandidateAccessService.
+     */
+    async getForCandidate(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        if (req.user!.role !== UserRole.RECRUITER) {
+
+            throw new ApiError(
+
+                "Access denied.",
+
+                HttpStatus.FORBIDDEN
+
+            );
+
+        }
+
+        const hasAccess =
+
+            await recruiterCandidateAccessService
+                .canRecruiterViewCandidate(
+
+                    req.user!.userId,
+
+                    req.user!.organizationId,
+
+                    req.params.userId
+
+                );
+
+        if (!hasAccess) {
+
+            throw new ApiError(
+
+                "This candidate has not applied to any of your drives.",
+
+                HttpStatus.FORBIDDEN
+
+            );
+
+        }
+
+        const resume =
+
+            await resumeContainer
+
+                .getMyResume
+
+                .execute(
+
+                    req.params.userId
 
                 );
 

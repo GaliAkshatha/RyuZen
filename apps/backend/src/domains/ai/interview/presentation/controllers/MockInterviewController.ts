@@ -5,6 +5,8 @@ import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
 import { mockInterviewContainer } from "../../application/container/MockInterviewContainer.js";
+import { recruiterCandidateAccessService } from "../../../../../shared/container/RecruiterCandidateAccessContainer.js";
+import { UserRole } from "../../../../identity/domain/constants/UserRole.js";
 
 export class MockInterviewController {
 
@@ -169,6 +171,84 @@ export class MockInterviewController {
             session,
 
             "Mock interview session fetched successfully."
+
+        );
+
+    }
+
+    /**
+     * Real RECRUITER-only access to a specific candidate's mock
+     * interview sessions - same real check as Career Score and
+     * Resume's candidate routes, via the same shared
+     * RecruiterCandidateAccessService. Reuses getMyMockInterviews
+     * unchanged (it already takes an arbitrary userId, confirmed
+     * directly - it was never truly "my interviews only", just a
+     * controller that only ever passed the caller's own id).
+     */
+    async listForCandidate(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        if (req.user!.role !== UserRole.RECRUITER) {
+
+            throw new ApiError(
+
+                "Access denied.",
+
+                HttpStatus.FORBIDDEN
+
+            );
+
+        }
+
+        const hasAccess =
+
+            await recruiterCandidateAccessService
+                .canRecruiterViewCandidate(
+
+                    req.user!.userId,
+
+                    req.user!.organizationId,
+
+                    req.params.userId
+
+                );
+
+        if (!hasAccess) {
+
+            throw new ApiError(
+
+                "This candidate has not applied to any of your drives.",
+
+                HttpStatus.FORBIDDEN
+
+            );
+
+        }
+
+        const sessions =
+
+            await mockInterviewContainer
+
+                .getMyMockInterviews
+
+                .execute(
+
+                    req.params.userId
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            sessions,
+
+            "Mock interview sessions fetched successfully."
 
         );
 
