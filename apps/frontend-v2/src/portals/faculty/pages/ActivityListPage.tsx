@@ -1,22 +1,22 @@
 import { Link } from "react-router-dom";
-import { Plus, ClipboardList } from "lucide-react";
+import { Plus, ClipboardList, Star, Calendar } from "lucide-react";
 
 import { Button } from "@/shared/ui/Button";
 import { Skeleton } from "@/shared/components/Skeleton";
 import { EmptyState } from "@/shared/components/EmptyState";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { StatusBadge } from "@/shared/components/StatusBadge";
+import { ActivityTargetingLabel } from "@/domains/activities/components/ActivityTargetingLabel";
 import { useActivityList } from "@/domains/activities/hooks/useActivityList";
 import { useAuth } from "@/domains/auth/AuthContext";
 
 /**
- * "My Activities" - the real GET /activities is open to any
- * authenticated user (read visibility for the whole org, confirmed
- * directly), so this page filters to the current faculty member's own
- * activities client-side for a "my activities" experience. Faculty
- * cannot write/publish/close/delete anything they didn't create
- * anyway (enforced server-side by this session's real fix), so this
- * filter is a real UX convenience, not the actual security boundary.
+ * "My Activities" - real dashboard-card grid, each card shows real
+ * targeting (who this activity is actually restricted to, from the
+ * activity's own real fields). GET /activities is open to any
+ * authenticated user org-wide, so this filters to the current faculty
+ * member's own activities client-side - a UX convenience, not the
+ * real security boundary (that's enforced server-side, confirmed).
  */
 export function ActivityListPage() {
   const { data: activities, isLoading, isError, error, refetch } = useActivityList();
@@ -40,9 +40,9 @@ export function ActivityListPage() {
       </div>
 
       {isLoading ? (
-        <div className="flex flex-col gap-2">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-16 w-full" />
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-32 w-full" />
           ))}
         </div>
       ) : isError ? (
@@ -54,17 +54,30 @@ export function ActivityListPage() {
           description="Create an activity for your students to participate in and earn points."
         />
       ) : (
-        <div className="flex flex-col gap-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {myActivities.map((activity) => (
             <Link key={activity.id} to={`/faculty/activities/${activity.id}`}>
-              <div className="flex items-center justify-between rounded-lg border border-border p-4 transition-colors hover:border-primary/40">
-                <div>
-                  <p className="font-medium text-foreground">{activity.title}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {activity.type} · {activity.points} pts · Due {new Date(activity.endDate).toLocaleDateString()}
-                  </p>
+              <div className="flex h-full flex-col gap-3 rounded-xl border border-border p-4 transition-colors hover:border-primary/40">
+                <div className="flex items-start justify-between gap-2">
+                  <p className="font-semibold text-foreground">{activity.title}</p>
+                  <StatusBadge status={activity.status} />
                 </div>
-                <StatusBadge status={activity.status} />
+                <span className="w-fit rounded bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+                  {activity.type}
+                </span>
+                <div className="mt-auto flex flex-col gap-1.5">
+                  <ActivityTargetingLabel activity={activity} />
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1 text-warning">
+                      <Star className="h-3.5 w-3.5" aria-hidden="true" />
+                      {activity.points} pts
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
+                      {new Date(activity.endDate).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
               </div>
             </Link>
           ))}

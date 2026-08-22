@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { Star } from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Star, ArrowLeft } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/Card";
+import { Button } from "@/shared/ui/Button";
 import { Skeleton } from "@/shared/components/Skeleton";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { StatusBadge } from "@/shared/components/StatusBadge";
@@ -23,6 +24,7 @@ import type { AppApiError } from "@/shared/types/api.types";
  */
 export function StudentActivityDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { data: activity, isLoading, isError, error, refetch } = useActivity(id ?? "");
   const { data: mySubmissions } = useMySubmissions();
   const { mutate: createSubmission, isPending } = useCreateSubmission();
@@ -50,6 +52,16 @@ export function StudentActivityDetailPage() {
 
   return (
     <div className="flex flex-col gap-6">
+      <Button
+        variant="ghost"
+        size="sm"
+        className="w-fit flex items-center gap-1.5 text-muted-foreground"
+        onClick={() => navigate("/student/activities")}
+      >
+        <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+        Back to activities
+      </Button>
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">{activity.title}</h1>

@@ -10,6 +10,7 @@ import {
   type CreatePlacementDriveFormValues,
 } from "@/domains/placement-drives/placementDriveSchemas";
 import { useCompanies } from "@/domains/companies/hooks/useCompanies";
+import { useDepartments } from "@/domains/departments/hooks/useDepartments";
 import type { CreatePlacementDriveRequest } from "@/domains/placement-drives/placementDrive.types";
 import type { AppApiError } from "@/shared/types/api.types";
 
@@ -22,6 +23,7 @@ export function CreatePlacementDriveForm({
   isSubmitting: boolean;
   submitError?: AppApiError | null;
 }) {
+  const { data: departments } = useDepartments();
   const { data: companies } = useCompanies();
 
   const {
@@ -32,6 +34,17 @@ export function CreatePlacementDriveForm({
   } = useForm<CreatePlacementDriveFormValues>({ resolver: zodResolver(createPlacementDriveSchema) });
 
   function handleFormSubmit(values: CreatePlacementDriveFormValues) {
+    const batches = values.eligibilityBatches
+      ?.split(",")
+      .map((v) => v.trim())
+      .filter(Boolean);
+
+    const hasEligibilityCriteria =
+      (values.eligibilityDepartmentIds?.length ?? 0) > 0 ||
+      (batches?.length ?? 0) > 0 ||
+      values.eligibilityMinSemester !== undefined ||
+      values.eligibilityMinCgpa !== undefined;
+
     onSubmit({
       companyId: values.companyId,
       title: values.title,
@@ -39,6 +52,14 @@ export function CreatePlacementDriveForm({
       package: values.package || undefined,
       location: values.location || undefined,
       eligibility: values.eligibility || undefined,
+      eligibilityCriteria: hasEligibilityCriteria
+        ? {
+            departmentIds: values.eligibilityDepartmentIds,
+            batches,
+            minSemester: values.eligibilityMinSemester,
+            minCgpa: values.eligibilityMinCgpa,
+          }
+        : undefined,
       deadline: values.deadline ? new Date(values.deadline).toISOString() : undefined,
     });
   }
@@ -100,8 +121,56 @@ export function CreatePlacementDriveForm({
         <Label htmlFor="drive-eligibility">Eligibility description (optional)</Label>
         <Input id="drive-eligibility" placeholder="e.g. CGPA 7+, no active backlogs" {...register("eligibility")} />
         <p className="text-xs text-muted-foreground">
-          Free text only, shown to students - this is not enforced automatically.
+          Free text shown to students. Real enforcement uses the criteria below, not this text.
         </p>
+      </div>
+
+      <div className="rounded-lg border border-border p-4">
+        <p className="mb-1 text-sm font-medium text-foreground">Real eligibility criteria (optional)</p>
+        <p className="mb-3 text-xs text-muted-foreground">
+          These are genuinely enforced — a student who doesn't meet them will see a real rejection
+          when they try to apply. Leave any field empty for no restriction on that dimension.
+        </p>
+
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1.5">
+            <Label>Department</Label>
+            <Controller
+              control={control}
+              name="eligibilityDepartmentIds"
+              render={({ field }) => (
+                <Select value={field.value?.[0]} onValueChange={(v) => field.onChange([v])}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Any department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {(departments ?? []).map((dept) => (
+                      <SelectItem key={dept.id} value={dept.id}>
+                        {dept.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
+
+          <div className="grid grid-cols-3 gap-3">
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="drive-eligibility-batches">Batches</Label>
+              <Input id="drive-eligibility-batches" placeholder="e.g. 2022-2026" {...register("eligibilityBatches")} />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="drive-min-semester">Min. semester</Label>
+              <Input id="drive-min-semester" type="number" min={1} max={12} {...register("eligibilityMinSemester")} />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="drive-min-cgpa">Min. CGPA</Label>
+              <Input id="drive-min-cgpa" type="number" step="0.1" min={0} max={10} {...register("eligibilityMinCgpa")} />
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground">Comma-separated for multiple batches.</p>
+        </div>
       </div>
 
       <div className="flex flex-col gap-1.5">

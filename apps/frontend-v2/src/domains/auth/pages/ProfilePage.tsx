@@ -11,6 +11,7 @@ import { Label } from "@/shared/ui/Label";
 import { useAuth } from "@/domains/auth/AuthContext";
 import { useUpdateProfile } from "@/domains/auth/hooks/useUpdateProfile";
 import { updateProfileSchema, type UpdateProfileFormValues } from "@/domains/auth/updateProfileSchema";
+import { ChangePasswordForm } from "@/domains/auth/components/ChangePasswordForm";
 import { getPortalPathForRole } from "@/app/router/getPortalPathForRole";
 
 const ROLE_LABELS: Record<string, string> = {
@@ -174,6 +175,15 @@ export function ProfilePage() {
             </CardContent>
           </Card>
         )}
+
+        <Card className="mb-8 mt-4">
+          <CardHeader>
+            <CardTitle>Password</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChangePasswordForm />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

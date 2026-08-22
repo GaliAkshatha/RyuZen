@@ -107,22 +107,23 @@ export function CreateActivityForm({
       </div>
 
       <div className="rounded-lg border border-border p-4">
-        <p className="mb-1 text-sm font-medium text-foreground">Target groups (optional)</p>
+        <p className="mb-1 text-sm font-medium text-foreground">Target groups</p>
         <p className="mb-3 text-xs text-muted-foreground">
-          Leave any of these empty for no restriction on that dimension. A student must match every
-          restriction you set to be eligible.
+          Department is required — every activity must specify at least one real target
+          department. Batch, semester, and section further narrow within it; leave any of those
+          empty for no restriction on that dimension.
         </p>
 
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-1.5">
-            <Label>Department</Label>
+            <Label>Department <span className="text-destructive">*</span></Label>
             <Controller
               control={control}
               name="departmentIds"
               render={({ field }) => (
                 <Select value={field.value?.[0]} onValueChange={(v) => field.onChange([v])}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Any department" />
+                  <SelectTrigger aria-invalid={Boolean(errors.departmentIds)}>
+                    <SelectValue placeholder="Select a department" />
                   </SelectTrigger>
                   <SelectContent>
                     {(departments ?? []).map((dept) => (
@@ -134,6 +135,7 @@ export function CreateActivityForm({
                 </Select>
               )}
             />
+            {errors.departmentIds && <p className="text-xs text-destructive">{errors.departmentIds.message}</p>}
           </div>
 
           <div className="grid grid-cols-3 gap-3">

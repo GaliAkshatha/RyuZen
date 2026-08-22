@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { Send, Lock, Trash2, ClipboardList, Clock, CheckCircle2, XCircle } from "lucide-react";
+import { Send, Lock, Trash2, ClipboardList, Clock, CheckCircle2, XCircle, ArrowLeft } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/Card";
 import { Button } from "@/shared/ui/Button";
@@ -45,6 +45,16 @@ export function ActivityDetailPage() {
 
   return (
     <div className="flex flex-col gap-6">
+      <Button
+        variant="ghost"
+        size="sm"
+        className="w-fit flex items-center gap-1.5 text-muted-foreground"
+        onClick={() => navigate("/faculty/activities")}
+      >
+        <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+        Back to activities
+      </Button>
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">{activity.title}</h1>

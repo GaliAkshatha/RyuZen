@@ -6,14 +6,17 @@ import { z } from "zod";
  * (department/batch/semester/section) are real, independent arrays -
  * confirmed directly that SubmissionEligibilityService enforces
  * whichever ones are populated regardless of what `visibility` is set
- * to, so they're shown here as their own real inputs, not gated
- * behind a visibility dropdown the way an earlier pass modeled them.
+ * to. departmentIds is genuinely required now (backend schema change,
+ * per explicit product direction: an activity must specify at least
+ * one real target department, not be open to the whole organization
+ * by default) - batches/semesters/sections stay optional refinements
+ * within that department.
  */
 export const createActivitySchema = z.object({
   title: z.string().trim().min(3, "At least 3 characters").max(200),
   description: z.string().trim().min(10, "At least 10 characters").max(5000),
   visibility: z.enum(["PUBLIC", "DEPARTMENT", "SEMESTER", "YEAR", "PRIVATE"]),
-  departmentIds: z.array(z.string()).optional(),
+  departmentIds: z.array(z.string()).min(1, "Select at least one department"),
   batches: z.string().trim().optional(),
   semesters: z.string().trim().optional(),
   sections: z.string().trim().optional(),

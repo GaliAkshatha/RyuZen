@@ -55,7 +55,7 @@ export const CreateActivitySchema = z.object({
     departmentIds:
 
         z.array(z.string())
-            .optional(),
+            .min(1, "At least one department is required."),
 
     batches:
 

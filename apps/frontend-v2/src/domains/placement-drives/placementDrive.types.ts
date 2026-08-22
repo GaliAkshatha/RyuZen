@@ -1,13 +1,10 @@
 /**
  * Matches the real backend PlacementDriveResponseDto exactly -
- * confirmed directly against PlacementDriveResponseMapper.ts.
- * `eligibility` (free text) is real; `eligibilityCriteria`
- * (structured) is deliberately NOT included here - confirmed the
- * response mapper never returns it, despite the entity/create-request
- * having a structured field internally. This is the real, previously
- * flagged backend gap: no student-facing eligibility signal exists.
- * Do not add this field back without re-confirming the backend
- * actually returns it.
+ * confirmed directly against PlacementDriveResponseMapper.ts. Both
+ * `eligibility` (free text) and `eligibilityCriteria` (structured)
+ * are real - the latter was previously a confirmed backend gap
+ * (silently stripped by the Zod schema even on create), now fixed
+ * end to end (schema, use case, mapper).
  */
 export const PlacementDriveStatus = {
   DRAFT: "DRAFT",
