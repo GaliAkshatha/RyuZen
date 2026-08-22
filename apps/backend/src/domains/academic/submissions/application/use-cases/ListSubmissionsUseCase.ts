@@ -9,6 +9,14 @@ import {
     IActivityRepository,
 } from "../../../activities/infrastructure/repositories/IActivityRepository.js";
 
+import {
+    IUserRepository,
+} from "../../../../identity/infrastructure/repositories/IUserRepository.js";
+
+import {
+    IStudentRepository,
+} from "../../../students/infrastructure/repositories/IStudentRepository.js";
+
 import { UserRole } from "../../../../identity/domain/constants/UserRole.js";
 
 import { ApiError } from "../../../../../shared/core/http/ApiError.js";
@@ -45,7 +53,11 @@ export class ListSubmissionsUseCase {
 
         private readonly repository: ISubmissionRepository,
 
-        private readonly activityRepository: IActivityRepository
+        private readonly activityRepository: IActivityRepository,
+
+        private readonly userRepository: IUserRepository,
+
+        private readonly studentRepository: IStudentRepository
 
     ) {}
 
@@ -119,14 +131,53 @@ export class ListSubmissionsUseCase {
                 effectiveFilter
             );
 
-        return submissions.map(
+        const uniqueSubmitterIds =
 
-            submission =>
-
-                SubmissionResponseMapper.toDto(
-                    submission
+            Array.from(
+                new Set(
+                    submissions.map(s => s.submittedBy)
                 )
+            );
 
+        const nameById = new Map<string, string>();
+        const usnById = new Map<string, string>();
+
+        for (const submitterId of uniqueSubmitterIds) {
+
+            const user =
+
+                await this.userRepository.findById(
+                    submitterId
+                );
+
+            if (user) {
+
+                nameById.set(submitterId, user.name);
+
+            }
+
+            const student =
+
+                await this.studentRepository.findByUserId(
+                    submitterId
+                );
+
+            if (student?.usn) {
+
+                usnById.set(submitterId, student.usn);
+
+            }
+
+        }
+
+        return submissions.map(
+            submission => ({
+                ...SubmissionResponseMapper.toDto(
+                    submission
+                ),
+                submittedByName: nameById.get(submission.submittedBy),
+                submittedByUsn: usnById.get(submission.submittedBy)
+            })
         );
 
     }

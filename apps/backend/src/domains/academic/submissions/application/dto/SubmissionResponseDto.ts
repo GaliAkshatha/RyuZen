@@ -14,6 +14,11 @@ export interface SubmissionResponseDto {
 
     submittedBy: string;
 
+    /** Enriched in ListSubmissionsUseCase - closes a real gap: previously the response only had a raw user id, unusable for a faculty reviewer or a CSV export without a second, wrongly-scoped request. */
+    submittedByName?: string;
+
+    submittedByUsn?: string;
+
     status: SubmissionStatus;
 
     remarks: string;

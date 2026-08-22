@@ -7,6 +7,10 @@ import {
 } from "../../../students/infrastructure/repositories/StudentRepository.js";
 
 import {
+    UserRepository,
+} from "../../../../identity/infrastructure/repositories/UserRepository.js";
+
+import {
     pointLedgerContainer,
 } from "../../../../campus/point-ledger/application/container/PointLedgerContainer.js";
 
@@ -32,6 +36,9 @@ const activityRepository =
 
 const studentRepository =
     new StudentRepository();
+
+const userRepository =
+    new UserRepository();
 
 const submissionEligibilityService =
     new SubmissionEligibilityService(
@@ -88,7 +95,11 @@ export const submissionContainer = {
 
             submissionRepository,
 
-            activityRepository
+            activityRepository,
+
+            userRepository,
+
+            studentRepository
 
         ),
 
