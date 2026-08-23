@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { UserPlus } from "lucide-react";
+import { UserPlus, Users, Network } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/shared/ui/Card";
 import { Button } from "@/shared/ui/Button";
 import { Skeleton } from "@/shared/components/Skeleton";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { StatusBadge } from "@/shared/components/StatusBadge";
+import { StatCard } from "@/shared/components/StatCard";
 import { useOrganization } from "@/domains/organizations/hooks/useOrganization";
 import { useUpdateOrganizationStatus } from "@/domains/organizations/hooks/useUpdateOrganizationStatus";
 import { OrganizationStatus } from "@/domains/organizations/organization.types";
@@ -39,15 +40,30 @@ export function OrganizationDetailPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-foreground">{organization.name}</h1>
-          <p className="text-sm text-muted-foreground">{organization.code}</p>
-        </div>
-        <Button size="sm" onClick={() => setAdminDialogOpen(true)} className="flex items-center gap-2">
-          <UserPlus className="h-4 w-4" aria-hidden="true" />
-          Add org admin
-        </Button>
+      <Card>
+        <CardContent className="flex items-center justify-between py-5">
+          <div className="flex items-center gap-4">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary text-lg font-extrabold text-primary-foreground">
+              {organization.name.slice(0, 2).toUpperCase()}
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-foreground">{organization.name}</h1>
+              <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span className="font-mono">{organization.code}</span>
+                <StatusBadge status={organization.status} />
+              </p>
+            </div>
+          </div>
+          <Button size="sm" onClick={() => setAdminDialogOpen(true)} className="flex items-center gap-2">
+            <UserPlus className="h-4 w-4" aria-hidden="true" />
+            Add org admin
+          </Button>
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <StatCard icon={Users} value={organization.userCount ?? "—"} label="Total users" tone="primary" />
+        <StatCard icon={Network} value={organization.departmentCount ?? "—"} label="Departments" tone="info" />
       </div>
 
       <Card>
@@ -56,7 +72,6 @@ export function OrganizationDetailPage() {
           <CardDescription>Controls whether this organization's users can access the platform.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap items-center gap-2">
-          <StatusBadge status={organization.status} />
           {STATUS_OPTIONS.filter((s) => s !== organization.status).map((status) => (
             <Button
               key={status}

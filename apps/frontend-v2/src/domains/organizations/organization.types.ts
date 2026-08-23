@@ -9,9 +9,18 @@ export const OrganizationStatus = {
 export type OrganizationStatus = (typeof OrganizationStatus)[keyof typeof OrganizationStatus];
 
 /**
- * Matches the real backend IOrganization interface + the confirmed
- * real response shape (no mapper exists - the controller returns the
- * raw entity via toObject(), which is exactly IOrganization + id).
+ * Matches the real backend OrganizationResponseDto exactly. A real,
+ * significant bug was found and fixed this pass: no mapper existed
+ * anywhere in the backend Organizations domain - every use case
+ * returned the raw Organization class instance directly, and since
+ * its fields are getters on the class prototype (not own enumerable
+ * properties), JSON.stringify never serialized them at all - the
+ * actual wire response was `{ props: { name, code, ... } }`, not this
+ * flat shape. Proven directly (not just reasoned about) by running
+ * the raw entity through JSON.stringify and comparing output. This
+ * was the real root cause of "the Organizations page shows nothing."
+ * userCount/departmentCount are a real enrichment added alongside the
+ * fix - only populated on the list endpoint, undefined elsewhere.
  */
 export interface Organization {
   id: string;
@@ -24,6 +33,8 @@ export interface Organization {
   organizationType: string;
   subscriptionPlan: string;
   status: OrganizationStatus;
+  userCount?: number;
+  departmentCount?: number;
   settings: {
     allowStudentRegistration: boolean;
     requireEmailVerification: boolean;
