@@ -5,6 +5,8 @@ import { Organization } from "../../domain/entities/Organization.js";
 import { IOrganization } from "../../domain/interfaces/IOrganization.js";
 
 import { IOrganizationRepository } from "../../infrastructure/repositories/IOrganizationRepository.js";
+import { OrganizationResponseMapper } from "../../infrastructure/mappers/OrganizationResponseMapper.js";
+import { OrganizationResponseDto } from "../dto/OrganizationResponseDto.js";
 
 export class CreateOrganizationUseCase {
 
@@ -14,7 +16,7 @@ export class CreateOrganizationUseCase {
 
     async execute(
         organization: IOrganization
-    ): Promise<Organization> {
+    ): Promise<OrganizationResponseDto> {
 
         const exists = await this.repository.existsByCode(
             organization.code
@@ -29,9 +31,11 @@ export class CreateOrganizationUseCase {
 
         }
 
-        return await this.repository.create(
+        const created = await this.repository.create(
             new Organization(organization)
         );
+
+        return OrganizationResponseMapper.toDto(created);
 
     }
 

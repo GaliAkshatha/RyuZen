@@ -4,6 +4,10 @@ import { OrganizationSettingsRepository } from "../../infrastructure/repositorie
 
 import { UserRepository } from "../../../identity/infrastructure/repositories/UserRepository.js";
 
+import {
+    DepartmentRepository,
+} from "../../../academic/departments/infrastructure/repositories/DepartmentRepository.js";
+
 import { BCryptPasswordHasher } from "../../../identity/infrastructure/security/BCryptPasswordHasher.js";
 
 import { CreateOrganizationUseCase } from "../use-cases/CreateOrganizationUseCase.js";
@@ -20,6 +24,8 @@ const organizationRepository = new OrganizationRepository();
 const organizationSettingsRepository = new OrganizationSettingsRepository();
 
 const userRepository = new UserRepository();
+
+const departmentRepository = new DepartmentRepository();
 
 const passwordHasher = new BCryptPasswordHasher();
 
@@ -40,7 +46,9 @@ export const organizationContainer = {
     getOrganizations:
 
         new GetOrganizationsUseCase(
-            organizationRepository
+            organizationRepository,
+            userRepository,
+            departmentRepository
         ),
 
     updateOrganization:

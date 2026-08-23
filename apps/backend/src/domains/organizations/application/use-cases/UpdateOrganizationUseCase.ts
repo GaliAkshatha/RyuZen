@@ -8,6 +8,8 @@ import {
 } from "../../infrastructure/repositories/IOrganizationRepository.js";
 
 import { UpdateOrganizationDto } from "../dto/UpdateOrganizationDto.js";
+import { OrganizationResponseMapper } from "../../infrastructure/mappers/OrganizationResponseMapper.js";
+import { OrganizationResponseDto } from "../dto/OrganizationResponseDto.js";
 
 export class UpdateOrganizationUseCase {
 
@@ -21,7 +23,7 @@ export class UpdateOrganizationUseCase {
 
         dto: UpdateOrganizationDto
 
-    ): Promise<Organization> {
+    ): Promise<OrganizationResponseDto> {
 
         const organization =
 
@@ -38,11 +40,13 @@ export class UpdateOrganizationUseCase {
 
         organization.updateDetails(dto);
 
-        return await this.repository.save(
+        const saved = await this.repository.save(
 
             organization
 
         );
+
+        return OrganizationResponseMapper.toDto(saved);
 
     }
 

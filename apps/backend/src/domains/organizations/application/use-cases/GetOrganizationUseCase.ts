@@ -1,11 +1,12 @@
 import { ApiError } from "../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../shared/core/http/HttpStatus.js";
 
-import { Organization } from "../../domain/entities/Organization.js";
-
 import {
     IOrganizationRepository,
 } from "../../infrastructure/repositories/IOrganizationRepository.js";
+
+import { OrganizationResponseMapper } from "../../infrastructure/mappers/OrganizationResponseMapper.js";
+import { OrganizationResponseDto } from "../dto/OrganizationResponseDto.js";
 
 export class GetOrganizationUseCase {
 
@@ -15,7 +16,7 @@ export class GetOrganizationUseCase {
 
     async execute(
         id: string
-    ): Promise<Organization> {
+    ): Promise<OrganizationResponseDto> {
 
         const organization =
             await this.repository.findById(id);
@@ -29,7 +30,7 @@ export class GetOrganizationUseCase {
 
         }
 
-        return organization;
+        return OrganizationResponseMapper.toDto(organization);
 
     }
 
