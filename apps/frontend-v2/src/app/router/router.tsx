@@ -64,6 +64,7 @@ import { CreateDrivePage } from "@/portals/placement-admin/pages/CreateDrivePage
 
 import { RecruiterLayout } from "@/portals/recruiter/layout/RecruiterLayout";
 import { ApplicantsPage } from "@/portals/recruiter/pages/ApplicantsPage";
+import { CandidateProfilePage } from "@/portals/recruiter/pages/CandidateProfilePage";
 import { CandidateSearchPage } from "@/portals/recruiter/pages/CandidateSearchPage";
 import { RecruiterHomePage } from "@/portals/recruiter/pages/RecruiterHomePage";
 import { MyDrivesPage } from "@/portals/recruiter/pages/MyDrivesPage";
@@ -212,6 +213,7 @@ export const router = createBrowserRouter([
       { index: true, element: <RecruiterHomePage /> },
       { path: "drives", element: <MyDrivesPage /> },
       { path: "applicants", element: <ApplicantsPage /> },
+      { path: "candidates", element: <CandidateProfilePage /> },
       { path: "search", element: <CandidateSearchPage /> },
       { path: "company", element: <MyCompanyPage /> },
     ],
