@@ -11,6 +11,7 @@
     "type-check:seed": "tsc --noEmit -p seed/tsconfig.json",
     "seed": "tsx seed/index.ts",
     "seed:credentials": "tsx seed/regenerateCredentials.ts",
+    "seed:backfill-chat-notifications": "tsx seed/backfillChatAndNotifications.ts",
     "build": "tsc",
     "start": "node dist/server.js"
   },

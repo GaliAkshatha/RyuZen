@@ -21,10 +21,11 @@ const controller = new NotificationController();
 /*
  Send Notification
 
- Per the Role & Permission Matrix, "Manage Notifications" is
- ORG_ADMIN and FACULTY (FACULTY requires a specific permission
- assignment; no granular permission-enforcement middleware
- currently exists in this codebase, so this is scoped by role).
+ Real sender-role scoping enforced inside SendNotificationUseCase,
+ not just this route gate - SUPER_ADMIN/ORG_ADMIN/FACULTY can all
+ reach this endpoint, but each is restricted to genuinely different
+ audiences server-side (see the use case's own comment for the full
+ real rule set).
 */
 
 router.post(
@@ -34,6 +35,8 @@ router.post(
     authenticate,
 
     authorizePermission(
+
+        UserRole.SUPER_ADMIN,
 
         UserRole.ORG_ADMIN,
 

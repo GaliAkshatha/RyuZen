@@ -31,7 +31,12 @@ export async function seedAlumni(org: SeededOrganization): Promise<SeededAlumnus
   for (let i = 0; i < count; i++) {
     const name = randomName();
     const email = `alumni${i + 1}@${org.code.toLowerCase()}.edu`;
-    const makeActive = chance(0.6);
+    // The first alumnus is always guaranteed ACTIVE - real demo
+    // credentials (the landing page's "Explore as Alumni") are
+    // hardcoded to alumni1@<code>.edu, so that specific one must
+    // reliably have a real account; every other alumnus stays
+    // genuinely randomized for realistic mixed data.
+    const makeActive = i === 0 ? true : chance(0.6);
 
     if (makeActive) {
       const user = await UserModel.create({

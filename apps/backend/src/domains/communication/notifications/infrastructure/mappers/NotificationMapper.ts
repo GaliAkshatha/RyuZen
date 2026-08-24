@@ -41,6 +41,9 @@ export class NotificationMapper {
             recipientUserId:
                 document.recipientUserId?.toString(),
 
+            departmentIds:
+                document.departmentIds?.map(id => id.toString()),
+
             readBy:
                 document.readBy.map(
 
@@ -86,6 +89,9 @@ export class NotificationMapper {
 
             recipientUserId:
                 data.recipientUserId,
+
+            departmentIds:
+                data.departmentIds,
 
             readBy:
                 data.readBy

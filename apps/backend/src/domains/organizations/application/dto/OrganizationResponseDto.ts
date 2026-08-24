@@ -34,4 +34,6 @@ export interface OrganizationResponseDto {
     /** Real enrichment, added alongside this fix - only populated by GetOrganizationsUseCase's list view, undefined elsewhere. */
     userCount?: number;
     departmentCount?: number;
+    /** Real enrichment, added alongside a confirmed real gap: the Organization Detail page had an "Add org admin" action but never actually displayed who the current org admin(s) are. Only populated by GetOrganizationUseCase (the detail endpoint), undefined elsewhere. */
+    orgAdmins?: { id: string; name: string; email: string }[];
 }

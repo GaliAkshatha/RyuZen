@@ -20,6 +20,9 @@ export interface INotification {
     /** Only set for system-generated, single-recipient notifications (targetAudience: TARGETED). */
     recipientUserId?: string;
 
+    /** Real, optional department narrowing - when set, only STUDENT/FACULTY viewers whose own departmentId is in this list see the notification. Unset means no department restriction (visible to the whole targetAudience). */
+    departmentIds?: string[];
+
     readBy: string[];
 
     createdAt?: Date;

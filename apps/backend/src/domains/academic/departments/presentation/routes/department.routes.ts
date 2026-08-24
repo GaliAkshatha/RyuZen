@@ -66,7 +66,9 @@ router.get(
 
         UserRole.SUPER_ADMIN,
 
-        UserRole.ORG_ADMIN
+        UserRole.ORG_ADMIN,
+
+        UserRole.FACULTY
 
     ),
 

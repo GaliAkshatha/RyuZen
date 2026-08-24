@@ -8,6 +8,8 @@ import {
     IStudentRepository,
 } from "../../../students/infrastructure/repositories/IStudentRepository.js";
 
+import { isStudentEligibleForActivity } from "../../../activities/domain/services/isStudentEligibleForActivity.js";
+
 import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
@@ -165,70 +167,46 @@ export class SubmissionEligibilityService {
 
             if (
 
-                hasDepartmentRestriction &&
-                (!student.departmentId ||
-                    !activity.departmentIds!.includes(student.departmentId))
+                !isStudentEligibleForActivity(
+
+                    student,
+
+                    activity
+
+                )
 
             ) {
 
-                throw new ApiError(
+                if (hasDepartmentRestriction && (!student.departmentId || !activity.departmentIds!.includes(student.departmentId))) {
 
-                    "This activity is not available to your department.",
+                    throw new ApiError(
+                        "This activity is not available to your department.",
+                        HttpStatus.FORBIDDEN
+                    );
 
-                    HttpStatus.FORBIDDEN
+                }
 
-                );
+                if (hasBatchRestriction && !activity.batches!.includes(student.batch)) {
 
-            }
+                    throw new ApiError(
+                        "This activity is not available to your batch.",
+                        HttpStatus.FORBIDDEN
+                    );
 
-            if (
+                }
 
-                hasBatchRestriction &&
-                !activity.batches!.includes(student.batch)
+                if (hasSemesterRestriction && !activity.semesters!.includes(student.semester)) {
 
-            ) {
+                    throw new ApiError(
+                        "This activity is not available to your semester.",
+                        HttpStatus.FORBIDDEN
+                    );
 
-                throw new ApiError(
-
-                    "This activity is not available to your batch.",
-
-                    HttpStatus.FORBIDDEN
-
-                );
-
-            }
-
-            if (
-
-                hasSemesterRestriction &&
-                !activity.semesters!.includes(student.semester)
-
-            ) {
+                }
 
                 throw new ApiError(
-
-                    "This activity is not available to your semester.",
-
-                    HttpStatus.FORBIDDEN
-
-                );
-
-            }
-
-            if (
-
-                hasSectionRestriction &&
-                (!student.section ||
-                    !activity.sections!.includes(student.section))
-
-            ) {
-
-                throw new ApiError(
-
                     "This activity is not available to your section.",
-
                     HttpStatus.FORBIDDEN
-
                 );
 
             }

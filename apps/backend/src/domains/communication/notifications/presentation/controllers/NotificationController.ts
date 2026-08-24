@@ -28,7 +28,9 @@ export class NotificationController {
 
                     req.user!.organizationId,
 
-                    req.user!.userId
+                    req.user!.userId,
+
+                    req.user!.role
 
                 );
 

@@ -6,7 +6,35 @@ import { SendAIChatMessageUseCase } from "../use-cases/SendAIChatMessageUseCase.
 import { GetMyAIChatsUseCase } from "../use-cases/GetMyAIChatsUseCase.js";
 import { GetAIChatUseCase } from "../use-cases/GetAIChatUseCase.js";
 
+import { ChatGroundingContextBuilder } from "../services/ChatGroundingContextBuilder.js";
+
+import { StudentRepository } from "../../../../academic/students/infrastructure/repositories/StudentRepository.js";
+import { ActivityRepository } from "../../../../academic/activities/infrastructure/repositories/ActivityRepository.js";
+import {
+    PlacementDriveRepository,
+} from "../../../../placements/drives/infrastructure/repositories/PlacementDriveRepository.js";
+
+import { careerScoreContainer } from "../../../career-score/application/container/CareerScoreContainer.js";
+
 const aiChatRepository = new AIChatRepository();
+
+const studentRepository = new StudentRepository();
+
+const activityRepository = new ActivityRepository();
+
+const placementDriveRepository = new PlacementDriveRepository();
+
+const groundingContextBuilder = new ChatGroundingContextBuilder(
+
+    studentRepository,
+
+    activityRepository,
+
+    placementDriveRepository,
+
+    careerScoreContainer.getCareerScore
+
+);
 
 /*
  Real AI Chat, backed by whichever provider AI_PROVIDER selects (see
@@ -26,7 +54,9 @@ export const aiChatContainer = {
 
             aiChatRepository,
 
-            aiProvider
+            aiProvider,
+
+            groundingContextBuilder
 
         ),
 

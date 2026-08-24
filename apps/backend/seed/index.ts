@@ -14,6 +14,8 @@ import { seedSubmissions } from "./data/submissions.js";
 import { seedApplications } from "./data/applications.js";
 import { seedConnections } from "./data/connections.js";
 import { seedLeaderboard } from "./data/leaderboard.js";
+import { seedAiChats } from "./data/aiChats.js";
+import { seedNotifications } from "./data/notifications.js";
 import { generateCredentialsFile } from "./generateCredentialsFile.js";
 import { recordExistingOrgCredentials } from "./utils/recordExistingCredentials.js";
 
@@ -55,6 +57,8 @@ async function main(): Promise<void> {
     await seedApplications(drives, students);
     await seedConnections(org.id, students, faculty, alumni);
     await seedLeaderboard(org.id, students, pointsByUserId);
+    await seedAiChats(students);
+    await seedNotifications(org, faculty, students);
   }
 
   const credentialsPath = fileURLToPath(new URL("../SEED_CREDENTIALS.md", import.meta.url));

@@ -49,6 +49,10 @@ export const SendNotificationSchema = z.object({
 
     ])
 
+        .optional(),
+
+    departmentIds: z.array(z.string())
+
         .optional()
 
 });

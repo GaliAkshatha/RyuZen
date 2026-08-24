@@ -69,9 +69,26 @@ implements INotificationRepository {
 
         audience: string,
 
-        userId: string
+        userId: string,
+
+        viewerDepartmentId?: string
 
     ): Promise<Notification[]> {
+
+        const departmentFilter = viewerDepartmentId
+            ? {
+                $or: [
+                    { departmentIds: { $exists: false } },
+                    { departmentIds: { $size: 0 } },
+                    { departmentIds: viewerDepartmentId }
+                ]
+            }
+            : {
+                $or: [
+                    { departmentIds: { $exists: false } },
+                    { departmentIds: { $size: 0 } }
+                ]
+            };
 
         const documents =
 
@@ -80,7 +97,12 @@ implements INotificationRepository {
                 organizationId,
 
                 $or: [
-                    { targetAudience: { $in: ["ALL", audience] } },
+                    {
+                        $and: [
+                            { targetAudience: { $in: ["ALL", audience] } },
+                            departmentFilter
+                        ]
+                    },
                     { recipientUserId: userId }
                 ]
 

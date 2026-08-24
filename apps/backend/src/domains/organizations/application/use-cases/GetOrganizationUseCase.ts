@@ -6,6 +6,7 @@ import {
 } from "../../infrastructure/repositories/IOrganizationRepository.js";
 
 import { IUserRepository } from "../../../identity/infrastructure/repositories/IUserRepository.js";
+import { UserRole } from "../../../identity/domain/constants/UserRole.js";
 import {
     IDepartmentRepository,
 } from "../../../academic/departments/infrastructure/repositories/IDepartmentRepository.js";
@@ -49,10 +50,15 @@ export class GetOrganizationUseCase {
             this.departmentRepository.findByOrganization(organization.id!),
         ]);
 
+        const orgAdmins = users
+            .filter((u) => u.role === UserRole.ORG_ADMIN)
+            .map((u) => ({ id: u.id!, name: u.name, email: u.email }));
+
         return {
             ...OrganizationResponseMapper.toDto(organization),
             userCount: users.length,
             departmentCount: departments.length,
+            orgAdmins,
         };
 
     }

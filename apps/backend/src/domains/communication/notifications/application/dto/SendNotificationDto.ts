@@ -11,4 +11,6 @@ export interface SendNotificationDto {
 
     targetAudience?: NotificationAudience;
 
+    departmentIds?: string[];
+
 }

@@ -53,6 +53,10 @@ export class Notification {
         return this.props.recipientUserId;
     }
 
+    get departmentIds(): string[] | undefined {
+        return this.props.departmentIds;
+    }
+
     get readBy(): string[] {
         return [...this.props.readBy];
     }

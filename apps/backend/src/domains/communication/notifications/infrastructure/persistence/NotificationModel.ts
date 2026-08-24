@@ -17,6 +17,8 @@ export interface NotificationDocument extends Document {
     /** Only set for system-generated, single-recipient notifications (targetAudience: TARGETED). */
     recipientUserId?: mongoose.Types.ObjectId;
 
+    departmentIds?: mongoose.Types.ObjectId[];
+
     readBy: mongoose.Types.ObjectId[];
 
     createdAt: Date;
@@ -96,6 +98,14 @@ const NotificationSchema = new Schema<NotificationDocument>(
             index: true,
 
         },
+
+        departmentIds: [{
+
+            type: Schema.Types.ObjectId,
+
+            ref: "Department",
+
+        }],
 
         readBy: [{
 

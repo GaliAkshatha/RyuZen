@@ -26,6 +26,10 @@ export class AIChatController {
 
                     req.user!.userId,
 
+                    req.user!.organizationId,
+
+                    req.user!.role,
+
                     req.body
 
                 );
