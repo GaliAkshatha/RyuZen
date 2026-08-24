@@ -68,6 +68,32 @@ export function OrganizationDetailPage() {
 
       <Card>
         <CardHeader>
+          <CardTitle>Org Admins</CardTitle>
+          <CardDescription>The accounts that manage this organization directly.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {!organization.orgAdmins || organization.orgAdmins.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No org admin has been added yet.</p>
+          ) : (
+            <div className="flex flex-col divide-y divide-border">
+              {organization.orgAdmins.map((admin) => (
+                <div key={admin.id} className="flex items-center gap-3 py-2.5">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                    {admin.name.slice(0, 2).toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{admin.name}</p>
+                    <p className="text-xs text-muted-foreground">{admin.email}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
           <CardTitle>Status</CardTitle>
           <CardDescription>Controls whether this organization's users can access the platform.</CardDescription>
         </CardHeader>

@@ -35,6 +35,8 @@ export interface Organization {
   status: OrganizationStatus;
   userCount?: number;
   departmentCount?: number;
+  /** Real enrichment, added alongside a confirmed gap: the detail page had an "Add org admin" action but never showed who the current org admin(s) actually are. Only populated on the detail endpoint. */
+  orgAdmins?: { id: string; name: string; email: string }[];
   settings: {
     allowStudentRegistration: boolean;
     requireEmailVerification: boolean;
