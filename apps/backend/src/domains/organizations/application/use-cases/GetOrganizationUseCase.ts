@@ -5,13 +5,27 @@ import {
     IOrganizationRepository,
 } from "../../infrastructure/repositories/IOrganizationRepository.js";
 
+import { IUserRepository } from "../../../identity/infrastructure/repositories/IUserRepository.js";
+import {
+    IDepartmentRepository,
+} from "../../../academic/departments/infrastructure/repositories/IDepartmentRepository.js";
+
 import { OrganizationResponseMapper } from "../../infrastructure/mappers/OrganizationResponseMapper.js";
 import { OrganizationResponseDto } from "../dto/OrganizationResponseDto.js";
 
+/**
+ * REAL BUG FIX: this detail endpoint was missing the same real
+ * userCount/departmentCount enrichment GetOrganizationsUseCase (the
+ * list endpoint) already has - confirmed directly from a real
+ * screenshot showing blank stat cards on the Organization Detail
+ * page. Both endpoints now compute this the same real way.
+ */
 export class GetOrganizationUseCase {
 
     constructor(
-        private readonly repository: IOrganizationRepository
+        private readonly repository: IOrganizationRepository,
+        private readonly userRepository: IUserRepository,
+        private readonly departmentRepository: IDepartmentRepository
     ) {}
 
     async execute(
@@ -30,7 +44,16 @@ export class GetOrganizationUseCase {
 
         }
 
-        return OrganizationResponseMapper.toDto(organization);
+        const [users, departments] = await Promise.all([
+            this.userRepository.findByOrganization(organization.id!),
+            this.departmentRepository.findByOrganization(organization.id!),
+        ]);
+
+        return {
+            ...OrganizationResponseMapper.toDto(organization),
+            userCount: users.length,
+            departmentCount: departments.length,
+        };
 
     }
 

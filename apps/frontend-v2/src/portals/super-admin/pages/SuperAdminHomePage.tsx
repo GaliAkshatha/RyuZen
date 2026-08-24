@@ -44,16 +44,25 @@ export function SuperAdminHomePage() {
               <CardTitle>Organizations by user count</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-end gap-3" style={{ height: 130 }}>
+              <div className="flex items-end gap-3 overflow-x-auto pb-1" style={{ height: 150 }}>
                 {organizations.map((org) => {
                   const count = org.userCount ?? 0;
-                  const heightPercent = Math.max((count / maxUsers) * 100, count > 0 ? 8 : 3);
+                  const barHeightPx = Math.max(Math.round((count / maxUsers) * 96), count > 0 ? 8 : 2);
                   return (
-                    <Link key={org.id} to={`/platform/organizations/${org.id}`} className="flex flex-1 flex-col items-center gap-1.5">
-                      <div className="flex h-24 w-full items-end">
-                        <div className="w-full rounded-t-md bg-primary opacity-80 transition-opacity hover:opacity-100" style={{ height: `${heightPercent}%` }} />
+                    <Link
+                      key={org.id}
+                      to={`/platform/organizations/${org.id}`}
+                      className="flex w-20 shrink-0 flex-col items-center gap-1.5"
+                    >
+                      <div className="flex h-24 w-full items-end justify-center">
+                        <div
+                          className="w-10 rounded-t-md bg-primary opacity-80 transition-opacity hover:opacity-100"
+                          style={{ height: `${barHeightPx}px` }}
+                          title={`${org.name}: ${count} users`}
+                        />
                       </div>
-                      <p className="w-full truncate text-center text-[11px] text-muted-foreground">{org.name}</p>
+                      <p className="w-full text-center text-[10.5px] font-medium text-foreground">{count}</p>
+                      <p className="line-clamp-2 w-full text-center text-[10px] leading-tight text-muted-foreground">{org.name}</p>
                     </Link>
                   );
                 })}

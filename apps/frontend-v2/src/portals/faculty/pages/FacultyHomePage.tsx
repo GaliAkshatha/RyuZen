@@ -1,21 +1,22 @@
-import { FileText, Send, Lock, Pencil, Trophy } from "lucide-react";
+import { FileText, Send, Pencil, Trophy, Users } from "lucide-react";
 
 import { StatCard } from "@/shared/components/StatCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/Card";
 import { LeaderboardPanel } from "@/domains/leaderboard/components/LeaderboardPanel";
 import { useAuth } from "@/domains/auth/AuthContext";
 import { useActivityList } from "@/domains/activities/hooks/useActivityList";
+import { useMyMentorships } from "@/domains/mentorship/hooks/useMyMentorships";
 import { ActivityStatus } from "@/domains/activities/activity.types";
 
 /** Real Faculty home - same client-side ownership filter ActivityListPage already uses (server-side ownership is enforced on every real mutation regardless). */
 export function FacultyHomePage() {
   const { user } = useAuth();
   const { data: activities } = useActivityList();
+  const { data: mentorships } = useMyMentorships();
 
   const myActivities = (activities ?? []).filter((a) => a.createdBy === user?.id);
   const published = myActivities.filter((a) => a.status === ActivityStatus.PUBLISHED).length;
   const draft = myActivities.filter((a) => a.status === ActivityStatus.DRAFT).length;
-  const closed = myActivities.filter((a) => a.status === ActivityStatus.CLOSED).length;
 
   return (
     <div className="flex flex-col gap-6">
@@ -28,7 +29,7 @@ export function FacultyHomePage() {
         <StatCard icon={FileText} value={myActivities.length} label="Total activities" tone="primary" to="/faculty/activities" />
         <StatCard icon={Send} value={published} label="Published" tone="success" to="/faculty/activities" />
         <StatCard icon={Pencil} value={draft} label="Drafts" tone="warning" to="/faculty/activities" />
-        <StatCard icon={Lock} value={closed} label="Closed" tone="info" to="/faculty/activities" />
+        <StatCard icon={Users} value={mentorships?.length ?? 0} label="My students" tone="info" to="/faculty/students" />
       </div>
 
       <Card>

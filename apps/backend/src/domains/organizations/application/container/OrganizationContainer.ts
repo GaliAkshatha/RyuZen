@@ -40,7 +40,9 @@ export const organizationContainer = {
     getOrganization:
 
         new GetOrganizationUseCase(
-            organizationRepository
+            organizationRepository,
+            userRepository,
+            departmentRepository
         ),
 
     getOrganizations:

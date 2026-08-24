@@ -1,0 +1,151 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+/**
+ * Scoped entirely to the landing page - deliberately does NOT touch
+ * src/index.css or the app's real HSL design tokens (--primary,
+ * --background, etc.), which every portal dashboard depends on. This
+ * page needs a genuinely different, cinematic visual identity; the
+ * rest of the app must be completely unaffected by it. All rules
+ * below are scoped under .ryuzen-landing.
+ */
+.ryuzen-landing {
+  --rz-void: #05060a;
+  --rz-ink: #0b0e14;
+  --rz-ink-2: #131722;
+  --rz-ink-3: #1b202d;
+  --rz-mist: #2a3040;
+  --rz-mist-soft: #1e2330;
+  --rz-eye: #7de8ff;
+  --rz-eye-soft: rgba(125, 232, 255, 0.16);
+  --rz-crystal: #4fe3d4;
+  --rz-crystal-soft: rgba(79, 227, 212, 0.14);
+  --rz-gold: #e8c87a;
+  --rz-gold-soft: rgba(232, 200, 122, 0.14);
+  --rz-purple: #b18cff;
+  --rz-purple-soft: rgba(177, 140, 255, 0.16);
+  --rz-text: #edeff4;
+  --rz-text-dim: #97a0b5;
+  --rz-text-mute: #565e70;
+
+  background: var(--rz-void);
+  color: var(--rz-text);
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.ryuzen-landing .rz-display {
+  font-family: "Cinzel", serif;
+  letter-spacing: 0.01em;
+}
+
+.ryuzen-landing .rz-mono {
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.ryuzen-landing ::selection {
+  background: var(--rz-eye);
+  color: #04262e;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ryuzen-landing * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.ryuzen-landing .rz-kenburns {
+  animation: rz-kenburns-move 55s ease-in-out infinite alternate;
+}
+@keyframes rz-kenburns-move {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+.ryuzen-landing .rz-bob {
+  display: inline-block;
+  animation: rz-bob-move 2.2s ease-in-out infinite;
+}
+@keyframes rz-bob-move {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+.ryuzen-landing .rz-crystal-pulse {
+  animation: rz-crystal-breathe 6s ease-in-out infinite;
+}
+@keyframes rz-crystal-breathe {
+  0%,
+  100% {
+    filter: brightness(1) saturate(1);
+    transform: scale(1);
+  }
+  50% {
+    filter: brightness(1.08) saturate(1.12);
+    transform: scale(1.015);
+  }
+}
+
+.ryuzen-landing .rz-mist-drift {
+  animation: rz-mist-drift-move 22s ease-in-out infinite;
+}
+.ryuzen-landing .rz-mist-drift-rev {
+  animation: rz-mist-drift-move-rev 26s ease-in-out infinite;
+}
+@keyframes rz-mist-drift-move {
+  0%,
+  100% {
+    transform: translate(0, -50%);
+  }
+  50% {
+    transform: translate(60px, -50%);
+  }
+}
+@keyframes rz-mist-drift-move-rev {
+  0%,
+  100% {
+    transform: translate(0, -50%);
+  }
+  50% {
+    transform: translate(-60px, -50%);
+  }
+}
+
+.ryuzen-landing .rz-particle-rise {
+  animation: rz-particle-rise-move 1.5s ease-out infinite;
+}
+@keyframes rz-particle-rise-move {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-70px) scale(0.3);
+    opacity: 0;
+  }
+}
+
+.ryuzen-landing .rz-dust-twinkle {
+  animation: rz-dust-twinkle-fade 4.5s ease-in-out infinite;
+}
+@keyframes rz-dust-twinkle-fade {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
