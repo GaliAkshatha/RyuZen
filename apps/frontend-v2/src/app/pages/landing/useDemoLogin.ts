@@ -29,7 +29,16 @@ export function useDemoLogin() {
       const account = DEMO_ACCOUNTS[role];
       const profile = await login({ email: account.email, password: account.password });
       sessionStorage.setItem(DEMO_MODE_KEY, "true");
-      navigate(getPortalPathForRole(profile.role), { replace: true });
+      // Deliberately a real push, not replace:true (unlike the real
+      // login form, where replace is correct - you don't want "back"
+      // reopening a stale login form). A demo is an exploration, not
+      // a one-way commitment: the landing page must stay in history
+      // so browser back genuinely returns to it. Confirmed this was
+      // the real cause of "back button goes to /login instead of the
+      // landing page" - replace:true was removing "/" from history
+      // entirely, so back skipped past it to whatever page came
+      // before it in the user's real session.
+      navigate(getPortalPathForRole(profile.role));
     } catch (err) {
       const apiError = err as AppApiError;
       // A genuine network-level failure (no real response from the

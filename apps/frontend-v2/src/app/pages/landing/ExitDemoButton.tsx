@@ -24,7 +24,7 @@ import { router } from "@/app/router/router";
  * component tree (a sibling of RouterProvider in App.tsx, so it has
  * no useNavigate() context) - the exported router instance's own
  * imperative .navigate() is the real, correct way to navigate from
- * here. The real navigation state (skipIntro + scrollTo) is read by
+ * here. The real navigation state (skipIntro) is read by
  * LandingPage to skip the GSAP intro replay and land exactly back on
  * the Explore section, not the top of the page.
  */
@@ -41,7 +41,7 @@ export function ExitDemoButton() {
   function exitDemo() {
     sessionStorage.removeItem(DEMO_MODE_KEY);
     logout();
-    void router.navigate("/", { state: { skipIntro: true, scrollTo: "explore" } });
+    void router.navigate("/", { state: { skipIntro: true } });
   }
 
   return (

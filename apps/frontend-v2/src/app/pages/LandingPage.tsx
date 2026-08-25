@@ -12,12 +12,12 @@ import { DemoScene } from "@/app/pages/landing/DemoScene";
 import { FinalScene } from "@/app/pages/landing/FinalScene";
 import { LandingFooter } from "@/app/pages/landing/LandingFooter";
 import { SceneMist } from "@/app/pages/landing/SceneMist";
+import { getLandingScrollPosition, saveLandingScrollPosition } from "@/app/pages/landing/landingScrollMemory";
 
 import "@/app/pages/landing/landing.css";
 
 interface LandingNavState {
   skipIntro?: boolean;
-  scrollTo?: string;
 }
 
 /**
@@ -25,15 +25,12 @@ interface LandingNavState {
  * already-authenticated visitor is redirected straight to their real
  * portal, never shown the marketing page again.
  *
- * skipIntro/scrollTo: real navigation state set by ExitDemoButton's
- * router.navigate() call - confirmed via an actual recorded session
- * that a hard window.location.href reload could never reliably land
- * on #explore (a browser's native hash-scroll can't land correctly
- * inside a React SPA whose layout is still settling), and replayed
- * the entire opening cinematic besides. A real client-side navigation
- * carrying this state lets the hero skip straight to its fully
- * revealed end state and this component scroll precisely to the
- * requested section once mounted.
+ * Scroll restoration now uses sessionStorage (see
+ * landingScrollMemory.ts) rather than router state alone - this is
+ * what makes a genuine browser back/forward button (not just
+ * ExitDemoButton's explicit navigation) correctly return to wherever
+ * the visitor actually was, confirmed as the real gap in the
+ * previous state-only approach.
  */
 export function LandingPage() {
   const { user, isLoading } = useAuth();
@@ -41,17 +38,30 @@ export function LandingPage() {
   const [navVisible, setNavVisible] = useState(false);
 
   const navState = location.state as LandingNavState | null;
-  const skipIntro = Boolean(navState?.skipIntro);
-  const scrollToRef = useRef(navState?.scrollTo);
+  const savedScrollRef = useRef(getLandingScrollPosition());
+  const skipIntro = Boolean(navState?.skipIntro) || savedScrollRef.current !== null;
 
   useEffect(() => {
-    if (scrollToRef.current) {
-      document.getElementById(scrollToRef.current)?.scrollIntoView({ behavior: "auto" });
+    if (savedScrollRef.current !== null) {
+      window.scrollTo({ top: savedScrollRef.current, behavior: "auto" });
     }
-    // Deliberately empty deps: this should only ever run once, right
-    // after mount, using whatever target this instance was mounted
-    // with - scrollToRef.current is a ref (stable, correctly excluded
-    // from deps), not the reactive navState value directly.
+
+    let frame: number | null = null;
+    function onScroll() {
+      if (frame !== null) return;
+      frame = requestAnimationFrame(() => {
+        saveLandingScrollPosition(window.scrollY);
+        frame = null;
+      });
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame !== null) cancelAnimationFrame(frame);
+    };
+    // Deliberately empty deps: this should only ever attach once per
+    // mount, using whatever saved position existed at that moment.
   }, []);
 
   if (!isLoading && user) {

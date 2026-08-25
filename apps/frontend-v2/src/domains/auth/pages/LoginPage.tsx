@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { AlertCircle } from "lucide-react";
+import { Navigate, Link, useLocation, useNavigate } from "react-router-dom";
+import { AlertCircle, ArrowLeft } from "lucide-react";
 
 import { Button } from "@/shared/ui/Button";
 import { Input } from "@/shared/ui/Input";
@@ -63,8 +63,25 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-background px-4">
-      <Card className="w-full max-w-sm">
+    <div className="flex min-h-screen flex-col bg-background">
+      <div className="flex items-center gap-3 px-6 py-5">
+        <Link
+          to="/"
+          aria-label="Back to RyuZen"
+          className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-foreground/40 hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        </Link>
+        <Link to="/" className="flex items-center gap-2 text-[15px] font-bold text-foreground">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full border border-primary/40 bg-primary/10 text-[11px] font-bold text-primary">
+            R
+          </span>
+          RyuZen
+        </Link>
+      </div>
+
+      <div className="flex flex-1 items-center justify-center px-4 pb-20">
+        <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>RyuZen</CardTitle>
           <CardDescription>Sign in to your account</CardDescription>
@@ -118,6 +135,7 @@ export function LoginPage() {
           </form>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }
