@@ -86,6 +86,36 @@ router.post(
 );
 
 /*
+ Get My Alumni Record - ALUMNI only, self-view. Placed before the
+ "/:id" route below so Express doesn't match "me" as an :id param.
+ Deliberately the one alumni-callable exception to the
+ SUPER_ADMIN/ORG_ADMIN-only pattern every other route here follows -
+ GetMyAlumniRecordUseCase looks up strictly by the caller's own real
+ userId, never accepts an id, so an alumnus can only ever see their
+ own record.
+*/
+
+router.get(
+
+    "/me",
+
+    authenticate,
+
+    authorizePermission(
+
+        UserRole.ALUMNI
+
+    ),
+
+    asyncHandler(
+
+        controller.getMe.bind(controller)
+
+    )
+
+);
+
+/*
  List Alumni
 */
 

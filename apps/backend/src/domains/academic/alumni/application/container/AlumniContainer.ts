@@ -11,6 +11,7 @@ import { BCryptPasswordHasher } from "../../../../identity/infrastructure/securi
 import { CreateAlumniUseCase } from "../use-cases/CreateAlumniUseCase.js";
 import { InviteAlumniUseCase } from "../use-cases/InviteAlumniUseCase.js";
 import { GetAlumniUseCase } from "../use-cases/GetAlumniUseCase.js";
+import { GetMyAlumniRecordUseCase } from "../use-cases/GetMyAlumniRecordUseCase.js";
 import { GetAlumniListUseCase } from "../use-cases/GetAlumniListUseCase.js";
 import { UpdateAlumniUseCase } from "../use-cases/UpdateAlumniUseCase.js";
 import { VerifyAlumniUseCase } from "../use-cases/VerifyAlumniUseCase.js";
@@ -54,6 +55,12 @@ export const alumniContainer = {
     getAlumni:
 
         new GetAlumniUseCase(
+            alumniRepository
+        ),
+
+    getMyAlumniRecord:
+
+        new GetMyAlumniRecordUseCase(
             alumniRepository
         ),
 

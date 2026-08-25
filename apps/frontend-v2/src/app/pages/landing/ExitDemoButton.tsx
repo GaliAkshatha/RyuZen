@@ -27,6 +27,20 @@ import { router } from "@/app/router/router";
  * here. The real navigation state (skipIntro) is read by
  * LandingPage to skip the GSAP intro replay and land exactly back on
  * the Explore section, not the top of the page.
+ *
+ * Order matters here, confirmed against a real bug: calling logout()
+ * before the navigation to "/" completed created a genuine race
+ * against ProtectedRoute, which wraps every portal route and
+ * reactively redirects to /login the instant isAuthenticated becomes
+ * false. logout() updates auth state synchronously, so the OLD
+ * portal route (still mounted at that moment) would see
+ * isAuthenticated flip to false and fire its own <Navigate
+ * to="/login"> - competing with this component's explicit navigate()
+ * call, and evidently winning. Fixed by awaiting the navigation to
+ * "/" (a public route, no ProtectedRoute wrapping it) BEFORE calling
+ * logout() - by the time auth state changes, the old portal's
+ * ProtectedRoute is already unmounted and never gets a chance to
+ * react at all.
  */
 export function ExitDemoButton() {
   const { logout, isAuthenticated } = useAuth();
@@ -38,10 +52,10 @@ export function ExitDemoButton() {
 
   if (!isDemoSession || !isAuthenticated) return null;
 
-  function exitDemo() {
+  async function exitDemo() {
     sessionStorage.removeItem(DEMO_MODE_KEY);
+    await router.navigate("/", { state: { skipIntro: true } });
     logout();
-    void router.navigate("/", { state: { skipIntro: true } });
   }
 
   return (

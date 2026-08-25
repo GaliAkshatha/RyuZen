@@ -90,6 +90,23 @@ implements INotificationRepository {
                 ]
             };
 
+        /*
+         "ALL" is meant to reach every real member of this
+         organization's own community (Student, Faculty, Alumni, Org
+         Admin, Placement Admin) - not literally every authenticated
+         role that merely shares this organizationId. Confirmed a real
+         bug: a seeded Recruiter account has the same organizationId
+         as the university they recruit from (correct, for real data
+         scoping elsewhere), which meant an "ALL" campus announcement
+         like "Welcome to the new semester, check the Activities tab"
+         was reaching recruiters too - an external visitor with no
+         activities tab at all. Super Admin is excluded for the same
+         reason: platform-level, not a member of any one org's
+         community.
+        */
+        const INTERNAL_ROLES = ["STUDENT", "FACULTY", "ALUMNI", "ORG_ADMIN", "PLACEMENT_ADMIN"];
+        const audienceMatch = INTERNAL_ROLES.includes(audience) ? { $in: ["ALL", audience] } : audience;
+
         const documents =
 
             await NotificationModel.find({
@@ -99,7 +116,7 @@ implements INotificationRepository {
                 $or: [
                     {
                         $and: [
-                            { targetAudience: { $in: ["ALL", audience] } },
+                            { targetAudience: audienceMatch },
                             departmentFilter
                         ]
                     },

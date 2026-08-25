@@ -8,6 +8,32 @@ import { alumniContainer } from "../../application/container/AlumniContainer.js"
 
 export class AlumniController {
 
+    async getMe(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const alumni =
+
+            await alumniContainer
+                .getMyAlumniRecord
+                .execute(
+                    req.user!.userId
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            alumni
+
+        );
+
+    }
+
     async create(
 
         req: Request,
