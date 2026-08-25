@@ -6,20 +6,24 @@ import dragonWorld from "@/assets/dragon-world.jpg";
 import { AmbientFog } from "@/app/pages/landing/AmbientFog";
 
 /**
- * Real, per-line staged reveal, per explicit direction: the eyes and
- * dragon-reveal intro stages were removed - the visitor now sees only
- * the full hero background the instant the page loads (with its own
- * slow Ken Burns zoom already running), completely free of text.
- * Every text element - kicker, wordmark, both headline lines,
- * supporting copy, CTAs, scroll cue - then reveals one at a time on
- * its own GSAP timeline, not all at once.
+ * Content rewrite per explicit direction: previous copy ("where proof
+ * outweighs claims", "verified before it counts") read as security /
+ * verification branding, not what RyuZen actually is. Rewritten to
+ * say plainly what the product is - one campus ecosystem for
+ * students, organizations, and recruiters - with less text overall so
+ * the artwork dominates (kicker line and second CTA button removed
+ * entirely, not just reworded).
+ *
+ * Real, per-line staged reveal: the visitor sees only the full hero
+ * background the instant the page loads (own slow Ken Burns zoom
+ * already running), completely free of text - every remaining text
+ * element then reveals one at a time on its own GSAP timeline.
  *
  * prefers-reduced-motion: skips straight to the fully-revealed end
  * state, ambient zoom disabled.
  */
 export function HeroExperience({ onNavReveal, skipIntro = false }: { onNavReveal: () => void; skipIntro?: boolean }) {
   const heroBgRef = useRef<HTMLDivElement>(null);
-  const kickerRef = useRef<HTMLDivElement>(null);
   const wordmarkRef = useRef<HTMLParagraphElement>(null);
   const line1Ref = useRef<HTMLSpanElement>(null);
   const line2Ref = useRef<HTMLSpanElement>(null);
@@ -31,7 +35,7 @@ export function HeroExperience({ onNavReveal, skipIntro = false }: { onNavReveal
 
   useEffect(() => {
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const targets = [kickerRef.current, wordmarkRef.current, line1Ref.current, line2Ref.current, subRef.current, ctaRef.current, scrollCueRef.current];
+    const targets = [wordmarkRef.current, line1Ref.current, line2Ref.current, subRef.current, ctaRef.current, scrollCueRef.current];
 
     // Returning from a demo session (Exit Demo) genuinely should not
     // replay the whole opening cinematic - skipIntro jumps straight
@@ -51,13 +55,12 @@ export function HeroExperience({ onNavReveal, skipIntro = false }: { onNavReveal
 
     tl.to(heroBgRef.current, { opacity: 1, duration: 1.6, ease: "power2.out" })
       .call(onNavReveal, [], 1.0)
-      .to(kickerRef.current, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 1.1)
-      .to(wordmarkRef.current, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 1.55)
-      .to(line1Ref.current, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 2.0)
-      .to(line2Ref.current, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 2.35)
-      .to(subRef.current, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 2.85)
-      .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 3.25)
-      .to(scrollCueRef.current, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 3.6);
+      .to(wordmarkRef.current, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 1.2)
+      .to(line1Ref.current, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 1.65)
+      .to(line2Ref.current, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 2.0)
+      .to(subRef.current, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 2.45)
+      .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 2.9)
+      .to(scrollCueRef.current, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 3.25);
 
     return () => {
       tl.kill();
@@ -80,42 +83,31 @@ export function HeroExperience({ onNavReveal, skipIntro = false }: { onNavReveal
       />
       <AmbientFog />
 
-      <div className="relative z-10 flex min-h-screen flex-col items-center justify-end px-6 pb-14 text-center">
-        <div ref={kickerRef} className="rz-mono mb-5 flex items-center justify-center gap-2 text-[11px] uppercase tracking-[0.14em] text-[var(--rz-eye)]">
-          <span className="h-[5px] w-[5px] animate-pulse rounded-full bg-[var(--rz-eye)] shadow-[0_0_8px_var(--rz-eye)]" />
-          where proof outweighs claims
-        </div>
-        <p ref={wordmarkRef} className="rz-display mb-4 text-xl font-bold uppercase tracking-[0.18em] text-[var(--rz-eye)]" style={{ textShadow: "0 0 18px rgba(125,232,255,.4)" }}>
+      <div className="relative z-10 flex min-h-screen flex-col items-center justify-end px-6 pb-16 text-center">
+        <p ref={wordmarkRef} className="rz-display mb-5 text-xl font-bold uppercase tracking-[0.18em] text-[var(--rz-eye)]" style={{ textShadow: "0 0 18px rgba(125,232,255,.4)" }}>
           RyuZen
         </p>
-        <h1 className="rz-display mb-5 max-w-3xl text-4xl font-bold leading-tight sm:text-5xl">
+        <h1 className="rz-display mb-5 max-w-2xl text-4xl font-bold uppercase leading-tight sm:text-5xl">
           <span ref={line1Ref} className="block" style={{ color: "#F4EFE4", textShadow: "0 4px 30px rgba(0,0,0,.6)" }}>
-            Every achievement,
+            One campus.
           </span>
           <span ref={line2Ref} className="block" style={{ color: "var(--rz-eye)", textShadow: "0 0 24px rgba(125,232,255,.5), 0 4px 30px rgba(0,0,0,.6)" }}>
-            verified <span style={{ color: "#F4EFE4" }}>before it counts.</span>
+            Every journey.
           </span>
         </h1>
-        <p ref={subRef} className="mb-9 max-w-lg text-base leading-relaxed text-[var(--rz-text-dim)]">
-          No claim goes unchecked. No achievement counts unproven. RyuZen keeps the record — and only real work makes it in.
+        <p ref={subRef} className="mb-10 max-w-lg text-base leading-relaxed text-[var(--rz-text-dim)]">
+          An intelligent ecosystem for students, organizations, and recruiters.
         </p>
-        <div ref={ctaRef} className="mb-11 flex flex-wrap items-center justify-center gap-3.5">
+        <div ref={ctaRef} className="mb-11">
           <Link
             to="/login"
-            className="flex items-center gap-2 rounded px-7 py-3.5 text-[13.5px] font-semibold uppercase tracking-wide transition-all hover:-translate-y-0.5"
+            className="flex items-center gap-2 rounded px-8 py-3.5 text-[13.5px] font-semibold uppercase tracking-wide transition-all hover:-translate-y-0.5"
             style={{ background: "var(--rz-eye)", color: "#04262e", boxShadow: "0 0 0 rgba(125,232,255,0)" }}
             onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 0 24px rgba(125,232,255,.45)")}
             onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "0 0 0 rgba(125,232,255,0)")}
           >
             Enter RyuZen
           </Link>
-          <a
-            href="#paths"
-            className="rounded border px-7 py-3.5 text-[13.5px] font-semibold uppercase tracking-wide backdrop-blur transition-colors"
-            style={{ borderColor: "var(--rz-mist)", background: "rgba(19,23,34,.5)", color: "var(--rz-text)" }}
-          >
-            Explore the ecosystem
-          </a>
         </div>
         <a ref={scrollCueRef} href="#paths" className="rz-mono flex flex-col items-center gap-2 text-[10.5px] uppercase tracking-[0.1em] text-[var(--rz-text-mute)]">
           <span>Continue the journey</span>

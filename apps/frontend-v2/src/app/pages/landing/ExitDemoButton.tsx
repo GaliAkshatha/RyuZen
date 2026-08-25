@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { LogOut } from "lucide-react";
 
 import { useAuth } from "@/domains/auth/AuthContext";
-import { DEMO_MODE_KEY } from "@/app/pages/landing/demoModeFlag";
+import { DEMO_MODE_KEY, EXITING_DEMO_KEY } from "@/app/pages/landing/demoModeFlag";
 import { router } from "@/app/router/router";
 
 /**
@@ -15,32 +15,33 @@ import { router } from "@/app/router/router";
  * signed in normally never sees this.
  *
  * Real client-side navigation via the router instance directly
- * (not window.location.href) - a hard reload was the confirmed real
+ * (not window.location.href) - a hard reload was a confirmed real
  * cause of "returns to the top of the page, replays the whole intro"
- * (verified against an actual recorded session): a full page reload
- * re-mounts everything from scratch and a browser's native
- * hash-scroll-on-load cannot reliably land inside a React SPA whose
- * layout is still settling. ExitDemoButton sits outside the Router's
- * component tree (a sibling of RouterProvider in App.tsx, so it has
- * no useNavigate() context) - the exported router instance's own
- * imperative .navigate() is the real, correct way to navigate from
- * here. The real navigation state (skipIntro) is read by
- * LandingPage to skip the GSAP intro replay and land exactly back on
- * the Explore section, not the top of the page.
+ * (verified against an actual recorded session). ExitDemoButton sits
+ * outside the Router's component tree (a sibling of RouterProvider
+ * in App.tsx, so it has no useNavigate() context) - the exported
+ * router instance's own imperative .navigate() is the real, correct
+ * way to navigate from here.
  *
- * Order matters here, confirmed against a real bug: calling logout()
- * before the navigation to "/" completed created a genuine race
- * against ProtectedRoute, which wraps every portal route and
- * reactively redirects to /login the instant isAuthenticated becomes
- * false. logout() updates auth state synchronously, so the OLD
- * portal route (still mounted at that moment) would see
- * isAuthenticated flip to false and fire its own <Navigate
- * to="/login"> - competing with this component's explicit navigate()
- * call, and evidently winning. Fixed by awaiting the navigation to
- * "/" (a public route, no ProtectedRoute wrapping it) BEFORE calling
- * logout() - by the time auth state changes, the old portal's
- * ProtectedRoute is already unmounted and never gets a chance to
- * react at all.
+ * The actual fix for "still lands on /login" required both changes
+ * together, confirmed by tracing the full sequence - neither alone
+ * was sufficient:
+ *
+ * 1. Awaiting the navigation to "/" BEFORE calling logout() - if
+ *    logout() ran first, ProtectedRoute (still wrapping the OLD
+ *    portal route at that instant) would reactively fire its own
+ *    <Navigate to="/login">, racing this component's explicit
+ *    navigate() call, and evidently winning often enough to be the
+ *    reported bug.
+ *
+ * 2. EXITING_DEMO_KEY - even with (1), LandingPage mounts at "/"
+ *    while the user may still be (briefly) authenticated, since
+ *    logout() hasn't run yet. LandingPage has its own guard
+ *    ("if authenticated, redirect to my portal") that would fire in
+ *    that exact window, bouncing back to the portal - which
+ *    ProtectedRoute then catches once logout() finally clears auth
+ *    state, landing on /login anyway. This flag tells that one
+ *    render to skip the guard. See LandingPage.tsx.
  */
 export function ExitDemoButton() {
   const { logout, isAuthenticated } = useAuth();
@@ -54,6 +55,7 @@ export function ExitDemoButton() {
 
   async function exitDemo() {
     sessionStorage.removeItem(DEMO_MODE_KEY);
+    sessionStorage.setItem(EXITING_DEMO_KEY, "true");
     await router.navigate("/", { state: { skipIntro: true } });
     logout();
   }

@@ -30,11 +30,12 @@ export function DemoScene() {
       <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[0.85fr_1.15fr]">
         <div>
           <p className="rz-mono mb-3 text-[11px] uppercase tracking-[0.14em] text-[var(--rz-eye)]">Explore RyuZen</p>
-          <h2 className="rz-display mb-4 text-3xl font-bold sm:text-4xl" style={{ color: "#DCE4EF" }}>
-            See it for yourself
+          <h2 className="rz-display mb-4 text-3xl font-bold uppercase sm:text-4xl" style={{ color: "#DCE4EF" }}>
+            See the campus from every side.
           </h2>
           <p className="mb-6 max-w-sm text-sm leading-relaxed text-[var(--rz-text-dim)]">
-            Experience RyuZen through real sample accounts and explore the platform from every perspective.
+            Step into RyuZen through sample accounts and experience the platform as a student, organization, or
+            recruiter.
           </p>
           <p className="rz-mono flex items-center gap-2 text-[10.5px] uppercase tracking-[0.1em] text-[var(--rz-crystal)]">
             <ShieldOff className="h-3.5 w-3.5" aria-hidden="true" />

@@ -131,16 +131,17 @@ export function EcosystemScene() {
         <AmbientFog tint="rgba(232,200,122,.04)" />
 
         <div ref={narratorRef} className="relative z-10 mx-auto mb-16 max-w-lg text-center">
-          <p className="rz-mono mb-3 text-[11px] uppercase tracking-[0.14em] text-[var(--rz-eye)]" style={{ textShadow: TEXT_SHADOW }}>
-            Three paths. One truth.
-          </p>
-          <h2 className="rz-display mb-3 text-3xl font-bold sm:text-4xl" style={{ color: "#F0F2F6", textShadow: TEXT_SHADOW }}>
-            Choose your path
-          </h2>
-          <p className="text-sm leading-relaxed text-[var(--rz-text-dim)]" style={{ textShadow: TEXT_SHADOW }}>
-            RyuZen serves every side of the journey.
+          <h2 className="rz-display mb-4 text-3xl font-bold uppercase sm:text-4xl" style={{ color: "#F0F2F6", textShadow: TEXT_SHADOW }}>
+            One campus.
             <br />
-            Your path. Your purpose. Your proof.
+            Three perspectives.
+          </h2>
+          <p
+            className="mx-auto max-w-md rounded px-3 py-2 text-sm leading-relaxed text-[var(--rz-text-dim)]"
+            style={{ textShadow: TEXT_SHADOW, background: "rgba(5,6,10,.45)" }}
+          >
+            RyuZen brings students, organizations, and recruiters into one connected campus ecosystem — where
+            experiences, opportunities, and talent move together.
           </p>
         </div>
 

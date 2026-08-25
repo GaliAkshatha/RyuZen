@@ -30,7 +30,7 @@ export const PATH_DETAILS: Record<PathKey, PathDetailContent> = {
     label: "Student",
     color: "var(--rz-eye)",
     glow: "rgba(125,232,255,.45)",
-    tagline: "Everything you need to build a record worth trusting.",
+    tagline: "Discover opportunities, build experience, develop skills, and understand your career readiness.",
     items: [
       { icon: TrendingUp, title: "A Career Score that means something", desc: "Leaderboard rank, resume quality, and verified achievements combined into one live number." },
       { icon: MessageCircle, title: "AI mock interviews, real feedback", desc: "Practice with an AI interviewer and get scored feedback before the real thing." },
@@ -43,7 +43,7 @@ export const PATH_DETAILS: Record<PathKey, PathDetailContent> = {
     label: "Organization",
     color: "var(--rz-gold)",
     glow: "rgba(232,200,122,.45)",
-    tagline: "Real oversight across every department, without chasing spreadsheets.",
+    tagline: "Create activities, engage students, manage participation, and understand campus involvement.",
     items: [
       { icon: Network, title: "Departments, faculty, and students in one place", desc: "Manage your entire academic structure from a single real dashboard." },
       { icon: Users2, title: "Activities that actually drive engagement", desc: "Faculty create real, targeted activities; students complete them; the record grows itself." },
@@ -56,7 +56,7 @@ export const PATH_DETAILS: Record<PathKey, PathDetailContent> = {
     label: "Recruiter",
     color: "var(--rz-purple)",
     glow: "rgba(177,140,255,.45)",
-    tagline: "Hire on real signal, not a resume and a hope.",
+    tagline: "Explore student profiles, understand skills and experience, and find candidates who fit your needs.",
     items: [
       { icon: LayoutGrid, title: "A real pipeline, not a spreadsheet", desc: "Kanban-style applicant tracking - move candidates through stages with one click." },
       { icon: UserSearch, title: "The full candidate, before the interview", desc: "Career Score, verified portfolio, and real AI interview results - not just a PDF." },

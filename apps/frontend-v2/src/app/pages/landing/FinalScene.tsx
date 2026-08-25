@@ -60,11 +60,11 @@ export function FinalScene() {
 
       <div ref={contentRef} className="relative z-10 max-w-md text-left">
         <p className="rz-mono mb-3 text-[11px] uppercase tracking-[0.14em] text-[var(--rz-eye)]">The journey awaits</p>
-        <h2 className="rz-display mb-4 text-3xl font-bold leading-tight sm:text-4xl" style={{ color: "#F4EFE4" }}>
-          Your <span style={{ color: "var(--rz-eye)", textShadow: "0 0 20px rgba(125,232,255,.4)" }}>legacy</span> starts here.
+        <h2 className="rz-display mb-4 text-3xl font-bold uppercase leading-tight sm:text-4xl" style={{ color: "#F4EFE4" }}>
+          Build what comes next.
         </h2>
         <p className="mb-9 text-sm leading-relaxed text-[var(--rz-text-dim)]">
-          Step into a world where proof is power and every achievement shapes tomorrow.
+          Whether you're building your career, your campus, or your team, RyuZen brings the journey together.
         </p>
         <div className="flex flex-wrap items-center gap-3.5">
           <Link
@@ -72,7 +72,7 @@ export function FinalScene() {
             className="rounded px-7 py-3.5 text-[13.5px] font-semibold uppercase tracking-wide transition-all hover:-translate-y-0.5"
             style={{ background: "var(--rz-eye)", color: "#04262e" }}
           >
-            Begin your journey
+            Enter RyuZen
           </Link>
           <a
             href="#paths"
