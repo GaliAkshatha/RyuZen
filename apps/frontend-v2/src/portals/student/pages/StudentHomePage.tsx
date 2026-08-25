@@ -16,6 +16,7 @@ import { usePendingRequests } from "@/domains/connections/hooks/usePendingReques
 import { ActivityStatus } from "@/domains/activities/activity.types";
 import { SubmissionStatus } from "@/domains/submissions/submission.types";
 import { PlacementDriveStatus } from "@/domains/placement-drives/placementDrive.types";
+import { NewsFeedWidget } from "@/domains/news/components/NewsFeedWidget";
 
 /**
  * Real Student home dashboard - deliberately NOT placement-centric.
@@ -47,6 +48,8 @@ export function StudentHomePage() {
         <h1 className="text-2xl font-semibold text-foreground">Good to see you, {user?.name?.split(" ")[0]}</h1>
         <p className="text-sm text-muted-foreground">Here's what's happening on your campus.</p>
       </div>
+
+      <NewsFeedWidget />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard icon={ClipboardList} value={unsubmittedOpen.length} label="Open activities" tone="primary" to="/student/activities" />

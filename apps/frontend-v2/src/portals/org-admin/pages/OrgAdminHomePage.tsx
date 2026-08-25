@@ -13,6 +13,7 @@ import { useAlumniList } from "@/domains/alumni-management/hooks/useAlumniList";
 import { FacultyStatus } from "@/domains/faculty/faculty.types";
 import { InvitationStatus } from "@/domains/invitations/invitation.types";
 import { AlumniStatus } from "@/domains/alumni-management/alumniManagement.types";
+import { NewsFeedWidget } from "@/domains/news/components/NewsFeedWidget";
 
 /**
  * Real Org Admin home - previously just a header and 4 stat cards,
@@ -53,6 +54,8 @@ export function OrgAdminHomePage() {
         <h1 className="text-2xl font-semibold text-foreground">Institution overview</h1>
         <p className="text-sm text-muted-foreground">A real snapshot of your organization.</p>
       </div>
+
+      <NewsFeedWidget />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard icon={Network} value={departments?.length ?? 0} label="Departments" tone="primary" to="/organization/departments" />

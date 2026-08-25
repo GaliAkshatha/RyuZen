@@ -7,6 +7,7 @@ import { useAuth } from "@/domains/auth/AuthContext";
 import { useActivityList } from "@/domains/activities/hooks/useActivityList";
 import { useMyMentorships } from "@/domains/mentorship/hooks/useMyMentorships";
 import { ActivityStatus } from "@/domains/activities/activity.types";
+import { NewsFeedWidget } from "@/domains/news/components/NewsFeedWidget";
 
 /** Real Faculty home - same client-side ownership filter ActivityListPage already uses (server-side ownership is enforced on every real mutation regardless). */
 export function FacultyHomePage() {
@@ -24,6 +25,8 @@ export function FacultyHomePage() {
         <h1 className="text-2xl font-semibold text-foreground">Welcome back, {user?.name?.split(" ")[0]}</h1>
         <p className="text-sm text-muted-foreground">A snapshot of your activities.</p>
       </div>
+
+      <NewsFeedWidget />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard icon={FileText} value={myActivities.length} label="Total activities" tone="primary" to="/faculty/activities" />

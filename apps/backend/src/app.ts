@@ -43,6 +43,7 @@ import connectionRoutes from "./domains/community/connections/presentation/route
 import attendanceRoutes from "./domains/academic/attendance/presentation/routes/attendance.routes.js";
 import placementAnalyticsRoutes from "./domains/placements/analytics/presentation/routes/placement-analytics.routes.js";
 import notificationRoutes from "./domains/communication/notifications/presentation/routes/notification.routes.js";
+import newsRoutes from "./domains/communication/news/presentation/routes/news.routes.js";
 import chatRoutes from "./domains/communication/chat/presentation/routes/chat.routes.js";
 import messageRoutes from "./domains/communication/chat/presentation/routes/message.routes.js";
 import aiChatRoutes from "./domains/ai/chat/presentation/routes/ai-chat.routes.js";
@@ -95,6 +96,7 @@ app.use("/api/v1/connections", connectionRoutes);
 app.use("/api/v1/attendance", attendanceRoutes);
 app.use("/api/v1/placement-analytics", placementAnalyticsRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
+app.use("/api/v1/news", newsRoutes);
 app.use("/api/v1/chats", chatRoutes);
 app.use("/api/v1/messages", messageRoutes);
 app.use("/api/v1/ai/chat", aiChatRoutes);

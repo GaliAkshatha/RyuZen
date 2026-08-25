@@ -8,6 +8,7 @@ import { usePeople } from "@/domains/connections/hooks/usePeople";
 import { useMyConnections } from "@/domains/connections/hooks/useMyConnections";
 import { usePendingRequests } from "@/domains/connections/hooks/usePendingRequests";
 import { useMyAlumniRecord } from "@/domains/alumni-management/hooks/useMyAlumniRecord";
+import { NewsFeedWidget } from "@/domains/news/components/NewsFeedWidget";
 
 /**
  * Real Alumni home. Connection counts are the same real domain as
@@ -32,6 +33,8 @@ export function AlumniHomePage() {
         <h1 className="text-2xl font-semibold text-foreground">Welcome back, {user?.name?.split(" ")[0]}</h1>
         <p className="text-sm text-muted-foreground">Stay connected with your campus network.</p>
       </div>
+
+      <NewsFeedWidget />
 
       {record && (
         <Card>

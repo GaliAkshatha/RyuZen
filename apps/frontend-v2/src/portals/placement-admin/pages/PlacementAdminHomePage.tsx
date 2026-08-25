@@ -7,6 +7,7 @@ import { useCompanies } from "@/domains/companies/hooks/useCompanies";
 import { usePlacementDrives } from "@/domains/placement-drives/hooks/usePlacementDrives";
 import { usePlacementAnalytics } from "@/domains/placement-analytics/hooks/usePlacementAnalytics";
 import { PlacementDriveStatus } from "@/domains/placement-drives/placementDrive.types";
+import { NewsFeedWidget } from "@/domains/news/components/NewsFeedWidget";
 
 const FUNNEL_STAGES = [
   { key: "appliedCount", label: "Applied", color: "bg-info" },
@@ -35,6 +36,8 @@ export function PlacementAdminHomePage() {
         <h1 className="text-2xl font-semibold text-foreground">Placements overview</h1>
         <p className="text-sm text-muted-foreground">A real snapshot of your placement pipeline.</p>
       </div>
+
+      <NewsFeedWidget />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard icon={Building2} value={companies?.length ?? 0} label="Companies" tone="primary" to="/placement-admin/companies" />
