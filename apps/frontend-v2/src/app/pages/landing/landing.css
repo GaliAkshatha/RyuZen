@@ -149,3 +149,19 @@
     opacity: 0.35;
   }
 }
+
+/**
+ * Hides the browser's native window scrollbar - deliberately scoped
+ * to a class toggled on <html> only while a landing-family page is
+ * mounted (see the useEffect in LandingPage/LearnMorePage), not
+ * applied globally. The rest of the app's data-heavy dashboard pages
+ * genuinely benefit from a visible scrollbar; only this cinematic
+ * page doesn't want one competing with its own visual language.
+ */
+html.rz-hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html.rz-hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

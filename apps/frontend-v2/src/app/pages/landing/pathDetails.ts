@@ -32,7 +32,7 @@ export const PATH_DETAILS: Record<PathKey, PathDetailContent> = {
     label: "Student",
     color: "var(--rz-eye)",
     glow: "rgba(125,232,255,.45)",
-    tagline: "Discover opportunities, build experience, develop skills, and understand your career readiness.",
+    tagline: "Your campus record, working for you — not just filed away.",
     whyUs: "A resume is a claim. RyuZen is proof — real activity, real scores, real growth, built while you're still on campus.",
     items: [
       { icon: TrendingUp, title: "A Career Score that means something", desc: "Leaderboard rank, resume quality, and verified achievements combined into one live number." },
@@ -46,7 +46,7 @@ export const PATH_DETAILS: Record<PathKey, PathDetailContent> = {
     label: "Organization",
     color: "var(--rz-gold)",
     glow: "rgba(232,200,122,.45)",
-    tagline: "Create activities, engage students, manage participation, and understand campus involvement.",
+    tagline: "Run your entire campus community from one real dashboard.",
     whyUs: "Spreadsheets can't show you who's actually engaged. RyuZen turns every department's real activity into one live, honest picture — automatically.",
     items: [
       { icon: Network, title: "Departments, faculty, and students in one place", desc: "Manage your entire academic structure from a single real dashboard." },
@@ -60,7 +60,7 @@ export const PATH_DETAILS: Record<PathKey, PathDetailContent> = {
     label: "Recruiter",
     color: "var(--rz-purple)",
     glow: "rgba(177,140,255,.45)",
-    tagline: "Explore student profiles, understand skills and experience, and find candidates who fit your needs.",
+    tagline: "Find the right students faster — backed by real signal, not guesswork.",
     whyUs: "Job boards give you applications. RyuZen gives you evidence — real Career Scores, real interview performance, real campus activity — before you ever pick up the phone.",
     items: [
       { icon: LayoutGrid, title: "A real pipeline, not a spreadsheet", desc: "Kanban-style applicant tracking - move candidates through stages with one click." },

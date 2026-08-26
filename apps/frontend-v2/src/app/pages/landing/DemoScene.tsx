@@ -31,7 +31,7 @@ export function DemoScene() {
         <div>
           <p className="rz-mono mb-3 text-[11px] uppercase tracking-[0.14em] text-[var(--rz-eye)]">Explore RyuZen</p>
           <h2 className="rz-display mb-4 text-3xl font-bold uppercase sm:text-4xl" style={{ color: "#DCE4EF" }}>
-            See the campus from every side.
+            See RyuZen in action.
           </h2>
           <p className="mb-6 max-w-sm text-sm leading-relaxed text-[var(--rz-text-dim)]">
             Step into RyuZen through sample accounts and experience the platform as a student, organization, or

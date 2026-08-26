@@ -15,6 +15,7 @@ import { SceneMist } from "@/app/pages/landing/SceneMist";
 import { getLandingScrollPosition, saveLandingScrollPosition } from "@/app/pages/landing/landingScrollMemory";
 import { EXITING_DEMO_KEY } from "@/app/pages/landing/demoModeFlag";
 import { AmbientAudioToggle } from "@/app/pages/landing/AmbientAudioToggle";
+import { useHideScrollbar } from "@/app/pages/landing/useHideScrollbar";
 
 import "@/app/pages/landing/landing.css";
 
@@ -49,6 +50,7 @@ export function LandingPage() {
   const { user, isLoading } = useAuth();
   const location = useLocation();
   const [navVisible, setNavVisible] = useState(false);
+  useHideScrollbar();
 
   const navState = location.state as LandingNavState | null;
   const savedScrollRef = useRef(getLandingScrollPosition());

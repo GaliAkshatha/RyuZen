@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, GraduationCap, Building2, Briefcase, Mail } from "lucide-react";
 
 import "@/app/pages/landing/landing.css";
+import { useHideScrollbar } from "@/app/pages/landing/useHideScrollbar";
 
 type Audience = "student" | "organization" | "recruiter";
 
@@ -58,6 +59,7 @@ export function LearnMorePage() {
   const [active, setActive] = useState<Audience>("student");
   const navigate = useNavigate();
   const current = AUDIENCES.find((a) => a.key === active)!;
+  useHideScrollbar();
 
   useEffect(() => {
     // Real fix for a confirmed bug: React Router doesn't reset scroll

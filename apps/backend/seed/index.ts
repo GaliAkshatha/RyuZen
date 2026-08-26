@@ -50,8 +50,9 @@ async function main(): Promise<void> {
     const alumni = await seedAlumni(org);
     await seedPlacementAdmin(org);
     const companies = await seedCompanies(org);
-    await seedRecruiters(org, companies);
-    const drives = await seedDrives(org, companies);
+    const recruiters = await seedRecruiters(org, companies);
+    const demoRecruiter = recruiters.find((r) => r.email.startsWith("recruiter1@"));
+    const drives = await seedDrives(org, companies, demoRecruiter?.companyId);
     const activities = await seedActivities(org, faculty);
     const pointsByUserId = await seedSubmissions(org.id, activities, students);
     await seedApplications(drives, students);
