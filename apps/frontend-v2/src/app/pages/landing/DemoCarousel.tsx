@@ -15,15 +15,16 @@ function circularOffset(index: number, activeIndex: number): number {
 }
 
 /**
- * Real circular "portal" windows into RyuZen, not rectangular
- * dashboard cards - round shape, a glowing ring, and only the single
- * most representative stat per role, kept deliberately sparse so it
- * reads as a magical window rather than a screenshot. Still a real
- * circular carousel: all 6 exist at once, positioned by signed
- * distance from activeIndex, only the center portal and its two
- * immediate neighbors visible. Hovering a visible side portal brings
- * it to center; arrow buttons provide the same navigation for
- * keyboard/touch users.
+ * Real rectangular dashboard-snapshot cards, per explicit correction
+ * (circular portals with a single stat weren't what was asked for) -
+ * each card is a real browser-chrome-style frame showing a genuine
+ * snapshot: 3 stat tiles plus 2 real list rows, so it reads as
+ * "here's what that role's dashboard actually looks like," not a
+ * single floating number. Still a real circular carousel underneath:
+ * all 6 exist at once, positioned by signed distance from
+ * activeIndex, only the center card and its two immediate neighbors
+ * visible. Hovering a visible side card brings it to center; arrow
+ * buttons provide the same navigation for keyboard/touch users.
  */
 export function DemoCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -38,8 +39,8 @@ export function DemoCarousel() {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  const portalSize = isNarrow ? 148 : 224;
-  const offsetStep = isNarrow ? 104 : 172;
+  const cardWidth = isNarrow ? 220 : 268;
+  const offsetStep = isNarrow ? 150 : 190;
 
   function go(delta: number) {
     setActiveIndex((prev) => (prev + delta + COUNT) % COUNT);
@@ -47,17 +48,16 @@ export function DemoCarousel() {
 
   return (
     <div className="flex flex-col items-center gap-7">
-      <div className="relative flex w-full max-w-lg items-center justify-center" style={{ height: isNarrow ? 220 : 360 }}>
+      <div className="relative flex w-full max-w-lg items-center justify-center" style={{ height: isNarrow ? 260 : 300 }}>
         {DEMO_PREVIEWS.map((preview, i) => {
           const offset = circularOffset(i, activeIndex);
           const isCenter = offset === 0;
           const isVisible = Math.abs(offset) <= 1;
 
           const translateX = offset * offsetStep;
-          const scale = isCenter ? 1 : Math.abs(offset) === 1 ? 0.68 : 0.5;
-          const opacity = isCenter ? 1 : Math.abs(offset) === 1 ? 0.45 : 0;
+          const scale = isCenter ? 1 : Math.abs(offset) === 1 ? 0.82 : 0.65;
+          const opacity = isCenter ? 1 : Math.abs(offset) === 1 ? 0.4 : 0;
           const zIndex = 10 - Math.abs(offset);
-          const headline = preview.stats[0];
 
           return (
             <button
@@ -69,29 +69,55 @@ export function DemoCarousel() {
               onFocus={() => isVisible && !isCenter && setActiveIndex(i)}
               onClick={() => (isCenter ? enterAs(preview.role) : setActiveIndex(i))}
               disabled={pendingRole !== null}
-              className="absolute flex flex-col items-center justify-center gap-2 rounded-full text-center transition-all duration-500 ease-out disabled:opacity-60"
+              className="absolute flex flex-col overflow-hidden rounded-lg text-left transition-all duration-500 ease-out disabled:opacity-60"
               style={{
-                width: portalSize,
-                height: portalSize,
+                width: cardWidth,
                 transform: `translateX(${translateX}px) scale(${scale})`,
                 opacity,
                 zIndex,
                 pointerEvents: isVisible ? "auto" : "none",
-                background: `radial-gradient(circle at 50% 35%, ${preview.glow}, rgba(11,14,20,.85) 68%)`,
+                background: "rgba(11,14,20,.9)",
                 border: `1px solid ${isCenter ? preview.color : "var(--rz-mist)"}`,
-                boxShadow: isCenter ? `0 0 40px ${preview.glow}, inset 0 0 30px ${preview.glow}` : "none",
+                boxShadow: isCenter ? `0 0 30px ${preview.glow}` : "none",
               }}
             >
-              <span className="h-2 w-2 rounded-full" style={{ background: preview.color, boxShadow: `0 0 10px ${preview.color}` }} />
-              <span className="rz-display text-sm font-bold uppercase tracking-wide" style={{ color: preview.color }}>
-                {preview.label}
-              </span>
-              <span className="rz-display text-2xl font-bold text-[var(--rz-text)]">{headline.value}</span>
-              <span className="text-[10.5px] text-[var(--rz-text-dim)]">{headline.label}</span>
-              {isCenter && (
-                <span className="rz-mono mt-1 text-[9.5px] uppercase tracking-wide" style={{ color: preview.color }}>
-                  {pendingRole === preview.role ? "Entering…" : "Enter →"}
+              {/* browser-chrome bar */}
+              <div className="flex items-center gap-3 border-b px-3 py-2" style={{ borderColor: "var(--rz-mist-soft)" }}>
+                <div className="flex gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--rz-mist)" }} />
+                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--rz-mist)" }} />
+                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--rz-mist)" }} />
+                </div>
+                <span className="rz-mono text-[9px] uppercase tracking-wide" style={{ color: preview.color }}>
+                  {preview.label}
                 </span>
+              </div>
+
+              <div className="p-3">
+                <div className="mb-2.5 grid grid-cols-3 gap-1.5">
+                  {preview.stats.map((s) => (
+                    <div key={s.label} className="rounded px-1 py-1.5 text-center" style={{ background: "rgba(255,255,255,.03)" }}>
+                      <p className="rz-display text-[13px] font-bold" style={{ color: preview.color }}>
+                        {s.value}
+                      </p>
+                      <p className="text-[7.5px] leading-tight text-[var(--rz-text-mute)]">{s.label}</p>
+                    </div>
+                  ))}
+                </div>
+                {preview.rows.map((r) => (
+                  <div key={r.label} className="flex items-center justify-between border-t py-1.5 text-[10px]" style={{ borderColor: "var(--rz-mist-soft)" }}>
+                    <span className="truncate text-[var(--rz-text-dim)]">{r.label}</span>
+                    <span className="shrink-0 pl-2 font-medium" style={{ color: preview.color }}>
+                      {r.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {isCenter && (
+                <div className="rz-mono px-3 pb-2.5 text-[9.5px] uppercase tracking-wide" style={{ color: preview.color }}>
+                  {pendingRole === preview.role ? "Entering…" : "Enter →"}
+                </div>
               )}
             </button>
           );

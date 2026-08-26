@@ -103,7 +103,32 @@ export function EcosystemScene() {
   }
 
   function togglePath(key: PathKey) {
+    const isOpening = selected !== key;
     setSelected((prev) => (prev === key ? null : key));
+
+    if (isOpening) {
+      // Real fix for a confirmed bug: scrolling too early (previously
+      // 120ms) meant the browser's smooth-scroll was targeting a
+      // layout that was STILL actively growing underneath it - the
+      // panel's own height tween runs for 600ms. Racing a native
+      // smooth-scroll against a resizing target is what caused the
+      // scroll position to appear frozen. Waiting until the height
+      // animation has genuinely settled first means the layout is
+      // stable before the scroll ever starts.
+      //
+      // Also fixed: the scroll target itself. Scrolling to the
+      // SECTION's bottom edge (block: "end") pushed the path buttons
+      // themselves (which sit at the section's own bottom) up until
+      // they collided with the fixed nav bar - confirmed via a real
+      // recorded session, this read as the page "locking" on a
+      // broken position rather than showing what had opened. Now
+      // scrolls to the panel itself once it exists, aligning its top
+      // just below the nav (scroll-margin-top on the panel handles
+      // that offset automatically).
+      window.setTimeout(() => {
+        document.getElementById("path-detail-panel")?.scrollIntoView({ block: "start", behavior: "smooth" });
+      }, 650);
+    }
   }
 
   return (
@@ -136,13 +161,6 @@ export function EcosystemScene() {
             <br />
             Three perspectives.
           </h2>
-          <p
-            className="mx-auto max-w-md rounded px-3 py-2 text-sm leading-relaxed text-[var(--rz-text-dim)]"
-            style={{ textShadow: TEXT_SHADOW, background: "rgba(5,6,10,.45)" }}
-          >
-            RyuZen brings students, organizations, and recruiters into one connected campus ecosystem — where
-            experiences, opportunities, and talent move together.
-          </p>
         </div>
 
         <div className="relative z-10 mt-auto flex flex-col items-center gap-10 sm:block sm:h-[230px]">

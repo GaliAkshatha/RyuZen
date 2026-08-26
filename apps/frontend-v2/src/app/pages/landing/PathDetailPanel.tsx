@@ -17,6 +17,7 @@ export function PathDetailPanel({ selected }: { selected: PathKey | null }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
+  const whyRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const prevSelected = useRef<PathKey | null>(null);
 
@@ -24,6 +25,7 @@ export function PathDetailPanel({ selected }: { selected: PathKey | null }) {
     const wrapper = wrapperRef.current;
     const content = contentRef.current;
     const header = headerRef.current;
+    const why = whyRef.current;
     if (!wrapper || !content) return;
 
     ensureGsapRegistered();
@@ -32,12 +34,13 @@ export function PathDetailPanel({ selected }: { selected: PathKey | null }) {
     const items = itemRefs.current.filter((el): el is HTMLDivElement => el !== null);
 
     if (selected && !prevSelected.current) {
-      // Closed -> open: header first, then the four items rise in one at a time
+      // Closed -> open: header, then the "why us" callout, then the four items rise in one at a time
       gsap.set(wrapper, { height: 0, opacity: 0 });
-      gsap.set([header, ...items], { opacity: 0, y: 14 });
+      gsap.set([header, why, ...items], { opacity: 0, y: 14 });
       gsap.to(wrapper, { height: "auto", opacity: 1, duration: dur, ease: "power2.out" });
       gsap.to(header, { opacity: 1, y: 0, duration: dur * 0.7, ease: "power2.out", delay: dur * 0.3 });
-      gsap.to(items, { opacity: 1, y: 0, duration: dur * 0.6, ease: "power2.out", stagger: 0.12, delay: dur * 0.5 });
+      gsap.to(why, { opacity: 1, y: 0, duration: dur * 0.7, ease: "power2.out", delay: dur * 0.55 });
+      gsap.to(items, { opacity: 1, y: 0, duration: dur * 0.6, ease: "power2.out", stagger: 0.12, delay: dur * 0.85 });
     } else if (!selected && prevSelected.current) {
       // Open -> closed
       gsap.to(wrapper, { height: 0, opacity: 0, duration: dur, ease: "power2.in" });
@@ -51,14 +54,14 @@ export function PathDetailPanel({ selected }: { selected: PathKey | null }) {
     prevSelected.current = selected;
 
     return () => {
-      gsap.killTweensOf([wrapper, content, header, ...items]);
+      gsap.killTweensOf([wrapper, content, header, why, ...items]);
     };
   }, [selected]);
 
   const detail = selected ? PATH_DETAILS[selected] : null;
 
   return (
-    <div ref={wrapperRef} className="relative overflow-hidden" style={{ height: 0, opacity: 0 }}>
+    <div id="path-detail-panel" ref={wrapperRef} className="relative overflow-hidden" style={{ height: 0, opacity: 0, scrollMarginTop: 90 }}>
       {detail && (
         <div
           ref={contentRef}
@@ -75,7 +78,11 @@ export function PathDetailPanel({ selected }: { selected: PathKey | null }) {
               <h3 className="rz-display mb-2 text-center text-2xl font-bold sm:text-3xl" style={{ color: detail.color }}>
                 {detail.label}
               </h3>
-              <p className="mx-auto mb-10 max-w-md text-center text-sm leading-relaxed text-[var(--rz-text-dim)]">{detail.tagline}</p>
+              <p className="mx-auto mb-8 max-w-md text-center text-sm leading-relaxed text-[var(--rz-text-dim)]">{detail.tagline}</p>
+            </div>
+
+            <div ref={whyRef} className="mx-auto mb-10 max-w-lg rounded-lg border-l-2 px-5 py-4 text-center" style={{ borderColor: detail.color, background: "rgba(5,6,10,.4)" }}>
+              <p className="text-[13px] italic leading-relaxed text-[var(--rz-text)]">"{detail.whyUs}"</p>
             </div>
 
             <div className="grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2">

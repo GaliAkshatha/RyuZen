@@ -6,6 +6,7 @@ import { NotFoundPage } from "@/app/pages/NotFoundPage";
 import { ForbiddenPage } from "@/app/pages/ForbiddenPage";
 import { LoginPage } from "@/domains/auth/pages/LoginPage";
 import { LandingPage } from "@/app/pages/LandingPage";
+import { LearnMorePage } from "@/app/pages/LearnMorePage";
 
 import { SuperAdminLayout } from "@/portals/super-admin/layout/SuperAdminLayout";
 import { SuperAdminHomePage } from "@/portals/super-admin/pages/SuperAdminHomePage";
@@ -229,6 +230,10 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <LandingPage />,
+  },
+  {
+    path: "/learn-more",
+    element: <LearnMorePage />,
   },
   { path: "*", element: <NotFoundPage /> },
 ]);

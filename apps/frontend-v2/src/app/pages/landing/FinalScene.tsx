@@ -74,13 +74,13 @@ export function FinalScene() {
           >
             Enter RyuZen
           </Link>
-          <a
-            href="#paths"
+          <Link
+            to="/learn-more"
             className="rounded border px-7 py-3.5 text-[13.5px] font-semibold uppercase tracking-wide backdrop-blur transition-colors"
             style={{ borderColor: "var(--rz-mist)", background: "rgba(19,23,34,.5)", color: "var(--rz-text)" }}
           >
             Learn more
-          </a>
+          </Link>
         </div>
       </div>
     </section>

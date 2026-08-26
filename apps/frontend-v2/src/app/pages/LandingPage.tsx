@@ -14,11 +14,13 @@ import { LandingFooter } from "@/app/pages/landing/LandingFooter";
 import { SceneMist } from "@/app/pages/landing/SceneMist";
 import { getLandingScrollPosition, saveLandingScrollPosition } from "@/app/pages/landing/landingScrollMemory";
 import { EXITING_DEMO_KEY } from "@/app/pages/landing/demoModeFlag";
+import { AmbientAudioToggle } from "@/app/pages/landing/AmbientAudioToggle";
 
 import "@/app/pages/landing/landing.css";
 
 interface LandingNavState {
   skipIntro?: boolean;
+  scrollToId?: string;
 }
 
 /**
@@ -51,14 +53,17 @@ export function LandingPage() {
   const navState = location.state as LandingNavState | null;
   const savedScrollRef = useRef(getLandingScrollPosition());
   const isExitingDemoRef = useRef(sessionStorage.getItem(EXITING_DEMO_KEY) === "true");
-  const skipIntro = Boolean(navState?.skipIntro) || savedScrollRef.current !== null;
+  const scrollToIdRef = useRef(navState?.scrollToId);
+  const skipIntro = Boolean(navState?.skipIntro) || Boolean(scrollToIdRef.current) || savedScrollRef.current !== null;
 
   useEffect(() => {
     if (isExitingDemoRef.current) {
       sessionStorage.removeItem(EXITING_DEMO_KEY);
     }
 
-    if (savedScrollRef.current !== null) {
+    if (scrollToIdRef.current) {
+      document.getElementById(scrollToIdRef.current)?.scrollIntoView({ behavior: "auto" });
+    } else if (savedScrollRef.current !== null) {
       window.scrollTo({ top: savedScrollRef.current, behavior: "auto" });
     }
 
@@ -87,8 +92,9 @@ export function LandingPage() {
   return (
     <div className="ryuzen-landing">
       <LandingNav visible={navVisible} />
+      <AmbientAudioToggle />
       <HeroExperience onNavReveal={() => setNavVisible(true)} skipIntro={skipIntro} />
-      <SceneMist height={180} />
+      <SceneMist height={110} />
       <EcosystemScene />
       <SceneMist height={140} variant="convergence" />
       <IntelligenceScene />

@@ -72,10 +72,17 @@ export function SceneMist({ height = 160, variant = "drift" }: { height?: number
   }, [variant]);
 
   return (
-    <div ref={wrapRef} className="relative overflow-hidden" style={{ height, background: "var(--rz-void)" }}>
+    <div
+      ref={wrapRef}
+      className="relative overflow-hidden"
+      style={{
+        height,
+        background: "radial-gradient(ellipse 900px 100% at 50% 50%, rgba(125,232,255,.05), var(--rz-void) 75%)",
+      }}
+    >
       <div ref={mistRef} className="absolute inset-0 opacity-0">
-        <div className="rz-mist-drift absolute -left-1/4 top-1/2 h-[220px] w-[70%] -translate-y-1/2 rounded-full blur-3xl" style={{ background: "rgba(125,232,255,.06)" }} />
-        <div className="rz-mist-drift-rev absolute -right-1/4 top-1/2 h-[220px] w-[70%] -translate-y-1/2 rounded-full blur-3xl" style={{ background: "rgba(45,212,167,.05)" }} />
+        <div className="rz-mist-drift absolute -left-1/4 top-1/2 h-[260px] w-[75%] -translate-y-1/2 rounded-full blur-3xl" style={{ background: "rgba(125,232,255,.16)" }} />
+        <div className="rz-mist-drift-rev absolute -right-1/4 top-1/2 h-[260px] w-[75%] -translate-y-1/2 rounded-full blur-3xl" style={{ background: "rgba(45,212,167,.13)" }} />
       </div>
       {variant === "convergence" && (
         <div ref={beamsRef} className="pointer-events-none absolute inset-0 flex items-center justify-center">
