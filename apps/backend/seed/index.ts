@@ -16,6 +16,9 @@ import { seedConnections } from "./data/connections.js";
 import { seedLeaderboard } from "./data/leaderboard.js";
 import { seedAiChats } from "./data/aiChats.js";
 import { seedNotifications } from "./data/notifications.js";
+import { seedNews } from "./data/news.js";
+import { seedMessages } from "./data/messages.js";
+import { seedPortfolios } from "./data/portfolios.js";
 import { generateCredentialsFile } from "./generateCredentialsFile.js";
 import { recordExistingOrgCredentials } from "./utils/recordExistingCredentials.js";
 
@@ -48,7 +51,8 @@ async function main(): Promise<void> {
     const faculty = await seedFaculty(org);
     const students = await seedStudents(org);
     const alumni = await seedAlumni(org);
-    await seedPlacementAdmin(org);
+    const placementAdmin = await seedPlacementAdmin(org);
+    await seedNews(org, faculty, placementAdmin);
     const companies = await seedCompanies(org);
     const recruiters = await seedRecruiters(org, companies);
     const demoRecruiter = recruiters.find((r) => r.email.startsWith("recruiter1@"));
@@ -57,6 +61,8 @@ async function main(): Promise<void> {
     const pointsByUserId = await seedSubmissions(org.id, activities, students);
     await seedApplications(drives, students);
     await seedConnections(org.id, students, faculty, alumni);
+    await seedMessages(org.id, students);
+    await seedPortfolios(students);
     await seedLeaderboard(org.id, students, pointsByUserId);
     await seedAiChats(students);
     await seedNotifications(org, faculty, students);

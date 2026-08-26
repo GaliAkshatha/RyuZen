@@ -45,7 +45,7 @@ export const env = {
 
     GEMINI_MODEL:
         process.env.GEMINI_MODEL ??
-        "gemini-1.5-flash",
+        "gemini-3.5-flash",
 
     OLLAMA_BASE_URL:
         process.env.OLLAMA_BASE_URL ??
