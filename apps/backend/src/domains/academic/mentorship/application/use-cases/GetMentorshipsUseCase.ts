@@ -121,6 +121,8 @@ export class GetMentorshipsUseCase {
 
                 dto.studentUsn = student.usn;
 
+                dto.studentUserId = student.userId;
+
                 const user =
 
                     await this.userRepository.findById(

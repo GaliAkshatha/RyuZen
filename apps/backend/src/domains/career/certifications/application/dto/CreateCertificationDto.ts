@@ -12,6 +12,8 @@ export interface CreateCertificationDto {
 
     credentialUrl?: string;
 
+    fileUrl?: string;
+
     skills?: string[];
 
 }

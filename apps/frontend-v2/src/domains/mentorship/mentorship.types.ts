@@ -9,6 +9,7 @@ export interface Mentorship {
   studentId: string;
   studentName?: string;
   studentUsn?: string;
+  studentUserId?: string;
   assignedBy: string;
   assignedDate: string;
   status: MentorshipStatus;

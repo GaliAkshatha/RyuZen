@@ -33,6 +33,7 @@ import { AuditLogsPage } from "@/portals/org-admin/pages/AuditLogsPage";
 import { FacultyLayout } from "@/portals/faculty/layout/FacultyLayout";
 import { FacultyHomePage } from "@/portals/faculty/pages/FacultyHomePage";
 import { MyStudentsPage } from "@/portals/faculty/pages/MyStudentsPage";
+import { MenteeCertificationsPage } from "@/portals/faculty/pages/MenteeCertificationsPage";
 import { ActivityListPage } from "@/portals/faculty/pages/ActivityListPage";
 import { ActivityDetailPage } from "@/portals/faculty/pages/ActivityDetailPage";
 import { CreateActivityPage } from "@/portals/faculty/pages/CreateActivityPage";
@@ -52,6 +53,7 @@ import { DriveDetailPage } from "@/portals/student/pages/DriveDetailPage";
 import { MyApplicationsPage } from "@/portals/student/pages/MyApplicationsPage";
 import { CareerScorePage } from "@/portals/student/pages/CareerScorePage";
 import { PortfolioPage } from "@/portals/student/pages/PortfolioPage";
+import { ResumePage } from "@/portals/student/pages/ResumePage";
 
 import { PlacementAdminLayout } from "@/portals/placement-admin/layout/PlacementAdminLayout";
 import { PlacementAdminHomePage } from "@/portals/placement-admin/pages/PlacementAdminHomePage";
@@ -143,6 +145,7 @@ export const router = createBrowserRouter([
       { path: "activities/new", element: <CreateActivityPage /> },
       { path: "activities/:id", element: <ActivityDetailPage /> },
       { path: "students", element: <MyStudentsPage /> },
+      { path: "students/:userId/certifications", element: <MenteeCertificationsPage /> },
       { path: "connect", element: <ConnectPage /> },
     ],
   },
@@ -178,6 +181,7 @@ export const router = createBrowserRouter([
       { path: "applications", element: <MyApplicationsPage /> },
       { path: "career-score", element: <CareerScorePage /> },
       { path: "portfolio", element: <PortfolioPage /> },
+      { path: "resume", element: <ResumePage /> },
       { path: "connect", element: <ConnectPage /> },
       { path: "ai-assistant", element: <AIAssistantPage /> },
     ],

@@ -45,8 +45,14 @@ export class CreateCertificationUseCase {
             credentialUrl:
                 dto.credentialUrl,
 
+            fileUrl:
+                dto.fileUrl,
+
             skills:
-                dto.skills ?? []
+                dto.skills ?? [],
+
+            verified:
+                false
 
         });
 

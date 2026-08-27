@@ -19,6 +19,9 @@ export interface MentorshipResponseDto {
 
     studentUsn?: string;
 
+    /** The student's real User id (not the Student record id above) - needed by any caller that wants to look up this student's Portfolio, which is keyed by userId. */
+    studentUserId?: string;
+
     assignedBy: string;
 
     assignedDate: Date;

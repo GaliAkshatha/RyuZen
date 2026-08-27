@@ -10,6 +10,8 @@ import {
   Briefcase,
   Award,
   FolderGit2,
+  Plus,
+  ShieldCheck,
   type LucideIcon,
 } from "lucide-react";
 
@@ -22,6 +24,9 @@ import { cn } from "@/shared/utils/cn";
 import { usePortfolio } from "@/domains/portfolio/hooks/usePortfolio";
 import { useUpdatePortfolioSettings } from "@/domains/portfolio/hooks/useUpdatePortfolioSettings";
 import { PortfolioSettingsForm } from "@/domains/portfolio/components/PortfolioSettingsForm";
+import { SkillsManager } from "@/domains/skills/components/SkillsManager";
+import { AddProjectForm, AddAchievementForm, AddExperienceForm, AddEducationForm, AddCertificationForm } from "@/domains/portfolio/components/PortfolioAddForms";
+import { CertificationFileUpload } from "@/domains/portfolio/components/CertificationFileUpload";
 
 type SectionKey = "skills" | "projects" | "achievements" | "experience" | "education" | "certifications";
 
@@ -45,6 +50,7 @@ export function PortfolioPage() {
   const { mutate: updateSettings, isPending } = useUpdatePortfolioSettings();
   const [isEditing, setIsEditing] = useState(false);
   const [activeSection, setActiveSection] = useState<SectionKey | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
 
   if (isLoading) {
     return (
@@ -140,7 +146,10 @@ export function PortfolioPage() {
           return (
             <button
               key={key}
-              onClick={() => setActiveSection(activeSection === key ? null : key)}
+              onClick={() => {
+                setActiveSection(activeSection === key ? null : key);
+                setShowAddForm(false);
+              }}
               className={cn(
                 "flex flex-col items-center gap-2 rounded-2xl border p-5 text-center transition-colors",
                 activeSection === key ? "border-primary bg-primary/5" : "border-border bg-card hover:border-primary/40",
@@ -161,26 +170,26 @@ export function PortfolioPage() {
         <Card>
           <CardHeader><CardTitle>Skills</CardTitle></CardHeader>
           <CardContent>
-            {portfolio.skills.length === 0 ? (
-              <EmptyState title="No skills yet" />
-            ) : (
-              <div className="flex flex-wrap gap-2">
-                {portfolio.skills.map((skill) => (
-                  <span key={skill.id} className="rounded-lg border border-success/30 bg-success/10 px-3 py-1.5 text-sm font-medium text-success">
-                    {skill.name}
-                  </span>
-                ))}
-              </div>
-            )}
+            <SkillsManager />
           </CardContent>
         </Card>
       )}
 
       {activeSection === "achievements" && (
         <Card>
-          <CardHeader><CardTitle>Achievements</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              Achievements
+              <Button size="sm" variant="outline" className="flex items-center gap-1.5" onClick={() => setShowAddForm((v) => !v)}>
+                <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+                {showAddForm ? "Cancel" : "Add achievement"}
+              </Button>
+            </CardTitle>
+          </CardHeader>
           <CardContent>
-            {portfolio.achievements.length === 0 ? (
+            {showAddForm ? (
+              <AddAchievementForm onDone={() => setShowAddForm(false)} />
+            ) : portfolio.achievements.length === 0 ? (
               <EmptyState title="No verified achievements yet" />
             ) : (
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -206,9 +215,19 @@ export function PortfolioPage() {
 
       {activeSection === "projects" && (
         <Card>
-          <CardHeader><CardTitle>Projects</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              Projects
+              <Button size="sm" variant="outline" className="flex items-center gap-1.5" onClick={() => setShowAddForm((v) => !v)}>
+                <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+                {showAddForm ? "Cancel" : "Add project"}
+              </Button>
+            </CardTitle>
+          </CardHeader>
           <CardContent>
-            {portfolio.projects.length === 0 ? (
+            {showAddForm ? (
+              <AddProjectForm onDone={() => setShowAddForm(false)} />
+            ) : portfolio.projects.length === 0 ? (
               <EmptyState title="No projects yet" />
             ) : (
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -235,9 +254,19 @@ export function PortfolioPage() {
 
       {activeSection === "experience" && (
         <Card>
-          <CardHeader><CardTitle>Experience</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              Experience
+              <Button size="sm" variant="outline" className="flex items-center gap-1.5" onClick={() => setShowAddForm((v) => !v)}>
+                <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+                {showAddForm ? "Cancel" : "Add experience"}
+              </Button>
+            </CardTitle>
+          </CardHeader>
           <CardContent>
-            {portfolio.experience.length === 0 ? (
+            {showAddForm ? (
+              <AddExperienceForm onDone={() => setShowAddForm(false)} />
+            ) : portfolio.experience.length === 0 ? (
               <EmptyState title="No experience yet" />
             ) : (
               <div className="flex flex-col gap-3">
@@ -257,9 +286,19 @@ export function PortfolioPage() {
 
       {activeSection === "education" && (
         <Card>
-          <CardHeader><CardTitle>Education</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              Education
+              <Button size="sm" variant="outline" className="flex items-center gap-1.5" onClick={() => setShowAddForm((v) => !v)}>
+                <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+                {showAddForm ? "Cancel" : "Add education"}
+              </Button>
+            </CardTitle>
+          </CardHeader>
           <CardContent>
-            {portfolio.education.length === 0 ? (
+            {showAddForm ? (
+              <AddEducationForm onDone={() => setShowAddForm(false)} />
+            ) : portfolio.education.length === 0 ? (
               <EmptyState title="No education records yet" />
             ) : (
               <div className="flex flex-col gap-3">
@@ -279,16 +318,39 @@ export function PortfolioPage() {
 
       {activeSection === "certifications" && (
         <Card>
-          <CardHeader><CardTitle>Certifications</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              Certifications
+              <Button size="sm" variant="outline" className="flex items-center gap-1.5" onClick={() => setShowAddForm((v) => !v)}>
+                <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+                {showAddForm ? "Cancel" : "Add certification"}
+              </Button>
+            </CardTitle>
+          </CardHeader>
           <CardContent>
-            {portfolio.certifications.length === 0 ? (
+            {showAddForm ? (
+              <AddCertificationForm onDone={() => setShowAddForm(false)} />
+            ) : portfolio.certifications.length === 0 ? (
               <EmptyState title="No certifications yet" />
             ) : (
               <div className="flex flex-col gap-3">
                 {portfolio.certifications.map((cert) => (
-                  <div key={cert.id}>
-                    <p className="font-medium text-foreground">{cert.title}</p>
-                    <p className="text-xs text-muted-foreground">{cert.issuer} · {new Date(cert.issueDate).getFullYear()}</p>
+                  <div key={cert.id} className="flex items-center justify-between gap-3 rounded-lg border border-border p-3">
+                    <div>
+                      <p className="flex items-center gap-1.5 font-medium text-foreground">
+                        {cert.title}
+                        {cert.verified && (
+                          <span className="flex items-center gap-1 rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-semibold text-success">
+                            <ShieldCheck className="h-3 w-3" aria-hidden="true" />
+                            Verified
+                          </span>
+                        )}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {cert.issuer} · {new Date(cert.issueDate).getFullYear()}
+                      </p>
+                    </div>
+                    <CertificationFileUpload certificationId={cert.id} hasFile={Boolean(cert.fileUrl)} />
                   </div>
                 ))}
               </div>

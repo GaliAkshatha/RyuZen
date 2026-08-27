@@ -36,8 +36,20 @@ export class CertificationResponseMapper {
             credentialUrl:
                 certification.credentialUrl,
 
+            fileUrl:
+                certification.fileUrl,
+
             skills:
                 certification.skills,
+
+            verified:
+                certification.verified,
+
+            verifiedBy:
+                certification.verifiedBy,
+
+            verifiedAt:
+                certification.verifiedAt,
 
             createdAt:
                 certification.createdAt,

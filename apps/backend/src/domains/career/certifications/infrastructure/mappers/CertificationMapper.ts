@@ -38,8 +38,20 @@ export class CertificationMapper {
             credentialUrl:
                 document.credentialUrl,
 
+            fileUrl:
+                document.fileUrl,
+
             skills:
                 [...(document.skills ?? [])],
+
+            verified:
+                document.verified ?? false,
+
+            verifiedBy:
+                document.verifiedBy?.toString(),
+
+            verifiedAt:
+                document.verifiedAt,
 
             createdAt:
                 document.createdAt,
@@ -83,8 +95,20 @@ export class CertificationMapper {
             credentialUrl:
                 data.credentialUrl,
 
+            fileUrl:
+                data.fileUrl,
+
             skills:
-                data.skills
+                data.skills,
+
+            verified:
+                data.verified,
+
+            verifiedBy:
+                data.verifiedBy,
+
+            verifiedAt:
+                data.verifiedAt
 
         };
 

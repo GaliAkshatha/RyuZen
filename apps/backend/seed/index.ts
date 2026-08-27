@@ -19,6 +19,7 @@ import { seedNotifications } from "./data/notifications.js";
 import { seedNews } from "./data/news.js";
 import { seedMessages } from "./data/messages.js";
 import { seedPortfolios } from "./data/portfolios.js";
+import { seedSkills } from "./data/skills.js";
 import { generateCredentialsFile } from "./generateCredentialsFile.js";
 import { recordExistingOrgCredentials } from "./utils/recordExistingCredentials.js";
 
@@ -63,6 +64,7 @@ async function main(): Promise<void> {
     await seedConnections(org.id, students, faculty, alumni);
     await seedMessages(org.id, students);
     await seedPortfolios(students);
+    await seedSkills(students);
     await seedLeaderboard(org.id, students, pointsByUserId);
     await seedAiChats(students);
     await seedNotifications(org, faculty, students);

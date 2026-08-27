@@ -1,4 +1,5 @@
 import express, { Express } from "express";
+import path from "path";
 
 import { bootstrap } from "./bootstrap/index.js";
 import { errorHandler } from "./shared/core/http/index.js";
@@ -56,6 +57,11 @@ import dashboardRoutes from "./domains/administration/dashboard/presentation/rou
 const app: Express = express();
 
 bootstrap(app);
+
+// Real static serving for uploaded certification files - matches the
+// exact "/uploads/certifications/<filename>" URL shape
+// CertificationController.uploadFile builds.
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);

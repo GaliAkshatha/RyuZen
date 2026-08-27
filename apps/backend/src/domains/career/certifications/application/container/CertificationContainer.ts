@@ -1,12 +1,16 @@
 import { CertificationRepository } from "../../infrastructure/repositories/CertificationRepository.js";
+import { UserRepository } from "../../../../identity/infrastructure/repositories/UserRepository.js";
 
 import { CreateCertificationUseCase } from "../use-cases/CreateCertificationUseCase.js";
 import { GetCertificationUseCase } from "../use-cases/GetCertificationUseCase.js";
 import { GetCertificationsByUserUseCase } from "../use-cases/GetCertificationsByUserUseCase.js";
 import { UpdateCertificationUseCase } from "../use-cases/UpdateCertificationUseCase.js";
 import { DeleteCertificationUseCase } from "../use-cases/DeleteCertificationUseCase.js";
+import { VerifyCertificationUseCase } from "../use-cases/VerifyCertificationUseCase.js";
+import { UploadCertificationFileUseCase } from "../use-cases/UploadCertificationFileUseCase.js";
 
 const certificationRepository = new CertificationRepository();
+const userRepository = new UserRepository();
 
 export const certificationContainer = {
 
@@ -37,6 +41,19 @@ export const certificationContainer = {
     deleteCertification:
 
         new DeleteCertificationUseCase(
+            certificationRepository
+        ),
+
+    verifyCertification:
+
+        new VerifyCertificationUseCase(
+            certificationRepository,
+            userRepository
+        ),
+
+    uploadCertificationFile:
+
+        new UploadCertificationFileUseCase(
             certificationRepository
         )
 

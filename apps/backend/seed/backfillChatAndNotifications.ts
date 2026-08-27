@@ -9,6 +9,7 @@ import { NotificationModel } from "../src/domains/communication/notifications/in
 import { NewsModel } from "../src/domains/communication/news/infrastructure/persistence/NewsModel.js";
 import { ChatModel } from "../src/domains/communication/chat/infrastructure/persistence/ChatModel.js";
 import { UserPortfolioModel } from "../src/domains/career/user-portfolio/infrastructure/persistence/UserPortfolioModel.js";
+import { SkillModel } from "../src/domains/career/skills/infrastructure/persistence/SkillModel.js";
 
 import { connectForSeed, disconnectAfterSeed } from "./utils/connection.js";
 import { seedAiChats } from "./data/aiChats.js";
@@ -16,6 +17,7 @@ import { seedNotifications } from "./data/notifications.js";
 import { seedNews } from "./data/news.js";
 import { seedMessages } from "./data/messages.js";
 import { seedPortfolios } from "./data/portfolios.js";
+import { seedSkills } from "./data/skills.js";
 import type { SeededOrganization, SeededFaculty, SeededStudent } from "./types.js";
 
 const facultyRepository = new FacultyRepository();
@@ -43,7 +45,7 @@ const studentRepository = new StudentRepository();
  * query to fill in genuine names, not empty strings.
  */
 async function main(): Promise<void> {
-  console.log("Backfilling AI chats, notifications, news, conversations, and portfolios for existing organizations\n");
+  console.log("Backfilling AI chats, notifications, news, conversations, portfolios, and skills for existing organizations\n");
 
   await connectForSeed();
 
@@ -109,6 +111,7 @@ async function main(): Promise<void> {
     const existingNewsCount = await NewsModel.countDocuments({ organizationId });
     const existingChatDocCount = await ChatModel.countDocuments({ organizationId });
     const existingPortfolioCount = await UserPortfolioModel.countDocuments({ userId: { $in: students.map((s) => s.userId) } });
+    const existingSkillCount = await SkillModel.countDocuments({ userId: { $in: students.map((s) => s.userId) } });
 
     console.log(`\n--- "${org.name}" ---`);
 
@@ -142,6 +145,12 @@ async function main(): Promise<void> {
       console.log(`  Skipping portfolios - ${existingPortfolioCount} already exist for this organization's students.`);
     } else {
       await seedPortfolios(students);
+    }
+
+    if (existingSkillCount > 0) {
+      console.log(`  Skipping skills - ${existingSkillCount} already exist for this organization's students.`);
+    } else {
+      await seedSkills(students);
     }
   }
 

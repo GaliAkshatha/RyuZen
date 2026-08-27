@@ -16,7 +16,15 @@ export interface CertificationResponseDto {
 
     credentialUrl?: string;
 
+    fileUrl?: string;
+
     skills: string[];
+
+    verified: boolean;
+
+    verifiedBy?: string;
+
+    verifiedAt?: Date;
 
     createdAt?: Date;
 

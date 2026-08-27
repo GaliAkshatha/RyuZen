@@ -264,4 +264,118 @@ export class CertificationController {
 
     }
 
+    async verify(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const { id } = req.params;
+
+        if (!id || Array.isArray(id)) {
+
+            throw new ApiError(
+
+                "Invalid certification id.",
+
+                HttpStatus.BAD_REQUEST
+
+            );
+
+        }
+
+        const certification =
+
+            await certificationContainer
+
+                .verifyCertification
+
+                .execute(
+
+                    id,
+
+                    req.user!.organizationId,
+
+                    req.user!.userId
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            certification,
+
+            "Certification verified successfully."
+
+        );
+
+    }
+
+    async uploadFile(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const { id } = req.params;
+
+        if (!id || Array.isArray(id)) {
+
+            throw new ApiError(
+
+                "Invalid certification id.",
+
+                HttpStatus.BAD_REQUEST
+
+            );
+
+        }
+
+        if (!req.file) {
+
+            throw new ApiError(
+
+                "No file was uploaded.",
+
+                HttpStatus.BAD_REQUEST
+
+            );
+
+        }
+
+        const fileUrl = `/uploads/certifications/${req.file.filename}`;
+
+        const certification =
+
+            await certificationContainer
+
+                .uploadCertificationFile
+
+                .execute(
+
+                    id,
+
+                    req.user!.userId,
+
+                    fileUrl
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            certification,
+
+            "File uploaded successfully."
+
+        );
+
+    }
+
 }

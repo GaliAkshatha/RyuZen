@@ -50,8 +50,24 @@ export class Certification {
         return this.props.credentialUrl;
     }
 
+    get fileUrl(): string | undefined {
+        return this.props.fileUrl;
+    }
+
     get skills(): string[] {
         return [...this.props.skills];
+    }
+
+    get verified(): boolean {
+        return this.props.verified;
+    }
+
+    get verifiedBy(): string | undefined {
+        return this.props.verifiedBy;
+    }
+
+    get verifiedAt(): Date | undefined {
+        return this.props.verifiedAt;
     }
 
     get createdAt() {
@@ -149,6 +165,30 @@ export class Certification {
                 [...values.skills];
 
         }
+
+    }
+
+    /**
+     * More complete than Skill.verify() (which only flips a boolean) -
+     * this Certification is written fresh with verifiedBy/verifiedAt
+     * already real fields on the interface, so there's no reason not
+     * to actually populate them here.
+     */
+    verify(verifiedByUserId: string): void {
+
+        this.props.verified = true;
+        this.props.verifiedBy = verifiedByUserId;
+        this.props.verifiedAt = new Date();
+
+    }
+
+    /**
+     * Called once a real uploaded file has been stored and a real,
+     * durable URL is known - see UploadCertificationFileUseCase.
+     */
+    setFileUrl(fileUrl: string): void {
+
+        this.props.fileUrl = fileUrl;
 
     }
 

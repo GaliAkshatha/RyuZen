@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Users, CheckCircle2, Save } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Users, CheckCircle2, Save, Award } from "lucide-react";
 
 import { Card, CardContent } from "@/shared/ui/Card";
 import { Button } from "@/shared/ui/Button";
@@ -72,6 +73,15 @@ export function MyStudentsPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <StatusBadge status={m.status} />
+                    {m.studentUserId && (
+                      <Link
+                        to={`/faculty/students/${m.studentUserId}/certifications`}
+                        className="flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80"
+                      >
+                        <Award className="h-3.5 w-3.5" aria-hidden="true" />
+                        Certifications
+                      </Link>
+                    )}
                     {m.status === MentorshipStatus.ACTIVE && (
                       <Button
                         size="sm"

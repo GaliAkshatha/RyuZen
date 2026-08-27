@@ -17,6 +17,8 @@ import {
 
 import { UserRole } from "../../../../identity/domain/constants/UserRole.js";
 
+import { certificationFileUpload } from "../../../../../shared/core/upload/certificationFileUpload.js";
+
 const router = Router();
 
 const controller = new CertificationController();
@@ -163,6 +165,65 @@ router.delete(
     asyncHandler(
 
         controller.remove.bind(controller)
+
+    )
+
+);
+
+/*
+ Verify Certification - Faculty/Org Admin/Super Admin confirming a
+ real certification is legitimate. Real cross-org protection enforced
+ inside VerifyCertificationUseCase.
+*/
+
+router.patch(
+
+    "/:id/verify",
+
+    authenticate,
+
+    authorizePermission(
+
+        UserRole.SUPER_ADMIN,
+
+        UserRole.ORG_ADMIN,
+
+        UserRole.FACULTY
+
+    ),
+
+    asyncHandler(
+
+        controller.verify.bind(controller)
+
+    )
+
+);
+
+/*
+ Upload Certification File - STUDENT only, and only the real owner of
+ this certification (enforced inside UploadCertificationFileUseCase).
+ certificationFileUpload handles real disk storage + a real 10MB
+ limit + real MIME filtering (PDF/JPEG/PNG/WEBP).
+*/
+
+router.post(
+
+    "/:id/file",
+
+    authenticate,
+
+    authorizePermission(
+
+        UserRole.STUDENT
+
+    ),
+
+    certificationFileUpload.single("file"),
+
+    asyncHandler(
+
+        controller.uploadFile.bind(controller)
 
     )
 

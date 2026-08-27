@@ -65,6 +65,10 @@ export interface Certification {
   issueDate: string;
   expiryDate?: string;
   credentialUrl?: string;
+  fileUrl?: string;
+  verified: boolean;
+  verifiedBy?: string;
+  verifiedAt?: string;
 }
 
 export interface Achievement {
@@ -118,4 +122,55 @@ export interface UpdatePortfolioSettingsRequest {
   website?: string;
   visibility?: PortfolioVisibility;
   theme?: string;
+}
+
+/** Matches the real backend CreatePortfolioProjectSchema exactly. */
+export interface CreatePortfolioProjectRequest {
+  title: string;
+  description?: string;
+  techStack?: string[];
+  github?: string;
+  liveDemo?: string;
+}
+
+/** Matches the real backend CreateAchievementSchema exactly. */
+export interface CreateAchievementRequest {
+  title: string;
+  description?: string;
+  category?: string;
+  level?: "COLLEGE" | "STATE" | "NATIONAL" | "INTERNATIONAL";
+  position?: string;
+  achievementDate: string;
+}
+
+/** Matches the real backend CreateExperienceSchema exactly. */
+export interface CreateExperienceRequest {
+  company: string;
+  role: string;
+  employmentType?: "FULL_TIME" | "PART_TIME" | "INTERNSHIP" | "CONTRACT" | "FREELANCE";
+  location?: string;
+  startDate: string;
+  endDate?: string;
+  currentlyWorking?: boolean;
+  description?: string;
+}
+
+/** Matches the real backend CreateEducationSchema exactly. */
+export interface CreateEducationRequest {
+  institution: string;
+  degree: string;
+  branch?: string;
+  cgpa?: number;
+  startYear: number;
+  endYear?: number;
+}
+
+/** Matches the real backend CreateCertificationSchema exactly. */
+export interface CreateCertificationRequest {
+  title: string;
+  issuer: string;
+  credentialId?: string;
+  issueDate: string;
+  expiryDate?: string;
+  credentialUrl?: string;
 }

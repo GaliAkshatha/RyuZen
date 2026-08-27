@@ -16,7 +16,15 @@ export interface CertificationDocument extends Document {
 
     credentialUrl?: string;
 
+    fileUrl?: string;
+
     skills: string[];
+
+    verified: boolean;
+
+    verifiedBy?: mongoose.Types.ObjectId;
+
+    verifiedAt?: Date;
 
     createdAt: Date;
 
@@ -90,11 +98,41 @@ const CertificationSchema = new Schema<CertificationDocument>(
 
         },
 
+        fileUrl: {
+
+            type: String,
+
+            trim: true,
+
+        },
+
         skills: [{
 
             type: String,
 
         }],
+
+        verified: {
+
+            type: Boolean,
+
+            default: false,
+
+        },
+
+        verifiedBy: {
+
+            type: Schema.Types.ObjectId,
+
+            ref: "User",
+
+        },
+
+        verifiedAt: {
+
+            type: Date,
+
+        },
 
     },
 

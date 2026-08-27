@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Home, ClipboardList, Briefcase, FileText, TrendingUp, FolderKanban, Users, Sparkles } from "lucide-react";
+import { Home, ClipboardList, Briefcase, FileText, TrendingUp, FolderKanban, Users, Sparkles, ScrollText } from "lucide-react";
 
 import { TopNav, type TopNavItem } from "@/shared/layout/TopNav";
 
@@ -10,17 +10,22 @@ const NAV_ITEMS: TopNavItem[] = [
   { to: "/student/applications", label: "Applications", icon: FileText },
   { to: "/student/career-score", label: "Career", icon: TrendingUp },
   { to: "/student/portfolio", label: "Portfolio", icon: FolderKanban },
+  { to: "/student/resume", label: "Resume", icon: ScrollText },
   { to: "/student/ai-assistant", label: "AI", icon: Sparkles },
   { to: "/student/connect", label: "Connect", icon: Users },
 ];
 
 /**
  * Real Student shell - topbar, not sidebar (per product direction).
- * Placements, Career Score, Portfolio, AI Assistant, Connect, and
- * Notifications (drawer, in TopNav) are all real. Profile is reached
- * only via the avatar in TopNav, never a nav item. Resume, Attendance,
- * Assessments remain real, substantial backend domains not yet
- * re-verified and built fresh in this rebuild.
+ * Placements, Career Score, Portfolio, Resume, AI Assistant, Connect,
+ * and Notifications (drawer, in TopNav) are all real. Profile is
+ * reached only via the avatar in TopNav, never a nav item. Resume was
+ * previously a confirmed gap (a complete backend domain with zero
+ * student-facing frontend) - now built and given its own nav entry,
+ * matching how Career Score already gets its own dedicated space
+ * despite also being portfolio-derived. Attendance and Assessments
+ * remain real, substantial backend domains not yet re-verified and
+ * built fresh in this rebuild.
  */
 export function StudentLayout() {
   return (
