@@ -134,7 +134,7 @@ export function EcosystemScene() {
       <section
         id="paths"
         ref={sceneRef}
-        className="relative flex min-h-[92vh] flex-col justify-between overflow-hidden px-6 pt-10 pb-16"
+        className="relative flex min-h-screen flex-col justify-between overflow-hidden px-6 pt-16 pb-12 sm:pt-20 sm:pb-14"
         style={
           {
             "--glow-student": 0.7,
@@ -155,7 +155,7 @@ export function EcosystemScene() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(180deg, rgba(5,6,10,0.35) 0%, transparent 15%, transparent 75%, rgba(5,6,10,0.65) 100%)",
+              "linear-gradient(180deg, rgba(5,6,10,0.4) 0%, transparent 15%, transparent 85%, rgba(5,6,10,0.5) 100%)",
           }}
         />
         <AmbientFog tint="rgba(246,196,102,.04)" />

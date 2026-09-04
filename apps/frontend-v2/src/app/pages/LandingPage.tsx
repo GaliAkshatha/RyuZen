@@ -79,13 +79,13 @@ export function LandingPage() {
       <LandingNav visible={navVisible} />
       <HeroExperience onNavReveal={() => setNavVisible(true)} skipIntro={skipIntro} />
       {/* Moderate breathing room between first and second section */}
-      <SceneMist height={55} />
+      <SceneMist height={36} />
       <EcosystemScene />
-      <SceneMist height={70} variant="convergence" />
+      <SceneMist height={36} variant="convergence" />
       <IntelligenceScene />
-      <SceneMist height={70} />
+      <SceneMist height={32} variant="data-stream" />
       <DemoScene />
-      <SceneMist height={70} />
+      <SceneMist height={32} variant="horizon" />
       <FinalScene />
       <LandingFooter />
     </div>

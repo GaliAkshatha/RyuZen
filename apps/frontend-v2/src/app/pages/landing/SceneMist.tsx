@@ -19,7 +19,13 @@ import { ensureGsapRegistered, gsap } from "@/app/pages/landing/gsapSetup";
  * paths genuinely feeding into the crystal, not just three more
  * generic mist clouds.
  */
-export function SceneMist({ height = 160, variant = "drift" }: { height?: number; variant?: "drift" | "convergence" }) {
+export function SceneMist({
+  height = 160,
+  variant = "drift",
+}: {
+  height?: number;
+  variant?: "drift" | "convergence" | "data-stream" | "horizon";
+}) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const mistRef = useRef<HTMLDivElement>(null);
   const beamsRef = useRef<HTMLDivElement>(null);
@@ -89,6 +95,18 @@ export function SceneMist({ height = 160, variant = "drift" }: { height?: number
           <div data-beam className="absolute left-0 top-1/2 h-[3px] w-[42%] origin-left -translate-y-1/2 opacity-40" style={{ background: "linear-gradient(90deg, transparent, var(--rz-eye))" }} />
           <div data-beam className="absolute right-0 top-1/2 h-[3px] w-[42%] origin-right -translate-y-1/2 opacity-40" style={{ background: "linear-gradient(270deg, transparent, var(--rz-purple))" }} />
           <div className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ background: "var(--rz-crystal)", boxShadow: "0 0 24px var(--rz-crystal)" }} />
+        </div>
+      )}
+      {variant === "data-stream" && (
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div className="h-[1px] w-[60%] opacity-40" style={{ background: "linear-gradient(90deg, transparent, var(--rz-eye), var(--rz-crystal), transparent)" }} />
+          <div className="absolute left-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ background: "var(--rz-eye)", boxShadow: "0 0 12px var(--rz-eye)" }} />
+        </div>
+      )}
+      {variant === "horizon" && (
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div className="h-[1px] w-[50%] opacity-35" style={{ background: "linear-gradient(90deg, transparent, var(--rz-gold), var(--rz-eye), transparent)" }} />
+          <div className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ background: "var(--rz-gold)", boxShadow: "0 0 10px var(--rz-gold)" }} />
         </div>
       )}
     </div>

@@ -42,7 +42,7 @@ export function FinalScene() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative flex min-h-[90vh] items-center overflow-hidden px-6 py-24 sm:px-14">
+    <section ref={sectionRef} className="relative flex min-h-screen items-center overflow-hidden px-6 py-12 sm:py-16 sm:px-14">
       {/* Artwork background - clearly visible */}
       <div
         ref={bgRef}
@@ -55,7 +55,7 @@ export function FinalScene() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(5,6,10,0.35) 0%, transparent 15%, transparent 75%, rgba(5,6,10,0.7) 100%)",
+            "linear-gradient(180deg, rgba(5,6,10,0.4) 0%, transparent 15%, transparent 80%, rgba(5,6,10,0.7) 100%)",
         }}
       />
 

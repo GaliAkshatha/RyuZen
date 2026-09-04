@@ -218,9 +218,22 @@
  * genuinely benefit from a visible scrollbar; only this cinematic
  * page doesn't want one competing with its own visual language.
  */
+@media (prefers-reduced-motion: reduce) {
+  html.rz-hide-scrollbar {
+    scroll-behavior: auto !important;
+  }
+  .ryuzen-landing * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 html.rz-hide-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
+  scroll-behavior: smooth;
 }
 html.rz-hide-scrollbar::-webkit-scrollbar {
   display: none;

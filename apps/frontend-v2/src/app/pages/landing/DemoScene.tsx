@@ -19,8 +19,8 @@ export function DemoScene() {
   useParallaxBackground(bgRef);
 
   return (
-    <section id="explore" className="relative min-h-[88vh] flex items-center overflow-hidden px-6 py-20 sm:px-12 lg:px-16">
-      {/* City artwork background - clearly visible */}
+    <section id="explore" className="relative min-h-screen flex items-center justify-center overflow-hidden px-6 py-12 sm:py-16 sm:px-12 lg:px-16">
+      {/* City artwork background - clearly visible across the entire viewport */}
       <div
         ref={bgRef}
         className="absolute -inset-y-[6%] inset-x-0 bg-cover bg-center"
@@ -32,7 +32,7 @@ export function DemoScene() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(5,6,10,0.35) 0%, transparent 20%, transparent 75%, rgba(5,6,10,0.6) 100%)",
+            "linear-gradient(180deg, rgba(5,6,10,0.4) 0%, transparent 15%, transparent 85%, rgba(5,6,10,0.48) 100%)",
         }}
       />
 

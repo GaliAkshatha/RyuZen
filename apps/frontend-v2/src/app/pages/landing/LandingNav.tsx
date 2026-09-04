@@ -14,6 +14,15 @@ export function LandingNav({ visible }: { visible: boolean }) {
   const [activeSection, setActiveSection] = useState<string>("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  function scrollToTarget(e: React.MouseEvent<HTMLAnchorElement>, targetId: string) {
+    e.preventDefault();
+    const el = document.getElementById(targetId);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.history.pushState(null, "", `#${targetId}`);
+    }
+  }
+
   useEffect(() => {
     function handleScroll() {
       setScrolled(window.scrollY > 40);
@@ -83,6 +92,7 @@ export function LandingNav({ visible }: { visible: boolean }) {
         >
           <a
             href="#paths"
+            onClick={(e) => scrollToTarget(e, "paths")}
             className={`relative py-1 transition-colors hover:text-[var(--rz-eye)] ${
               activeSection === "paths" ? "text-[var(--rz-eye)] font-semibold" : ""
             }`}
@@ -94,6 +104,7 @@ export function LandingNav({ visible }: { visible: boolean }) {
           </a>
           <a
             href="#intelligence"
+            onClick={(e) => scrollToTarget(e, "intelligence")}
             className={`relative py-1 transition-colors hover:text-[var(--rz-eye)] ${
               activeSection === "intelligence" ? "text-[var(--rz-eye)] font-semibold" : ""
             }`}
@@ -105,6 +116,7 @@ export function LandingNav({ visible }: { visible: boolean }) {
           </a>
           <a
             href="#explore"
+            onClick={(e) => scrollToTarget(e, "explore")}
             className={`relative py-1 transition-colors hover:text-[var(--rz-eye)] ${
               activeSection === "explore" ? "text-[var(--rz-eye)] font-semibold" : ""
             }`}
@@ -161,21 +173,30 @@ export function LandingNav({ visible }: { visible: boolean }) {
           <div className="flex flex-col gap-4 text-sm font-medium text-[var(--rz-text)]">
             <a
               href="#paths"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={(e) => {
+                scrollToTarget(e, "paths");
+                setMobileMenuOpen(false);
+              }}
               className="py-1 transition-colors hover:text-[var(--rz-eye)]"
             >
               Paths & Roles
             </a>
             <a
               href="#intelligence"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={(e) => {
+                scrollToTarget(e, "intelligence");
+                setMobileMenuOpen(false);
+              }}
               className="py-1 transition-colors hover:text-[var(--rz-eye)]"
             >
               The Intelligence Layer
             </a>
             <a
               href="#explore"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={(e) => {
+                scrollToTarget(e, "explore");
+                setMobileMenuOpen(false);
+              }}
               className="py-1 transition-colors hover:text-[var(--rz-eye)]"
             >
               Interactive Demo

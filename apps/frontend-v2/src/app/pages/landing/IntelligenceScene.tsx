@@ -90,7 +90,7 @@ export function IntelligenceScene() {
     <section
       id="intelligence"
       ref={sectionRef}
-      className="relative min-h-[85vh] lg:min-h-screen flex items-center justify-center overflow-hidden px-6 py-14 sm:px-12"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden px-6 py-10 sm:py-12 sm:px-12"
     >
       {/* Crystal artwork background - positioned so the glowing crystal has ample breathing room */}
       <div
@@ -111,7 +111,7 @@ export function IntelligenceScene() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(5,6,10,0.3) 0%, transparent 15%, transparent 80%, rgba(5,6,10,0.6) 100%)",
+            "linear-gradient(180deg, rgba(5,6,10,0.3) 0%, transparent 15%, transparent 85%, rgba(5,6,10,0.45) 100%)",
         }}
       />
       <AmbientFog tint="rgba(79,227,212,.05)" />

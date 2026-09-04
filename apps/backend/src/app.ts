@@ -5,7 +5,7 @@ import { bootstrap } from "./bootstrap/index.js";
 import { errorHandler } from "./shared/core/http/index.js";
 import { notFound } from "./shared/core/middleware/notFound.js";
 
-import authRoutes from "../src/domains/identity/presentation/routes/auth.routes.js";
+import authRoutes from "./domains/identity/presentation/routes/auth.routes.js";
 import userRoutes from "./domains/identity/presentation/routes/user.routes.js";
 import invitationRoutes from "./domains/identity/presentation/routes/invitation.routes.js";
 import organizationRoutes from "./domains/organizations/presentation/routes/organization.routes.js";
