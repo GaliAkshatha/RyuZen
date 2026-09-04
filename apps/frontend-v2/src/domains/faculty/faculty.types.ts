@@ -14,6 +14,9 @@ export interface Faculty {
   designation: string;
   specialization?: string;
   status: FacultyStatus;
+  /** The real User account's login-access status (ACTIVE/SUSPENDED/ARCHIVED) - distinct from `status` above (employment record status). */
+  userStatus?: string;
+  permissions?: string[];
   joinedAt?: string;
   createdAt?: string;
   updatedAt?: string;

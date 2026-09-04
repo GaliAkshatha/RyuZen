@@ -35,7 +35,8 @@ export const facultyContainer = {
     getFaculty:
 
         new GetFacultyUseCase(
-            facultyRepository
+            facultyRepository,
+            userRepository
         ),
 
     getMyFacultyProfile:

@@ -18,6 +18,11 @@ export interface FacultyResponseDto {
 
     status: FacultyStatus;
 
+    /** The real User account's login-access status (ACTIVE/SUSPENDED/ARCHIVED) - a genuinely different concern from `status` above (employment record status). Populated by GetFacultyUseCase. */
+    userStatus?: string;
+
+    permissions?: string[];
+
     joinedAt?: Date;
 
     createdAt?: Date;

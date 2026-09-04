@@ -124,4 +124,45 @@ export const env = {
             process.env.ACCOUNT_LOCK_DURATION_MS ?? 15 * 60 * 1000
         ),
 
+    // Selects which real IFileStorageService implementation
+    // certifications.routes.ts wires up. "local" (default) writes to
+    // local disk - genuinely fine on a host with a real persistent
+    // volume attached (see docker-compose.yml), but loses files on
+    // restart without one. "s3" uses real S3-compatible object
+    // storage (AWS S3, Cloudflare R2, DigitalOcean Spaces, MinIO -
+    // anything speaking the S3 API) and needs the S3_* variables
+    // below set.
+    STORAGE_PROVIDER:
+        process.env.STORAGE_PROVIDER ??
+        "local",
+
+    S3_BUCKET:
+        process.env.S3_BUCKET ??
+        "",
+
+    S3_REGION:
+        process.env.S3_REGION ??
+        "auto",
+
+    S3_ACCESS_KEY_ID:
+        process.env.S3_ACCESS_KEY_ID ??
+        "",
+
+    S3_SECRET_ACCESS_KEY:
+        process.env.S3_SECRET_ACCESS_KEY ??
+        "",
+
+    // Only needed for S3-compatible providers that aren't real AWS
+    // S3 itself (R2, Spaces, MinIO) - leave unset for real AWS S3.
+    S3_ENDPOINT:
+        process.env.S3_ENDPOINT ??
+        "",
+
+    // The real public base URL files end up reachable at once
+    // uploaded - e.g. a CloudFront/CDN domain in front of the
+    // bucket, or the bucket's own public endpoint.
+    S3_PUBLIC_URL_BASE:
+        process.env.S3_PUBLIC_URL_BASE ??
+        "",
+
 };

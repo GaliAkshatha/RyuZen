@@ -16,6 +16,7 @@ import { useAssignFacultyDepartment } from "@/domains/faculty/hooks/useAssignFac
 import { useDeactivateFaculty } from "@/domains/faculty/hooks/useDeactivateFaculty";
 import { useDepartments } from "@/domains/departments/hooks/useDepartments";
 import { FacultyStatus } from "@/domains/faculty/faculty.types";
+import { AccountAccessCard } from "@/domains/user-admin/components/AccountAccessCard";
 
 export function FacultyDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -113,6 +114,13 @@ export function FacultyDetailPage() {
           </Select>
         </CardContent>
       </Card>
+
+      <AccountAccessCard
+        userId={faculty.userId}
+        recordQueryKey={["faculty", id]}
+        userStatus={faculty.userStatus}
+        permissions={faculty.permissions}
+      />
     </div>
   );
 }

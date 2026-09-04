@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Sparkles, ArrowRight, Loader2 } from "lucide-react";
 
 import { DEMO_PREVIEWS } from "@/app/pages/landing/demoPreviews";
 import { useDemoLogin } from "@/app/pages/landing/useDemoLogin";
@@ -15,16 +15,11 @@ function circularOffset(index: number, activeIndex: number): number {
 }
 
 /**
- * Real rectangular dashboard-snapshot cards, per explicit correction
- * (circular portals with a single stat weren't what was asked for) -
- * each card is a real browser-chrome-style frame showing a genuine
- * snapshot: 3 stat tiles plus 2 real list rows, so it reads as
- * "here's what that role's dashboard actually looks like," not a
- * single floating number. Still a real circular carousel underneath:
- * all 6 exist at once, positioned by signed distance from
- * activeIndex, only the center card and its two immediate neighbors
- * visible. Hovering a visible side card brings it to center; arrow
- * buttons provide the same navigation for keyboard/touch users.
+ * Enhanced DemoCarousel:
+ * - Quick role switcher pills for immediate one-click role selection
+ * - Refined command-center cards with "Live Sandbox" status indicators
+ * - Glowing one-click authentication launch button
+ * - Preserves authentic seeded login flow via useDemoLogin
  */
 export function DemoCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -39,8 +34,8 @@ export function DemoCarousel() {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  const cardWidth = isNarrow ? 220 : 268;
-  const offsetStep = isNarrow ? 150 : 190;
+  const cardWidth = isNarrow ? 230 : 285;
+  const offsetStep = isNarrow ? 155 : 205;
 
   function go(delta: number) {
     setActiveIndex((prev) => (prev + delta + COUNT) % COUNT);
@@ -48,114 +43,201 @@ export function DemoCarousel() {
 
   return (
     <div className="flex flex-col items-center gap-7">
-      <div className="relative flex w-full max-w-lg items-center justify-center" style={{ height: isNarrow ? 260 : 300 }}>
+      {/* Quick Role Switcher Pills */}
+      <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+        {DEMO_PREVIEWS.map((preview, i) => {
+          const isActive = i === activeIndex;
+          return (
+            <button
+              key={preview.role}
+              type="button"
+              onClick={() => setActiveIndex(i)}
+              className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold transition-all duration-300 ${
+                isActive
+                  ? "scale-105 border-[var(--rz-eye)] bg-[rgba(19,23,34,0.9)] text-white shadow-[0_0_15px_rgba(125,232,255,0.3)]"
+                  : "border-[rgba(255,255,255,0.08)] bg-[rgba(5,6,10,0.5)] text-[var(--rz-text-dim)] hover:border-[rgba(255,255,255,0.2)] hover:text-white"
+              }`}
+            >
+              <span
+                className="h-1.5 w-1.5 rounded-full"
+                style={{ background: preview.color }}
+              />
+              <span>{preview.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Circular Carousel Stage */}
+      <div
+        className="relative flex w-full max-w-xl items-center justify-center"
+        style={{ height: isNarrow ? 280 : 320 }}
+      >
         {DEMO_PREVIEWS.map((preview, i) => {
           const offset = circularOffset(i, activeIndex);
           const isCenter = offset === 0;
           const isVisible = Math.abs(offset) <= 1;
 
           const translateX = offset * offsetStep;
-          const scale = isCenter ? 1 : Math.abs(offset) === 1 ? 0.82 : 0.65;
-          const opacity = isCenter ? 1 : Math.abs(offset) === 1 ? 0.4 : 0;
+          const scale = isCenter ? 1 : Math.abs(offset) === 1 ? 0.84 : 0.65;
+          const opacity = isCenter ? 1 : Math.abs(offset) === 1 ? 0.45 : 0;
           const zIndex = 10 - Math.abs(offset);
 
           return (
-            <button
+            <div
               key={preview.role}
-              type="button"
               tabIndex={isVisible ? 0 : -1}
               aria-hidden={!isVisible}
               onMouseEnter={() => isVisible && !isCenter && setActiveIndex(i)}
-              onFocus={() => isVisible && !isCenter && setActiveIndex(i)}
-              onClick={() => (isCenter ? enterAs(preview.role) : setActiveIndex(i))}
-              disabled={pendingRole !== null}
-              className="absolute flex flex-col overflow-hidden rounded-lg text-left transition-all duration-500 ease-out disabled:opacity-60"
+              onClick={() => !isCenter && setActiveIndex(i)}
+              className="absolute flex flex-col overflow-hidden rounded-xl text-left transition-all duration-500 ease-out"
               style={{
                 width: cardWidth,
                 transform: `translateX(${translateX}px) scale(${scale})`,
                 opacity,
                 zIndex,
                 pointerEvents: isVisible ? "auto" : "none",
-                background: "rgba(11,14,20,.9)",
+                background: "rgba(11, 14, 20, 0.92)",
+                backdropFilter: "blur(16px)",
                 border: `1px solid ${isCenter ? preview.color : "var(--rz-mist)"}`,
-                boxShadow: isCenter ? `0 0 30px ${preview.glow}` : "none",
+                boxShadow: isCenter ? `0 0 35px ${preview.glow}, 0 20px 40px rgba(0,0,0,0.8)` : "none",
               }}
             >
-              {/* browser-chrome bar */}
-              <div className="flex items-center gap-3 border-b px-3 py-2" style={{ borderColor: "var(--rz-mist-soft)" }}>
-                <div className="flex gap-1">
-                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--rz-mist)" }} />
-                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--rz-mist)" }} />
-                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--rz-mist)" }} />
+              {/* Card Header (Browser / Terminal Bar) */}
+              <div
+                className="flex items-center justify-between border-b px-3.5 py-2.5"
+                style={{ borderColor: "var(--rz-mist-soft)", background: "rgba(5,6,10,0.6)" }}
+              >
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-1">
+                    <span className="h-2 w-2 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }} />
+                    <span className="h-2 w-2 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }} />
+                    <span className="h-2 w-2 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }} />
+                  </div>
+                  <span className="rz-mono text-[9.5px] uppercase font-semibold tracking-wider" style={{ color: preview.color }}>
+                    {preview.label} Workspace
+                  </span>
                 </div>
-                <span className="rz-mono text-[9px] uppercase tracking-wide" style={{ color: preview.color }}>
-                  {preview.label}
+
+                <span className="flex items-center gap-1 rounded-full bg-[rgba(79,227,212,0.12)] px-2 py-0.5 text-[8.5px] font-medium text-[var(--rz-crystal)]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[var(--rz-crystal)] animate-pulse" />
+                  Live
                 </span>
               </div>
 
-              <div className="p-3">
-                <div className="mb-2.5 grid grid-cols-3 gap-1.5">
+              {/* Card Body - Metric Tiles & Data Rows */}
+              <div className="p-3.5">
+                <div className="mb-3 grid grid-cols-3 gap-1.5">
                   {preview.stats.map((s) => (
-                    <div key={s.label} className="rounded px-1 py-1.5 text-center" style={{ background: "rgba(255,255,255,.03)" }}>
-                      <p className="rz-display text-[13px] font-bold" style={{ color: preview.color }}>
+                    <div
+                      key={s.label}
+                      className="rounded-lg p-2 text-center"
+                      style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.04)" }}
+                    >
+                      <p className="rz-display text-[14px] font-extrabold" style={{ color: preview.color }}>
                         {s.value}
                       </p>
-                      <p className="text-[7.5px] leading-tight text-[var(--rz-text-mute)]">{s.label}</p>
+                      <p className="mt-0.5 text-[8px] uppercase tracking-wider text-[var(--rz-text-mute)] leading-tight">
+                        {s.label}
+                      </p>
                     </div>
                   ))}
                 </div>
-                {preview.rows.map((r) => (
-                  <div key={r.label} className="flex items-center justify-between border-t py-1.5 text-[10px]" style={{ borderColor: "var(--rz-mist-soft)" }}>
-                    <span className="truncate text-[var(--rz-text-dim)]">{r.label}</span>
-                    <span className="shrink-0 pl-2 font-medium" style={{ color: preview.color }}>
-                      {r.value}
-                    </span>
-                  </div>
-                ))}
+
+                <div className="space-y-1.5">
+                  {preview.rows.map((r) => (
+                    <div
+                      key={r.label}
+                      className="flex items-center justify-between rounded border border-[rgba(255,255,255,0.04)] bg-[rgba(5,6,10,0.4)] px-2.5 py-1.5 text-[10.5px]"
+                    >
+                      <span className="truncate text-[var(--rz-text-dim)]">{r.label}</span>
+                      <span className="shrink-0 pl-2 font-mono font-medium" style={{ color: preview.color }}>
+                        {r.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              {isCenter && (
-                <div className="rz-mono px-3 pb-2.5 text-[9.5px] uppercase tracking-wide" style={{ color: preview.color }}>
-                  {pendingRole === preview.role ? "Entering…" : "Enter →"}
+              {/* Card Footer Launch Action */}
+              {isCenter ? (
+                <div className="border-t border-[rgba(255,255,255,0.06)] bg-[rgba(5,6,10,0.4)] p-3">
+                  <button
+                    type="button"
+                    disabled={pendingRole !== null}
+                    onClick={() => enterAs(preview.role)}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg py-2.5 text-[11.5px] font-bold uppercase tracking-wider transition-all duration-300 hover:scale-[1.02] disabled:opacity-60"
+                    style={{
+                      background: preview.color,
+                      color: "#04262e",
+                      boxShadow: `0 0 16px ${preview.glow}`,
+                    }}
+                  >
+                    {pendingRole === preview.role ? (
+                      <>
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        <span>Entering {preview.label}…</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="h-3.5 w-3.5" />
+                        <span>Enter Live Sandbox</span>
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </>
+                    )}
+                  </button>
+                </div>
+              ) : (
+                <div className="px-3 pb-2.5 text-center">
+                  <span className="rz-mono text-[9px] uppercase tracking-wider text-[var(--rz-text-mute)]">
+                    Click to bring to center
+                  </span>
                 </div>
               )}
-            </button>
+            </div>
           );
         })}
       </div>
 
+      {/* Carousel Controls */}
       <div className="flex items-center gap-5">
         <button
           type="button"
           onClick={() => go(-1)}
-          aria-label="Previous"
-          className="flex h-8 w-8 items-center justify-center rounded-full border text-[var(--rz-text-dim)] transition-colors hover:text-[var(--rz-eye)]"
-          style={{ borderColor: "var(--rz-mist)" }}
+          aria-label="Previous role preview"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--rz-mist)] bg-[rgba(11,14,20,0.8)] text-[var(--rz-text-dim)] transition-all hover:border-[var(--rz-eye)] hover:text-[var(--rz-eye)] hover:scale-105"
         >
-          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+          <ChevronLeft className="h-4.5 w-4.5" aria-hidden="true" />
         </button>
-        <div className="flex gap-1.5">
+
+        <div className="flex items-center gap-2">
           {DEMO_PREVIEWS.map((preview, i) => (
-            <span
+            <button
               key={preview.role}
-              className="h-1.5 w-1.5 rounded-full transition-colors"
-              style={{ background: i === activeIndex ? "var(--rz-eye)" : "var(--rz-mist)" }}
+              type="button"
+              onClick={() => setActiveIndex(i)}
+              aria-label={`View ${preview.label}`}
+              className="h-2 rounded-full transition-all"
+              style={{
+                width: i === activeIndex ? "24px" : "8px",
+                background: i === activeIndex ? preview.color : "var(--rz-mist)",
+              }}
             />
           ))}
         </div>
+
         <button
           type="button"
           onClick={() => go(1)}
-          aria-label="Next"
-          className="flex h-8 w-8 items-center justify-center rounded-full border text-[var(--rz-text-dim)] transition-colors hover:text-[var(--rz-eye)]"
-          style={{ borderColor: "var(--rz-mist)" }}
+          aria-label="Next role preview"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--rz-mist)] bg-[rgba(11,14,20,0.8)] text-[var(--rz-text-dim)] transition-all hover:border-[var(--rz-eye)] hover:text-[var(--rz-eye)] hover:scale-105"
         >
-          <ChevronRight className="h-4 w-4" aria-hidden="true" />
+          <ChevronRight className="h-4.5 w-4.5" aria-hidden="true" />
         </button>
       </div>
 
       {error && (
-        <p className="mx-auto max-w-sm rounded border px-4 py-3 text-center text-xs text-[var(--rz-text-dim)]" style={{ borderColor: "var(--rz-mist)", background: "rgba(19,23,34,.7)" }}>
+        <p className="mx-auto max-w-sm rounded-lg border border-[var(--rz-mist)] bg-[rgba(19,23,34,.9)] px-4 py-3 text-center text-xs text-[var(--rz-text-dim)]">
           {error}
         </p>
       )}

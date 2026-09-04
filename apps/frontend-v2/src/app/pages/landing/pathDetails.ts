@@ -30,8 +30,8 @@ export const PATH_DETAILS: Record<PathKey, PathDetailContent> = {
   student: {
     key: "student",
     label: "Student",
-    color: "var(--rz-eye)",
-    glow: "rgba(125,232,255,.45)",
+    color: "#5ce1e6",
+    glow: "rgba(92,225,230,.55)",
     tagline: "Your campus record, working for you — not just filed away.",
     whyUs: "A resume is a claim. RyuZen is proof — real activity, real scores, real growth, built while you're still on campus.",
     items: [
@@ -44,8 +44,8 @@ export const PATH_DETAILS: Record<PathKey, PathDetailContent> = {
   organization: {
     key: "organization",
     label: "Organization",
-    color: "var(--rz-gold)",
-    glow: "rgba(232,200,122,.45)",
+    color: "#ff9d3b",
+    glow: "rgba(255,157,59,.55)",
     tagline: "Run your entire campus community from one real dashboard.",
     whyUs: "Spreadsheets can't show you who's actually engaged. RyuZen turns every department's real activity into one live, honest picture — automatically.",
     items: [
@@ -58,8 +58,8 @@ export const PATH_DETAILS: Record<PathKey, PathDetailContent> = {
   recruiter: {
     key: "recruiter",
     label: "Recruiter",
-    color: "var(--rz-purple)",
-    glow: "rgba(177,140,255,.45)",
+    color: "#be8aff",
+    glow: "rgba(190,138,255,.55)",
     tagline: "Find the right students faster — backed by real signal, not guesswork.",
     whyUs: "Job boards give you applications. RyuZen gives you evidence — real Career Scores, real interview performance, real campus activity — before you ever pick up the phone.",
     items: [

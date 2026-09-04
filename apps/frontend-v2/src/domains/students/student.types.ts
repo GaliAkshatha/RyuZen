@@ -24,6 +24,9 @@ export interface Student {
   semester: number;
   cgpa?: number;
   status: StudentStatus;
+  /** The real User account's login-access status (ACTIVE/SUSPENDED/ARCHIVED) - distinct from `status` above (enrollment record status). */
+  userStatus?: string;
+  permissions?: string[];
   joinedAt?: string;
   createdAt?: string;
   updatedAt?: string;

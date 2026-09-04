@@ -1,0 +1,82 @@
+# Real local orchestration - backend, frontend, and MongoDB together.
+# Every backend env var here matches apps/backend/.env.example
+# exactly. For a real production deployment, don't run MongoDB in a
+# container without ALSO attaching real persistent storage to it (the
+# named volume below does this for local use) - most managed hosts
+# instead point MONGODB_URI at a real managed database (MongoDB
+# Atlas, etc.) rather than running Mongo in a container at all.
+
+services:
+  mongodb:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+    environment:
+      PORT: 5000
+      NODE_ENV: production
+      MONGODB_URI: mongodb://mongodb:27017/ryuzen
+      JWT_SECRET: ${JWT_SECRET:-change-this-to-a-real-random-secret}
+      JWT_EXPIRES_IN: 7d
+      REFRESH_TOKEN_EXPIRES_IN: 30d
+      AI_PROVIDER: ${AI_PROVIDER:-gemini}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.5-flash}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://localhost:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:8b}
+      RATE_LIMIT_WINDOW_MS: 900000
+      RATE_LIMIT_MAX: 300
+      AUTH_RATE_LIMIT_MAX: 10
+      CACHE_DEFAULT_TTL_SECONDS: 60
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      EMAIL_FROM: ${EMAIL_FROM:-RyuZen <no-reply@ryuzen.ai>}
+      FRONTEND_URL: http://localhost:8080
+      ACCOUNT_LOCK_THRESHOLD: 5
+      ACCOUNT_LOCK_DURATION_MS: 900000
+      STORAGE_PROVIDER: ${STORAGE_PROVIDER:-local}
+      S3_BUCKET: ${S3_BUCKET:-}
+      S3_REGION: ${S3_REGION:-auto}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
+      S3_ENDPOINT: ${S3_ENDPOINT:-}
+      S3_PUBLIC_URL_BASE: ${S3_PUBLIC_URL_BASE:-}
+    volumes:
+      # Real persistent storage for certification file uploads - only
+      # actually matters when STORAGE_PROVIDER=local (the default,
+      # see LocalDiskStorageService.ts); without this volume, local
+      # files are lost every time the container restarts. Irrelevant
+      # if STORAGE_PROVIDER=s3, since uploads go to real object
+      # storage instead.
+      - backend_uploads:/app/uploads
+
+  frontend:
+    build:
+      context: ./apps/frontend-v2
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:5000/api/v1
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongodb_data:
+  backend_uploads:

@@ -17,6 +17,7 @@ import { usePromoteSemester } from "@/domains/students/hooks/usePromoteSemester"
 import { useArchiveStudent } from "@/domains/students/hooks/useArchiveStudent";
 import { useFacultyList } from "@/domains/faculty/hooks/useFacultyList";
 import { StudentStatus } from "@/domains/students/student.types";
+import { AccountAccessCard } from "@/domains/user-admin/components/AccountAccessCard";
 
 export function StudentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -137,6 +138,13 @@ export function StudentDetailPage() {
           </Select>
         </CardContent>
       </Card>
+
+      <AccountAccessCard
+        userId={student.userId}
+        recordQueryKey={["students", id]}
+        userStatus={student.userStatus}
+        permissions={student.permissions}
+      />
     </div>
   );
 }

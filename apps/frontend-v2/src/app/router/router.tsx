@@ -29,6 +29,7 @@ import { BulkImportPage } from "@/portals/org-admin/pages/BulkImportPage";
 import { InvitationsPage } from "@/portals/org-admin/pages/InvitationsPage";
 import { AlumniListPage } from "@/portals/org-admin/pages/AlumniListPage";
 import { AuditLogsPage } from "@/portals/org-admin/pages/AuditLogsPage";
+import { BadgeCatalogPage } from "@/portals/super-admin/pages/BadgeCatalogPage";
 
 import { FacultyLayout } from "@/portals/faculty/layout/FacultyLayout";
 import { FacultyHomePage } from "@/portals/faculty/pages/FacultyHomePage";
@@ -60,6 +61,17 @@ import { PlacementAdminHomePage } from "@/portals/placement-admin/pages/Placemen
 import { CompanyListPage } from "@/portals/placement-admin/pages/CompanyListPage";
 import { PlacementAnalyticsPage } from "@/portals/placement-admin/pages/PlacementAnalyticsPage";
 import { OrgAnalyticsPage } from "@/portals/org-admin/pages/OrgAnalyticsPage";
+import { LedgerAuditPage } from "@/portals/org-admin/pages/LedgerAuditPage";
+import { ClubsListPage } from "@/portals/org-admin/pages/ClubsListPage";
+import { ClubDetailPage } from "@/portals/org-admin/pages/ClubDetailPage";
+import { EventsListPage } from "@/domains/events/components/EventsListPage";
+import { EventDetailPage } from "@/domains/events/components/EventDetailPage";
+import { OpenAttendanceSessionPage } from "@/domains/attendance/components/OpenAttendanceSessionPage";
+import { AttendanceSessionPage } from "@/domains/attendance/components/AttendanceSessionPage";
+import { MyAttendancePage } from "@/domains/attendance/components/MyAttendancePage";
+import { AssessmentsListPage } from "@/domains/assessments/components/AssessmentsListPage";
+import { AssessmentBuilderPage } from "@/domains/assessments/components/AssessmentBuilderPage";
+import { AssessmentAttemptPage } from "@/domains/assessments/components/AssessmentAttemptPage";
 import { CreateCompanyPage } from "@/portals/placement-admin/pages/CreateCompanyPage";
 import { DriveListPage as PlacementAdminDriveListPage } from "@/portals/placement-admin/pages/DriveListPage";
 import { DriveDetailPage as PlacementAdminDriveDetailPage } from "@/portals/placement-admin/pages/DriveDetailPage";
@@ -101,6 +113,7 @@ export const router = createBrowserRouter([
       { path: "organizations/new", element: <CreateOrganizationPage /> },
       { path: "organizations/:id", element: <OrganizationDetailPage /> },
       { path: "audit-logs", element: <AuditLogsPage /> },
+      { path: "badges", element: <BadgeCatalogPage /> },
     ],
   },
   {
@@ -128,6 +141,9 @@ export const router = createBrowserRouter([
       { path: "alumni", element: <AlumniListPage /> },
       { path: "placements", element: <PlacementAnalyticsPage /> },
       { path: "analytics", element: <OrgAnalyticsPage /> },
+      { path: "ledger-audit", element: <LedgerAuditPage /> },
+      { path: "clubs", element: <ClubsListPage /> },
+      { path: "clubs/:id", element: <ClubDetailPage /> },
     ],
   },
   {
@@ -146,6 +162,12 @@ export const router = createBrowserRouter([
       { path: "activities/:id", element: <ActivityDetailPage /> },
       { path: "students", element: <MyStudentsPage /> },
       { path: "students/:userId/certifications", element: <MenteeCertificationsPage /> },
+      { path: "events", element: <EventsListPage /> },
+      { path: "events/:id", element: <EventDetailPage /> },
+      { path: "attendance", element: <OpenAttendanceSessionPage /> },
+      { path: "attendance/:sessionId", element: <AttendanceSessionPage /> },
+      { path: "assessments", element: <AssessmentsListPage /> },
+      { path: "assessments/:id", element: <AssessmentBuilderPage /> },
       { path: "connect", element: <ConnectPage /> },
     ],
   },
@@ -182,6 +204,11 @@ export const router = createBrowserRouter([
       { path: "career-score", element: <CareerScorePage /> },
       { path: "portfolio", element: <PortfolioPage /> },
       { path: "resume", element: <ResumePage /> },
+      { path: "events", element: <EventsListPage /> },
+      { path: "events/:id", element: <EventDetailPage /> },
+      { path: "attendance", element: <MyAttendancePage /> },
+      { path: "assessments", element: <AssessmentsListPage /> },
+      { path: "assessments/:id", element: <AssessmentAttemptPage /> },
       { path: "connect", element: <ConnectPage /> },
       { path: "ai-assistant", element: <AIAssistantPage /> },
     ],

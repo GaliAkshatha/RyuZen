@@ -27,6 +27,9 @@ import { PortfolioSettingsForm } from "@/domains/portfolio/components/PortfolioS
 import { SkillsManager } from "@/domains/skills/components/SkillsManager";
 import { AddProjectForm, AddAchievementForm, AddExperienceForm, AddEducationForm, AddCertificationForm } from "@/domains/portfolio/components/PortfolioAddForms";
 import { CertificationFileUpload } from "@/domains/portfolio/components/CertificationFileUpload";
+import { CodingProfileManager } from "@/domains/coding-profiles/components/CodingProfileManager";
+import { MyBadgesCard } from "@/domains/badges/components/MyBadgesCard";
+import { MyIssuedCertificatesCard } from "@/domains/issued-certificates/components/MyIssuedCertificatesCard";
 
 type SectionKey = "skills" | "projects" | "achievements" | "experience" | "education" | "certifications";
 
@@ -164,6 +167,10 @@ export function PortfolioPage() {
           );
         })}
       </div>
+
+      <CodingProfileManager />
+      <MyBadgesCard />
+      <MyIssuedCertificatesCard />
 
       {/* Expanded section detail */}
       {activeSection === "skills" && (

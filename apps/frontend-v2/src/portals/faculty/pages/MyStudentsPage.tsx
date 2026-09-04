@@ -14,6 +14,8 @@ import { useMyMentorships } from "@/domains/mentorship/hooks/useMyMentorships";
 import { useUpdateMentorship } from "@/domains/mentorship/hooks/useUpdateMentorship";
 import { useCompleteMentorship } from "@/domains/mentorship/hooks/useCompleteMentorship";
 import { MentorshipStatus, type Mentorship } from "@/domains/mentorship/mentorship.types";
+import { AwardBadgeButton } from "@/domains/badges/components/AwardBadgeButton";
+import { IssueCertificateButton } from "@/domains/issued-certificates/components/IssueCertificateButton";
 
 /**
  * "My Students" - closes a real, previously-flagged Faculty portal
@@ -82,6 +84,8 @@ export function MyStudentsPage() {
                         Certifications
                       </Link>
                     )}
+                    <AwardBadgeButton studentId={m.studentId} />
+                    <IssueCertificateButton studentId={m.studentId} />
                     {m.status === MentorshipStatus.ACTIVE && (
                       <Button
                         size="sm"

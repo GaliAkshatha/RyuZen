@@ -1,7 +1,52 @@
-node_modules
-.env
-dist
-build
-coverage
-.vscode
+# Dependencies
+node_modules/
 
+# Build output
+dist/
+dist-ssr/
+dist-seed/
+*.tsbuildinfo
+
+# Environment files - every app's real .env holds live secrets
+# (database connection strings, JWT secrets, AI provider API keys).
+# Only .env.example files (committed on purpose, contain no real
+# values) should ever be tracked.
+.env
+.env.local
+.env.*.local
+apps/*/.env
+
+# Seed script output - regenerable, and genuinely sensitive: this
+# file lists every demo account's real login email + password in
+# plain text. Regenerate locally with `npm run seed:credentials`
+# rather than committing it. If this file was already committed in
+# an earlier commit, run `git rm --cached apps/backend/SEED_CREDENTIALS.md`
+# once to stop tracking it going forward - adding it here alone does
+# not remove it from files git already tracks.
+apps/backend/SEED_CREDENTIALS.md
+
+# Uploaded files - only relevant when STORAGE_PROVIDER=local; real
+# uploads belong on disk/a mounted volume, never in version control.
+apps/backend/uploads/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test/coverage output
+coverage/
+
+# Editor/OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

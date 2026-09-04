@@ -24,6 +24,11 @@ export interface StudentResponseDto {
 
     status: StudentStatus;
 
+    /** The real User account's login-access status (ACTIVE/SUSPENDED/ARCHIVED) - a genuinely different concern from `status` above (enrollment record status). Populated by GetStudentUseCase. */
+    userStatus?: string;
+
+    permissions?: string[];
+
     joinedAt?: Date;
 
     createdAt?: Date;

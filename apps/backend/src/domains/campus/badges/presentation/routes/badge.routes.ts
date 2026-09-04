@@ -69,6 +69,32 @@ router.get(
 );
 
 /*
+ My Badges - STUDENT only, self-scoped. Declared before "/:id" and
+ "/students/:studentId" so "me" is never captured as an id/studentId
+ route parameter.
+*/
+
+router.get(
+
+    "/me",
+
+    authenticate,
+
+    authorizePermission(
+
+        UserRole.STUDENT
+
+    ),
+
+    asyncHandler(
+
+        controller.getMine.bind(controller)
+
+    )
+
+);
+
+/*
  List Badges Awarded To A Student
 
  Declared before "/:id" so "students" is not

@@ -51,7 +51,8 @@ export const studentContainer = {
     getStudent:
 
         new GetStudentUseCase(
-            studentRepository
+            studentRepository,
+            userRepository
         ),
 
     getStudents:

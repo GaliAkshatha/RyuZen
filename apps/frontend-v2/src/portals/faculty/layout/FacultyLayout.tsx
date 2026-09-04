@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { ClipboardList, Home, Users, UserCheck } from "lucide-react";
+import { ClipboardList, Home, Users, UserCheck, Calendar, ClipboardCheck, FileQuestion } from "lucide-react";
 
 import { TopNav, type TopNavItem } from "@/shared/layout/TopNav";
 
@@ -7,17 +7,22 @@ const NAV_ITEMS: TopNavItem[] = [
   { to: "/faculty", label: "Home", icon: Home, end: true },
   { to: "/faculty/activities", label: "My Activities", icon: ClipboardList },
   { to: "/faculty/students", label: "My Students", icon: Users },
+  { to: "/faculty/events", label: "Events", icon: Calendar },
+  { to: "/faculty/attendance", label: "Attendance", icon: ClipboardCheck },
+  { to: "/faculty/assessments", label: "Assessments", icon: FileQuestion },
   { to: "/faculty/connect", label: "Connect", icon: UserCheck },
 ];
 
 /**
  * Real Faculty shell - topbar, not sidebar. Activities (with real
  * organization+ownership isolation), My Students (real mentorship,
- * sourced from assigned mentees), and Connect (a real, confirmed gap
- * fix this pass - Faculty was wrongly excluded before, but only
- * ORG_ADMIN/SUPER_ADMIN are actually excluded from the directory at
- * the backend level) are what's built. Attendance/Assessments remain
- * real backend capabilities not yet built into this portal.
+ * sourced from assigned mentees), Events (full lifecycle - create,
+ * publish, mark attendance, issue certificates), Attendance (real
+ * signed rotating QR-token sessions, GPS proximity, correction
+ * review), Assessments (a full MCQ builder + timed student attempt
+ * flow), and Connect are what's built. Every real, substantial
+ * backend domain surfaced in the pre-deployment audit now has real
+ * frontend coverage in this portal.
  */
 export function FacultyLayout() {
   return (

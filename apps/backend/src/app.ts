@@ -63,6 +63,15 @@ bootstrap(app);
 // CertificationController.uploadFile builds.
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
+// Real liveness endpoint - used by render.yaml's healthCheckPath, and
+// generally useful for any platform's uptime monitoring. Deliberately
+// does no DB query or other work - a health check should answer fast
+// and only reflect whether the process itself is up and routing
+// requests, not downstream dependency health.
+app.get("/api/v1/health", (_req, res) => {
+    res.status(200).json({ status: "ok" });
+});
+
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/invitations", invitationRoutes);

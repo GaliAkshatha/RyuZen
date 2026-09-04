@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Network, GraduationCap, Users, Home, Mail, UserCheck, BarChart3, Briefcase } from "lucide-react";
+import { Network, GraduationCap, Users, Home, Mail, UserCheck, BarChart3, Briefcase, ShieldCheck, Users2 } from "lucide-react";
 
 import { TopNav, type TopNavItem } from "@/shared/layout/TopNav";
 
@@ -10,8 +10,10 @@ const NAV_ITEMS: TopNavItem[] = [
   { to: "/organization/students", label: "Students", icon: Users },
   { to: "/organization/invitations", label: "Invitations", icon: Mail },
   { to: "/organization/alumni", label: "Alumni", icon: UserCheck },
+  { to: "/organization/clubs", label: "Clubs", icon: Users2 },
   { to: "/organization/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/organization/placements", label: "Placements", icon: Briefcase },
+  { to: "/organization/ledger-audit", label: "Ledger Audit", icon: ShieldCheck },
 ];
 
 /**
@@ -23,8 +25,11 @@ const NAV_ITEMS: TopNavItem[] = [
  * - users, departments, activities, AI usage, department comparison -
  * with "Placements" kept as its own separate, clearly-labeled link
  * for the finer-grained drive-level detail Org Admin still has real
- * access to. Settings and Audit Logs are deliberately not in this
- * portal's nav, per explicit product direction.
+ * access to. Settings and (activity) Audit Logs are deliberately not
+ * in this portal's nav, per explicit product direction - "Ledger
+ * Audit" is a genuinely different feature (the point-transaction
+ * hash-chain verification), not a renamed version of that excluded
+ * page.
  */
 export function OrgAdminLayout() {
   return (

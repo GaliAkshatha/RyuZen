@@ -1,35 +1,65 @@
-import { useEffect, useRef } from "react";
-import { ClipboardList, Sparkles, Target, UserSearch } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ClipboardList, Sparkles, Target, UserSearch, ArrowRight, Activity } from "lucide-react";
 
 import sceneCrystal from "@/assets/scene-crystal.jpg";
 import { useParallaxBackground } from "@/app/pages/landing/useParallaxBackground";
 import { ensureGsapRegistered, gsap } from "@/app/pages/landing/gsapSetup";
 import { AmbientFog } from "@/app/pages/landing/AmbientFog";
 
-/**
- * Content rewrite per explicit direction: this section previously
- * read as security/compliance branding ("Trusted. Transparent.
- * Timeless.", "Verified Authenticity", "Immutable Records") - none of
- * which is what RyuZen actually does. Replaced with the real idea:
- * everything a student does on campus connects into one picture that
- * organizations and recruiters can actually use - a real flow
- * (activity -> skills -> readiness -> discovery), not a security
- * pitch. Visual structure (2x2 grid beside the crystal, the one-time
- * awakening flash before the stagger) is unchanged.
- */
-const CONNECTIONS = [
-  { icon: ClipboardList, label: "Campus activity", desc: "Everything a student does, tracked as it happens." },
-  { icon: Sparkles, label: "Skills & growth", desc: "Real experience building into a real skill set." },
-  { icon: Target, label: "Career readiness", desc: "One clear picture of where a student actually stands." },
-  { icon: UserSearch, label: "Talent discovery", desc: "Recruiters find the right fit, faster." },
+interface ConnectionItem {
+  step: string;
+  icon: typeof ClipboardList;
+  label: string;
+  desc: string;
+  detail: string;
+}
+
+const CONNECTIONS: ConnectionItem[] = [
+  {
+    step: "01",
+    icon: ClipboardList,
+    label: "Campus Activity",
+    desc: "Everything a student does, captured as it happens.",
+    detail: "Workshops, hackathons, certifications, and coursework are verified in real time.",
+  },
+  {
+    step: "02",
+    icon: Sparkles,
+    label: "Skills & Growth",
+    desc: "Real experience building into a living skillset.",
+    detail: "AI maps granular competencies, benchmarked against current industry demands.",
+  },
+  {
+    step: "03",
+    icon: Target,
+    label: "Career Readiness",
+    desc: "One transparent picture of where a student stands.",
+    detail: "Objective readiness scores eliminate guesswork for placement teams and students.",
+  },
+  {
+    step: "04",
+    icon: UserSearch,
+    label: "Talent Discovery",
+    desc: "Recruiters discover the exact right fit, instantly.",
+    detail: "Filter candidates by verified skills and demonstrable project achievements.",
+  },
 ];
 
+const TEXT_SHADOW = "0 2px 14px rgba(0,0,0,0.95), 0 1px 3px rgba(0,0,0,0.95)";
+
+/**
+ * Enhanced IntelligenceScene:
+ * - Fits within the viewport window (h-screen / compact window-fit layout)
+ * - Crystal artwork background clearly visible with minimal translucent overlay
+ * - Compact, high-impact 2x2 interactive cards and synergy flow
+ */
 export function IntelligenceScene() {
   const bgRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const headRef = useRef<HTMLDivElement>(null);
   const flashRef = useRef<HTMLDivElement>(null);
   const connectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [activeStep, setActiveStep] = useState<number>(0);
   useParallaxBackground(bgRef);
 
   useEffect(() => {
@@ -38,17 +68,17 @@ export function IntelligenceScene() {
     if (prefersReduced || !sectionRef.current || connections.length === 0) return;
 
     ensureGsapRegistered();
-    gsap.set([headRef.current, ...connections], { opacity: 0, y: 16 });
+    gsap.set([headRef.current, ...connections], { opacity: 0, y: 14 });
     gsap.set(flashRef.current, { opacity: 0 });
 
     const tl = gsap.timeline({
-      scrollTrigger: { trigger: sectionRef.current, start: "top 65%", once: true },
+      scrollTrigger: { trigger: sectionRef.current, start: "top 70%", once: true },
     });
 
-    tl.to(flashRef.current, { opacity: 1, duration: 0.9, ease: "power1.out" })
-      .to(flashRef.current, { opacity: 0, duration: 1.4, ease: "power1.in" }, ">-0.2")
-      .to(headRef.current, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, "<")
-      .to(connections, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out", stagger: 0.18 }, "-=0.3");
+    tl.to(flashRef.current, { opacity: 1, duration: 0.7, ease: "power1.out" })
+      .to(flashRef.current, { opacity: 0, duration: 1.0, ease: "power1.in" }, ">-0.2")
+      .to(headRef.current, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, "<")
+      .to(connections, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out", stagger: 0.1 }, "-=0.2");
 
     return () => {
       tl.scrollTrigger?.kill();
@@ -57,50 +87,118 @@ export function IntelligenceScene() {
   }, []);
 
   return (
-    <section id="intelligence" ref={sectionRef} className="relative min-h-[85vh] overflow-hidden px-6 py-28">
-      <div ref={bgRef} className="absolute -inset-y-[6%] inset-x-0 rz-crystal-pulse bg-cover" style={{ backgroundImage: `url(${sceneCrystal})`, backgroundPosition: "20% center" }} />
+    <section
+      id="intelligence"
+      ref={sectionRef}
+      className="relative min-h-[85vh] lg:min-h-screen flex items-center justify-center overflow-hidden px-6 py-14 sm:px-12"
+    >
+      {/* Crystal artwork background - positioned so the glowing crystal has ample breathing room */}
+      <div
+        ref={bgRef}
+        className="absolute -inset-y-[6%] inset-x-0 rz-crystal-pulse bg-cover"
+        style={{ backgroundImage: `url(${sceneCrystal})`, backgroundPosition: "22% center" }}
+      />
+
+      {/* Awakening light flash */}
       <div
         ref={flashRef}
         className="pointer-events-none absolute inset-0"
         style={{ background: "radial-gradient(ellipse 700px 500px at 22% 45%, rgba(125,232,255,.35), transparent 65%)" }}
       />
+
+      {/* Light translucent gradient so the crystal artwork breathes freely */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, var(--rz-void) 0%, transparent 12%, transparent 88%, var(--rz-void) 100%), linear-gradient(90deg, rgba(5,6,10,.15) 0%, rgba(5,6,10,.55) 46%, var(--rz-ink) 62%, var(--rz-ink) 100%)",
+            "linear-gradient(180deg, rgba(5,6,10,0.3) 0%, transparent 15%, transparent 80%, rgba(5,6,10,0.6) 100%)",
         }}
       />
       <AmbientFog tint="rgba(79,227,212,.05)" />
 
-      <div className="relative z-10 mx-auto flex max-w-5xl items-center">
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl items-center justify-between gap-6">
+        {/* Left space allowing the glowing crystal in the artwork to shine through unobstructed */}
         <div className="hidden flex-1 lg:block" aria-hidden="true" />
-        <div className="max-w-md lg:pl-8">
+
+        {/* Content column - compact and unconstrained */}
+        <div className="w-full max-w-md rounded-2xl border border-[rgba(255,255,255,0.1)] bg-[rgba(5,6,10,0.65)] p-5 sm:p-6 backdrop-blur-md shadow-2xl">
           <div ref={headRef}>
-            <p className="rz-mono mb-3 text-[11px] uppercase tracking-[0.14em] text-[var(--rz-eye)]">The RyuZen intelligence layer</p>
-            <h2 className="rz-display mb-4 text-3xl font-bold uppercase sm:text-4xl" style={{ color: "#E4EEF9" }}>
+            <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-[rgba(125,232,255,0.3)] bg-[rgba(5,6,10,0.6)] px-3 py-0.5 text-[10px] uppercase tracking-[0.14em] text-[var(--rz-eye)]">
+              <Activity className="h-3 w-3 animate-pulse" aria-hidden="true" />
+              <span>The RyuZen Intelligence Engine</span>
+            </div>
+            <h2 className="rz-display mb-1.5 text-2xl font-extrabold uppercase sm:text-3xl" style={{ color: "#E4EEF9", textShadow: TEXT_SHADOW }}>
               Everything connects.
             </h2>
-            <p className="mb-10 text-sm leading-relaxed text-[var(--rz-text-dim)]">
-              Every activity, skill, and achievement connects into one clear picture — helping students grow,
-              organizations engage, and recruiters discover real potential.
+            <p className="mb-4 text-xs sm:text-sm leading-relaxed text-[#D2DCE8]" style={{ textShadow: TEXT_SHADOW }}>
+              Milestones synthesize into a unified graph — empowering students to advance and recruiters to discover genuine talent.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-x-6 gap-y-7">
-            {CONNECTIONS.map((c, i) => (
-              <div
-                key={c.label}
-                ref={(el) => {
-                  connectionRefs.current[i] = el;
-                }}
-                className="flex flex-col gap-2"
-              >
-                <c.icon className="h-5 w-5" style={{ color: "var(--rz-eye)" }} aria-hidden="true" />
-                <p className="text-[13px] font-semibold text-[var(--rz-text)]">{c.label}</p>
-                <p className="text-[11.5px] leading-relaxed text-[var(--rz-text-mute)]">{c.desc}</p>
-              </div>
-            ))}
+          {/* 2x2 Interactive Synergy Cards */}
+          <div className="grid grid-cols-2 gap-3">
+            {CONNECTIONS.map((c, i) => {
+              const isActive = activeStep === i;
+
+              return (
+                <div
+                  key={c.label}
+                  ref={(el) => {
+                    connectionRefs.current[i] = el;
+                  }}
+                  onClick={() => setActiveStep(i)}
+                  className={`group relative cursor-pointer rounded-xl border p-3 backdrop-blur-md transition-all duration-200 ${
+                    isActive
+                      ? "border-[var(--rz-eye)] bg-[rgba(19,23,34,0.9)] shadow-[0_0_18px_rgba(125,232,255,0.25)]"
+                      : "border-[rgba(255,255,255,0.08)] bg-[rgba(5,6,10,0.55)] hover:border-[rgba(125,232,255,0.3)] hover:bg-[rgba(19,23,34,0.75)]"
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span
+                      className="flex h-7 w-7 items-center justify-center rounded-lg border text-[var(--rz-eye)]"
+                      style={{
+                        borderColor: isActive ? "var(--rz-eye)" : "rgba(255,255,255,0.12)",
+                        background: isActive ? "rgba(125,232,255,0.15)" : "rgba(5,6,10,0.4)",
+                      }}
+                    >
+                      <c.icon className="h-3.5 w-3.5" aria-hidden="true" />
+                    </span>
+                    <span className="rz-mono text-[10px] font-bold text-[var(--rz-text-mute)] group-hover:text-[var(--rz-eye)]">
+                      {c.step}
+                    </span>
+                  </div>
+
+                  <p className="text-[12.5px] font-semibold text-[var(--rz-text)] group-hover:text-[var(--rz-eye)] transition-colors">
+                    {c.label}
+                  </p>
+                  <p className="mt-0.5 text-[10.5px] leading-tight text-[var(--rz-text-dim)] line-clamp-2">
+                    {c.desc}
+                  </p>
+
+                  {isActive && (
+                    <p className="mt-2 border-t border-[rgba(125,232,255,0.15)] pt-1.5 text-[10px] leading-tight text-[var(--rz-crystal)]">
+                      {c.detail}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Interactive Synergy Chain Indicator */}
+          <div className="mt-4 flex items-center justify-between rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(5,6,10,0.5)] px-3 py-2 text-[10.5px]">
+            <span className="rz-mono uppercase tracking-wider text-[var(--rz-text-mute)] text-[9.5px]">
+              Flow:
+            </span>
+            <div className="flex items-center gap-1.5 font-semibold text-[var(--rz-text-dim)]">
+              <span className={activeStep === 0 ? "text-[var(--rz-eye)] font-bold" : ""}>Activity</span>
+              <ArrowRight className="h-2.5 w-2.5 opacity-40" />
+              <span className={activeStep === 1 ? "text-[var(--rz-eye)] font-bold" : ""}>Skills</span>
+              <ArrowRight className="h-2.5 w-2.5 opacity-40" />
+              <span className={activeStep === 2 ? "text-[var(--rz-eye)] font-bold" : ""}>Readiness</span>
+              <ArrowRight className="h-2.5 w-2.5 opacity-40" />
+              <span className={activeStep === 3 ? "text-[var(--rz-eye)] font-bold" : ""}>Talent</span>
+            </div>
           </div>
         </div>
       </div>

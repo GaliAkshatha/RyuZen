@@ -5,6 +5,7 @@ import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
 import { certificationContainer } from "../../application/container/CertificationContainer.js";
+import { createFileStorageService } from "../../../../../shared/infrastructure/storage/FileStorageFactory.js";
 
 export class CertificationController {
 
@@ -348,7 +349,19 @@ export class CertificationController {
 
         }
 
-        const fileUrl = `/uploads/certifications/${req.file.filename}`;
+        const fileUrl =
+
+            await createFileStorageService()
+
+                .upload(
+
+                    req.file.buffer,
+
+                    req.file.originalname,
+
+                    req.file.mimetype
+
+                );
 
         const certification =
 

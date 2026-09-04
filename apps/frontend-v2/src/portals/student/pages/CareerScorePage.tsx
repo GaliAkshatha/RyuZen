@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/Card";
 import { Skeleton } from "@/shared/components/Skeleton";
 import { ErrorState } from "@/shared/components/ErrorState";
 import { useCareerScore } from "@/domains/career-score/hooks/useCareerScore";
+import { MyPointHistoryCard } from "@/domains/point-ledger/components/MyPointHistoryCard";
 
 const SUB_SCORES = [
   { key: "leaderboardScore" as const, label: "Activity Points" },
@@ -114,6 +115,8 @@ export function CareerScorePage() {
           </CardContent>
         </Card>
       )}
+
+      <MyPointHistoryCard />
     </div>
   );
 }

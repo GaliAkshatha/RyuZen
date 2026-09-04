@@ -14,7 +14,6 @@ import { LandingFooter } from "@/app/pages/landing/LandingFooter";
 import { SceneMist } from "@/app/pages/landing/SceneMist";
 import { getLandingScrollPosition, saveLandingScrollPosition } from "@/app/pages/landing/landingScrollMemory";
 import { EXITING_DEMO_KEY } from "@/app/pages/landing/demoModeFlag";
-import { AmbientAudioToggle } from "@/app/pages/landing/AmbientAudioToggle";
 import { useHideScrollbar } from "@/app/pages/landing/useHideScrollbar";
 
 import "@/app/pages/landing/landing.css";
@@ -25,26 +24,12 @@ interface LandingNavState {
 }
 
 /**
- * Real, preserved behavior from the original landing page: an
- * already-authenticated visitor is redirected straight to their real
- * portal, never shown the marketing page again.
- *
- * isExitingDemoRef is the actual fix for "Exit Demo lands on
- * /login": confirmed this guard itself was the real second bug,
- * independent of logout()/navigate() ordering - during the brief
- * moment the router reaches "/" while the user is still (or again)
- * authenticated, this guard would fire and bounce straight back to
- * the portal, which ProtectedRoute then redirects to /login once
- * auth state finishes clearing. EXITING_DEMO_KEY (set by
- * ExitDemoButton right before it navigates) tells this one render to
- * skip the guard; the flag is cleared immediately after so a genuine
- * later authenticated visit to "/" still redirects normally.
- *
- * Scroll restoration uses sessionStorage (see
- * landingScrollMemory.ts) rather than router state alone - this is
- * what makes a genuine browser back/forward button (not just
- * ExitDemoButton's explicit navigation) correctly return to wherever
- * the visitor actually was.
+ * Enhanced LandingPage:
+ * - Direct seamless transition between Hero and Ecosystem without an empty gap
+ * - Audio removed per user direction
+ * - Section 3 (Intelligence) perfectly sized to fit the window view size
+ * - Background artwork clearly visible across all scenes
+ * - Demo section text full to the left side with visible city background
  */
 export function LandingPage() {
   const { user, isLoading } = useAuth();
@@ -83,8 +68,6 @@ export function LandingPage() {
       window.removeEventListener("scroll", onScroll);
       if (frame !== null) cancelAnimationFrame(frame);
     };
-    // Deliberately empty deps: this should only ever attach once per
-    // mount, using whatever saved position existed at that moment.
   }, []);
 
   if (!isLoading && user && !isExitingDemoRef.current) {
@@ -94,15 +77,15 @@ export function LandingPage() {
   return (
     <div className="ryuzen-landing">
       <LandingNav visible={navVisible} />
-      <AmbientAudioToggle />
       <HeroExperience onNavReveal={() => setNavVisible(true)} skipIntro={skipIntro} />
-      <SceneMist height={110} />
+      {/* Moderate breathing room between first and second section */}
+      <SceneMist height={55} />
       <EcosystemScene />
-      <SceneMist height={140} variant="convergence" />
+      <SceneMist height={70} variant="convergence" />
       <IntelligenceScene />
-      <SceneMist height={150} />
+      <SceneMist height={70} />
       <DemoScene />
-      <SceneMist height={170} />
+      <SceneMist height={70} />
       <FinalScene />
       <LandingFooter />
     </div>

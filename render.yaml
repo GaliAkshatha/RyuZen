@@ -1,0 +1,108 @@
+# Render Blueprint - https://render.com/docs/blueprint-spec
+#
+# Deploy: connect this repo in the Render dashboard and it detects
+# this file automatically ("New +" -> "Blueprint"). Render builds
+# from apps/backend using its native Node runtime (matches the real
+# "build": "tsc" / "start": "node dist/server.js" scripts in
+# package.json - confirmed by actually running both before writing
+# this file).
+#
+# Real env vars below match apps/backend/.env.example field-for-field.
+# Anything with `sync: false` is a genuine secret - set its real value
+# in the Render dashboard (Environment tab) after the first deploy,
+# never commit real secrets into this file.
+#
+# Storage note: STORAGE_PROVIDER defaults to "local", which writes
+# certification uploads to local disk. Render's free/standard web
+# services have an EPHEMERAL filesystem - local uploads will be lost
+# on every redeploy or restart unless you attach a real Render
+# persistent disk (a paid add-on). For a real production deployment
+# without one, set STORAGE_PROVIDER=s3 and fill in the S3_* variables
+# instead (see LocalDiskStorageService.ts / S3StorageService.ts).
+
+services:
+  - type: web
+    name: ryuzen-backend
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: apps/backend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+
+      # Secrets - set real values in the Render dashboard
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: REFRESH_TOKEN_EXPIRES_IN
+        value: 30d
+
+      - key: AI_PROVIDER
+        value: gemini
+      - key: GEMINI_MODEL
+        value: gemini-3.5-flash
+
+      - key: RATE_LIMIT_WINDOW_MS
+        value: "900000"
+      - key: RATE_LIMIT_MAX
+        value: "300"
+      - key: AUTH_RATE_LIMIT_MAX
+        value: "10"
+
+      - key: CACHE_DEFAULT_TTL_SECONDS
+        value: "60"
+
+      # Email is optional - the app starts fine without these set
+      # (EmailService logs a warning and skips sending rather than
+      # crashing a request). Set real values in the dashboard only if
+      # you want invitations/verification/password-reset emails to
+      # actually send.
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_SECURE
+        value: "false"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: EMAIL_FROM
+        value: "RyuZen <no-reply@ryuzen.ai>"
+
+      # Set this to your real deployed Vercel frontend URL once you
+      # have it - used to build links in outgoing emails.
+      - key: FRONTEND_URL
+        sync: false
+
+      - key: ACCOUNT_LOCK_THRESHOLD
+        value: "5"
+      - key: ACCOUNT_LOCK_DURATION_MS
+        value: "900000"
+
+      - key: STORAGE_PROVIDER
+        value: local
+      - key: S3_BUCKET
+        sync: false
+      - key: S3_REGION
+        value: auto
+      - key: S3_ACCESS_KEY_ID
+        sync: false
+      - key: S3_SECRET_ACCESS_KEY
+        sync: false
+      - key: S3_ENDPOINT
+        sync: false
+      - key: S3_PUBLIC_URL_BASE
+        sync: false

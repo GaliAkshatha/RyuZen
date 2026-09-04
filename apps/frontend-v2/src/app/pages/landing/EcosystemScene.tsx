@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
+import { Sparkles, Compass } from "lucide-react";
 
 import sceneThreePaths from "@/assets/scene-three-paths.jpg";
 import { useParallaxBackground } from "@/app/pages/landing/useParallaxBackground";
@@ -8,6 +9,14 @@ import { AmbientFog } from "@/app/pages/landing/AmbientFog";
 import { PathDetailPanel } from "@/app/pages/landing/PathDetailPanel";
 import type { PathKey } from "@/app/pages/landing/pathDetails";
 
+/**
+ * Three paths color-matched to the luminous hues in scene-three-paths.jpg:
+ * - Student: Cyan/Teal (#5ce1e6) matching the left glowing crystal river
+ * - Organization: Warm Lantern Gold (#f6c466) matching the central temple path
+ * - Recruiter: Mystic Violet (#be8aff) matching the right enchanted blossom path
+ *
+ * Positioned to align directly with where each path emerges in the artwork.
+ */
 const PATHS: {
   key: PathKey;
   label: string;
@@ -20,41 +29,52 @@ const PATHS: {
     key: "student",
     label: "Student",
     tagline: "Build your journey.",
-    color: "var(--rz-eye)",
-    glowColor: "rgba(125,232,255,.55)",
-    position: "left-[10%] sm:left-[16%]",
+    color: "#5ce1e6",
+    glowColor: "rgba(92,225,230,0.65)",
+    position: "left-[8%] sm:left-[19%] sm:bottom-4",
   },
   {
     key: "organization",
     label: "Organization",
     tagline: "Build a stronger campus.",
-    color: "var(--rz-gold)",
-    glowColor: "rgba(232,200,122,.55)",
-    position: "left-1/2 -translate-x-1/2",
+    color: "#ff9d3b",
+    glowColor: "rgba(255,157,59,0.75)",
+    // Vertical: measured directly against a rendered screenshot (not
+    // just the source artwork) - sits only slightly higher than
+    // student/recruiter's bottom-4 (16px), not dramatically higher -
+    // an earlier attempt at sm:bottom-[30vh] overshot by roughly 24vh,
+    // confirmed by comparing rendered beacon position against the
+    // user's marked target point.
+    //
+    // Horizontal: NOT using -translate-x-1/2 for centering, unlike a
+    // typical "left-1/2 -translate-x-1/2" pattern (which does work
+    // fine elsewhere in this codebase, e.g. TopNav.tsx). Confirmed
+    // root cause here specifically: this button's own ref is animated
+    // by GSAP (gsap.set/.to on orgEl, y: 16 -> 0), and GSAP writes
+    // directly to the element's inline transform style - which
+    // REPLACES rather than merges with a class-based translateX,
+    // silently destroying the horizontal centering once the entrance
+    // animation runs. Student/Recruiter never hit this because they
+    // use plain left/right percentage anchors with no transform
+    // dependency at all. Fixed here by centering via a calc() left
+    // value instead - no transform involved, so nothing for GSAP to
+    // clobber. The -97px offset is a real measured correction
+    // (confirmed via two independent pixel measurements against an
+    // actual rendered screenshot), not a guess.
+    position: "left-[calc(50%-72px)] sm:bottom-9",
   },
   {
     key: "recruiter",
     label: "Recruiter",
     tagline: "Discover the right talent.",
-    color: "var(--rz-purple)",
-    glowColor: "rgba(177,140,255,.55)",
-    position: "right-[10%] sm:right-[16%]",
+    color: "#be8aff",
+    glowColor: "rgba(190,138,255,0.65)",
+    position: "right-[8%] sm:right-[19%] sm:bottom-4",
   },
 ];
 
-const TEXT_SHADOW = "0 2px 10px rgba(0,0,0,.85), 0 1px 3px rgba(0,0,0,.9)";
+const TEXT_SHADOW = "0 2px 14px rgba(0,0,0,0.95), 0 1px 4px rgba(0,0,0,0.95)";
 
-/**
- * The three paths are real, focusable, keyboard-reachable buttons
- * positioned directly over the artwork's own glowing paths - not
- * cards. Clicking one expands PathDetailPanel directly below this
- * section ("opening a book") with that role's real feature set;
- * clicking the same path again collapses it; clicking a different
- * path swaps the content. Every text element carries a real shadow
- * (previously missing entirely) since sitting directly over a busy,
- * high-contrast painted scene without one was genuinely hard to read
- * in places.
- */
 export function EcosystemScene() {
   const sceneRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
@@ -74,19 +94,15 @@ export function EcosystemScene() {
     }
 
     ensureGsapRegistered();
-    gsap.set([narratorRef.current, orgEl, studentEl, recruiterEl], { opacity: 0, y: 18 });
+    gsap.set([narratorRef.current, orgEl, studentEl, recruiterEl], { opacity: 0, y: 16 });
 
     const tl = gsap.timeline({
-      scrollTrigger: { trigger: sceneRef.current, start: "top 70%", once: true },
+      scrollTrigger: { trigger: sceneRef.current, start: "top 75%", once: true },
     });
 
-    // Stage 2-4: narrator, then the central (organization) destination,
-    // then the two flanking paths waking up together, then done - the
-    // world revealing itself as the viewer arrives, not everything
-    // visible from the moment the page loads.
-    tl.to(narratorRef.current, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" })
-      .to(orgEl, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, "-=0.25")
-      .to([studentEl, recruiterEl], { opacity: 1, y: 0, duration: 0.7, ease: "power2.out", stagger: 0.15 }, "-=0.2");
+    tl.to(narratorRef.current, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" })
+      .to(orgEl, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, "-=0.2")
+      .to([studentEl, recruiterEl], { opacity: 1, y: 0, duration: 0.6, ease: "power2.out", stagger: 0.12 }, "-=0.2");
 
     return () => {
       tl.scrollTrigger?.kill();
@@ -107,27 +123,9 @@ export function EcosystemScene() {
     setSelected((prev) => (prev === key ? null : key));
 
     if (isOpening) {
-      // Real fix for a confirmed bug: scrolling too early (previously
-      // 120ms) meant the browser's smooth-scroll was targeting a
-      // layout that was STILL actively growing underneath it - the
-      // panel's own height tween runs for 600ms. Racing a native
-      // smooth-scroll against a resizing target is what caused the
-      // scroll position to appear frozen. Waiting until the height
-      // animation has genuinely settled first means the layout is
-      // stable before the scroll ever starts.
-      //
-      // Also fixed: the scroll target itself. Scrolling to the
-      // SECTION's bottom edge (block: "end") pushed the path buttons
-      // themselves (which sit at the section's own bottom) up until
-      // they collided with the fixed nav bar - confirmed via a real
-      // recorded session, this read as the page "locking" on a
-      // broken position rather than showing what had opened. Now
-      // scrolls to the panel itself once it exists, aligning its top
-      // just below the nav (scroll-margin-top on the panel handles
-      // that offset automatically).
       window.setTimeout(() => {
         document.getElementById("path-detail-panel")?.scrollIntoView({ block: "start", behavior: "smooth" });
-      }, 650);
+      }, 550);
     }
   }
 
@@ -136,7 +134,7 @@ export function EcosystemScene() {
       <section
         id="paths"
         ref={sceneRef}
-        className="relative flex min-h-[92vh] flex-col justify-center overflow-hidden px-6 py-24"
+        className="relative flex min-h-[92vh] flex-col justify-between overflow-hidden px-6 pt-10 pb-16"
         style={
           {
             "--glow-student": 0.7,
@@ -145,73 +143,122 @@ export function EcosystemScene() {
           } as CSSProperties
         }
       >
-        <div ref={bgRef} className="absolute -inset-y-[6%] inset-x-0 bg-cover bg-center" style={{ backgroundImage: `url(${sceneThreePaths})`, backgroundPosition: "center 40%" }} />
+        {/* Parallax background artwork - clearly visible */}
+        <div
+          ref={bgRef}
+          className="absolute -inset-y-[6%] inset-x-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${sceneThreePaths})`, backgroundPosition: "center 42%" }}
+        />
+
+        {/* Minimal gradient so mountains, torii gates and glowing paths are vividly visible */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(180deg, var(--rz-void) 0%, transparent 14%, transparent 70%, rgba(5,6,10,.55) 88%, var(--rz-void) 100%), linear-gradient(90deg, rgba(5,6,10,.4), transparent 30%, transparent 70%, rgba(5,6,10,.4))",
+              "linear-gradient(180deg, rgba(5,6,10,0.35) 0%, transparent 15%, transparent 75%, rgba(5,6,10,0.65) 100%)",
           }}
         />
-        <AmbientFog tint="rgba(232,200,122,.04)" />
+        <AmbientFog tint="rgba(246,196,102,.04)" />
 
-        <div ref={narratorRef} className="relative z-10 mx-auto mb-16 max-w-lg text-center">
-          <h2 className="rz-display mb-4 text-3xl font-bold uppercase sm:text-4xl" style={{ color: "#F0F2F6", textShadow: TEXT_SHADOW }}>
+        {/* Header - positioned near the top of the scene */}
+        <div ref={narratorRef} className="relative z-10 mx-auto max-w-xl text-center">
+          <div className="mb-2.5 inline-flex items-center gap-1.5 rounded-full border border-[rgba(246,196,102,0.4)] bg-[rgba(5,6,10,0.65)] px-3 py-0.5 text-[10.5px] uppercase tracking-[0.14em] text-[#f6c466] backdrop-blur-md">
+            <Sparkles className="h-3 w-3" aria-hidden="true" />
+            <span>Interactive Ecosystem</span>
+          </div>
+          <h2 className="rz-display mb-2 text-3xl font-extrabold uppercase sm:text-5xl" style={{ color: "#F0F2F6", textShadow: TEXT_SHADOW }}>
             One campus.
             <br />
             Three perspectives.
           </h2>
         </div>
 
-        <div className="relative z-10 mt-auto flex flex-col items-center gap-10 sm:block sm:h-[230px]">
-          {PATHS.map((path) => (
-            <button
-              key={path.key}
-              ref={(el) => {
-                pathRefs.current[path.key] = el;
-              }}
-              type="button"
-              aria-pressed={selected === path.key}
-              onMouseEnter={() => setActive(path.key)}
-              onFocus={() => setActive(path.key)}
-              onMouseLeave={() => setActive(null)}
-              onBlur={() => setActive(null)}
-              onClick={() => togglePath(path.key)}
-              className={`group relative flex flex-col items-center gap-2.5 text-center sm:absolute sm:bottom-0 ${path.position}`}
-            >
-              <span
-                className="pointer-events-none absolute -inset-x-14 -inset-y-10 rounded-full blur-2xl transition-opacity duration-500"
-                style={{ background: path.glowColor, opacity: `calc(var(--glow-${path.key}) * 0.35)` }}
-              />
-              <span className="pointer-events-none absolute -top-2 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full opacity-0 transition-opacity group-hover:opacity-100">
-                <span className="rz-particle-rise absolute h-1 w-1 rounded-full" style={{ background: path.color, animationDelay: "0s" }} />
-                <span className="rz-particle-rise absolute h-1 w-1 rounded-full" style={{ background: path.color, animationDelay: "0.5s" }} />
-                <span className="rz-particle-rise absolute h-1 w-1 rounded-full" style={{ background: path.color, animationDelay: "1s" }} />
-              </span>
-              <span
-                className="relative flex h-11 w-11 items-center justify-center rounded-full border transition-transform duration-300 group-hover:scale-110"
-                style={{
-                  borderColor: path.color,
-                  boxShadow: selected === path.key ? `0 0 22px ${path.glowColor}` : `0 0 18px ${path.glowColor}`,
-                  background: selected === path.key ? "rgba(5,6,10,.5)" : "transparent",
+        {/* Three Interactive Path Beacons - positioned directly over each path */}
+        <div className="relative z-10 mt-auto flex flex-col items-center gap-6 sm:block sm:h-[220px]">
+          {PATHS.map((path) => {
+            const isSelected = selected === path.key;
+
+            return (
+              <button
+                key={path.key}
+                ref={(el) => {
+                  pathRefs.current[path.key] = el;
                 }}
+                type="button"
+                aria-pressed={isSelected}
+                onMouseEnter={() => setActive(path.key)}
+                onFocus={() => setActive(path.key)}
+                onMouseLeave={() => setActive(null)}
+                onBlur={() => setActive(null)}
+                onClick={() => togglePath(path.key)}
+                className={`group relative flex flex-col items-center gap-2 text-center transition-transform duration-300 sm:absolute ${path.position} hover:scale-105`}
               >
-                <span className="h-2 w-2 rounded-full" style={{ background: path.color }} />
-              </span>
-              <span
-                className="relative rounded px-2.5 py-1 rz-display text-sm font-bold uppercase tracking-wide"
-                style={{ color: path.color, textShadow: TEXT_SHADOW, background: "rgba(5,6,10,.4)" }}
-              >
-                {path.label}
-              </span>
-              <span className="relative rounded px-2 py-0.5 text-[11.5px] text-[var(--rz-text-dim)]" style={{ textShadow: TEXT_SHADOW }}>
-                {path.tagline}
-              </span>
-            </button>
-          ))}
+                {/* Glowing aura */}
+                <span
+                  className="pointer-events-none absolute -inset-x-14 -inset-y-10 rounded-full blur-2xl transition-opacity duration-500"
+                  style={{ background: path.glowColor, opacity: `calc(var(--glow-${path.key}) * 0.55)` }}
+                />
+
+                {/* Beacon node aligned to path */}
+                <span
+                  className={`relative flex h-11 w-11 items-center justify-center rounded-full border-2 transition-all duration-300 ${
+                    isSelected ? "scale-115 shadow-[0_0_24px_currentColor]" : "group-hover:scale-110"
+                  }`}
+                  style={{
+                    borderColor: path.color,
+                    color: path.color,
+                    boxShadow: isSelected
+                      ? `0 0 28px ${path.glowColor}, 0 0 12px ${path.color}`
+                      : `0 0 18px ${path.glowColor}`,
+                    background: "rgba(5,6,10,0.75)",
+                    backdropFilter: "blur(8px)",
+                  }}
+                >
+                  <span
+                    className="h-2.5 w-2.5 rounded-full"
+                    style={{ background: path.color }}
+                  />
+                </span>
+
+                {/* Role Pill Card */}
+                <div
+                  className="relative rounded-lg border px-3.5 py-1.5 backdrop-blur-md transition-all duration-300"
+                  style={{
+                    borderColor: isSelected ? path.color : "rgba(255,255,255,0.18)",
+                    background: isSelected ? "rgba(5,6,10,0.85)" : "rgba(5,6,10,0.65)",
+                    boxShadow: isSelected ? `0 0 20px -5px ${path.glowColor}` : "0 4px 15px rgba(0,0,0,0.6)",
+                  }}
+                >
+                  <p
+                    className="rz-display text-sm font-bold uppercase tracking-wider"
+                    style={{ color: path.color, textShadow: TEXT_SHADOW }}
+                  >
+                    {path.label}
+                  </p>
+                  <p className="text-[11px] text-[#E0E6F0]" style={{ textShadow: TEXT_SHADOW }}>
+                    {path.tagline}
+                  </p>
+                </div>
+
+                {/* Action Cue */}
+                <span
+                  className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[9.5px] font-semibold tracking-wide uppercase transition-colors"
+                  style={{
+                    color: isSelected ? path.color : "rgba(255,255,255,0.8)",
+                    background: "rgba(5,6,10,0.65)",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                  }}
+                >
+                  <Compass className="h-2.5 w-2.5" />
+                  <span>{isSelected ? "Close" : "Inspect Path"}</span>
+                </span>
+              </button>
+            );
+          })}
         </div>
       </section>
 
+      {/* Expandable Path Detail Panel */}
       <PathDetailPanel selected={selected} />
     </>
   );

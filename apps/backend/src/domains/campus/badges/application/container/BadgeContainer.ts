@@ -13,6 +13,7 @@ import { UpdateBadgeUseCase } from "../use-cases/UpdateBadgeUseCase.js";
 import { DeleteBadgeUseCase } from "../use-cases/DeleteBadgeUseCase.js";
 import { AwardBadgeUseCase } from "../use-cases/AwardBadgeUseCase.js";
 import { GetStudentBadgesUseCase } from "../use-cases/GetStudentBadgesUseCase.js";
+import { GetMyBadgesUseCase } from "../use-cases/GetMyBadgesUseCase.js";
 
 import { cacheService } from "../../../../../shared/infrastructure/cache/InMemoryCacheService.js";
 
@@ -92,6 +93,18 @@ export const badgeContainer = {
     getStudentBadges:
 
         new GetStudentBadgesUseCase(
+
+            badgeRepository,
+
+            studentBadgeRepository,
+
+            studentRepository
+
+        ),
+
+    getMyBadges:
+
+        new GetMyBadgesUseCase(
 
             badgeRepository,
 

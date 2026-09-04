@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Home, ClipboardList, Briefcase, FileText, TrendingUp, FolderKanban, Users, Sparkles, ScrollText } from "lucide-react";
+import { Home, ClipboardList, Briefcase, FileText, TrendingUp, FolderKanban, Users, Sparkles, ScrollText, Calendar, ClipboardCheck, FileQuestion } from "lucide-react";
 
 import { TopNav, type TopNavItem } from "@/shared/layout/TopNav";
 
@@ -11,6 +11,9 @@ const NAV_ITEMS: TopNavItem[] = [
   { to: "/student/career-score", label: "Career", icon: TrendingUp },
   { to: "/student/portfolio", label: "Portfolio", icon: FolderKanban },
   { to: "/student/resume", label: "Resume", icon: ScrollText },
+  { to: "/student/events", label: "Events", icon: Calendar },
+  { to: "/student/attendance", label: "Attendance", icon: ClipboardCheck },
+  { to: "/student/assessments", label: "Assessments", icon: FileQuestion },
   { to: "/student/ai-assistant", label: "AI", icon: Sparkles },
   { to: "/student/connect", label: "Connect", icon: Users },
 ];

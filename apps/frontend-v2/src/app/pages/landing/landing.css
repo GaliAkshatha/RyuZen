@@ -150,6 +150,66 @@
   }
 }
 
+/* Enhanced micro-animations & visual dynamics */
+.ryuzen-landing .rz-shimmer-badge {
+  background: linear-gradient(90deg, rgba(125,232,255,0.06), rgba(125,232,255,0.22), rgba(125,232,255,0.06));
+  background-size: 200% 100%;
+  animation: rz-shimmer-pan 4s linear infinite;
+}
+@keyframes rz-shimmer-pan {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.ryuzen-landing .rz-glow-pulse {
+  animation: rz-glow-pulse-anim 3s ease-in-out infinite alternate;
+}
+@keyframes rz-glow-pulse-anim {
+  0% {
+    box-shadow: 0 0 15px rgba(125,232,255,0.25);
+  }
+  100% {
+    box-shadow: 0 0 35px rgba(125,232,255,0.65), 0 0 10px rgba(79,227,212,0.4);
+  }
+}
+
+/* Audio visualizer equalizer bars */
+.ryuzen-landing .rz-bar-wave-1 {
+  animation: rz-bar-jump 1.1s ease-in-out infinite alternate;
+}
+.ryuzen-landing .rz-bar-wave-2 {
+  animation: rz-bar-jump 0.8s ease-in-out 0.2s infinite alternate;
+}
+.ryuzen-landing .rz-bar-wave-3 {
+  animation: rz-bar-jump 1.3s ease-in-out 0.4s infinite alternate;
+}
+@keyframes rz-bar-jump {
+  0% {
+    height: 4px;
+  }
+  100% {
+    height: 14px;
+  }
+}
+
+/* Interactive glass card utilities */
+.ryuzen-landing .rz-glass-card {
+  background: rgba(11, 14, 20, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ryuzen-landing .rz-glass-card:hover {
+  background: rgba(19, 23, 34, 0.85);
+  border-color: rgba(125, 232, 255, 0.3);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8), 0 0 20px -5px rgba(125, 232, 255, 0.15);
+}
+
 /**
  * Hides the browser's native window scrollbar - deliberately scoped
  * to a class toggled on <html> only while a landing-family page is

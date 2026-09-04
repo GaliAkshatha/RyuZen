@@ -262,6 +262,36 @@ export class BadgeController {
 
     }
 
+    async getMine(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const studentBadges =
+
+            await badgeContainer
+
+                .getMyBadges
+
+                .execute(
+
+                    req.user!.userId
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            studentBadges
+
+        );
+
+    }
+
     async listForStudent(
 
         req: Request,
