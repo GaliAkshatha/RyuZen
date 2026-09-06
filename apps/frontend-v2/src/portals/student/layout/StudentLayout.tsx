@@ -1,34 +1,73 @@
 import { Outlet } from "react-router-dom";
-import { Home, ClipboardList, Briefcase, FileText, TrendingUp, FolderKanban, Users, Sparkles, ScrollText, Calendar, ClipboardCheck, FileQuestion } from "lucide-react";
+import {
+  Home,
+  ClipboardList,
+  Briefcase,
+  FileText,
+  TrendingUp,
+  FolderKanban,
+  Users,
+  Sparkles,
+  ScrollText,
+  Calendar,
+  ClipboardCheck,
+  FileQuestion,
+  Users2,
+  GraduationCap,
+  Layers,
+} from "lucide-react";
 
 import { TopNav, type TopNavItem } from "@/shared/layout/TopNav";
 
+/**
+ * Grouped into 3 dropdowns (Academics / Career / More) plus Home -
+ * was 12 flat items before Clubs was even added, genuinely too wide
+ * for a topbar. Grouping is purely presentational (TopNav's
+ * `children` support) - every route below is completely unchanged,
+ * this only changes how they're reached from the nav itself.
+ */
 const NAV_ITEMS: TopNavItem[] = [
   { to: "/student", label: "Home", icon: Home, end: true },
-  { to: "/student/activities", label: "Activities", icon: ClipboardList },
-  { to: "/student/drives", label: "Drives", icon: Briefcase },
-  { to: "/student/applications", label: "Applications", icon: FileText },
-  { to: "/student/career-score", label: "Career", icon: TrendingUp },
-  { to: "/student/portfolio", label: "Portfolio", icon: FolderKanban },
-  { to: "/student/resume", label: "Resume", icon: ScrollText },
-  { to: "/student/events", label: "Events", icon: Calendar },
-  { to: "/student/attendance", label: "Attendance", icon: ClipboardCheck },
-  { to: "/student/assessments", label: "Assessments", icon: FileQuestion },
-  { to: "/student/ai-assistant", label: "AI", icon: Sparkles },
-  { to: "/student/connect", label: "Connect", icon: Users },
+  {
+    to: "",
+    label: "Academics",
+    icon: GraduationCap,
+    children: [
+      { to: "/student/activities", label: "Activities", icon: ClipboardList },
+      { to: "/student/events", label: "Events", icon: Calendar },
+      { to: "/student/clubs", label: "Clubs", icon: Users2 },
+      { to: "/student/attendance", label: "Attendance", icon: ClipboardCheck },
+      { to: "/student/assessments", label: "Assessments", icon: FileQuestion },
+    ],
+  },
+  {
+    to: "",
+    label: "Career",
+    icon: Briefcase,
+    children: [
+      { to: "/student/drives", label: "Drives", icon: Briefcase },
+      { to: "/student/applications", label: "Applications", icon: FileText },
+      { to: "/student/career-score", label: "Career Score", icon: TrendingUp },
+      { to: "/student/portfolio", label: "Portfolio", icon: FolderKanban },
+      { to: "/student/resume", label: "Resume", icon: ScrollText },
+    ],
+  },
+  {
+    to: "",
+    label: "More",
+    icon: Layers,
+    children: [
+      { to: "/student/ai-assistant", label: "AI Assistant", icon: Sparkles },
+      { to: "/student/connect", label: "Connect", icon: Users },
+    ],
+  },
 ];
 
 /**
  * Real Student shell - topbar, not sidebar (per product direction).
- * Placements, Career Score, Portfolio, Resume, AI Assistant, Connect,
- * and Notifications (drawer, in TopNav) are all real. Profile is
- * reached only via the avatar in TopNav, never a nav item. Resume was
- * previously a confirmed gap (a complete backend domain with zero
- * student-facing frontend) - now built and given its own nav entry,
- * matching how Career Score already gets its own dedicated space
- * despite also being portfolio-derived. Attendance and Assessments
- * remain real, substantial backend domains not yet re-verified and
- * built fresh in this rebuild.
+ * Every route from before is still reachable, just grouped rather
+ * than flat - see NAV_ITEMS above for the real grouping. Profile is
+ * reached only via the avatar in TopNav, never a nav item.
  */
 export function StudentLayout() {
   return (

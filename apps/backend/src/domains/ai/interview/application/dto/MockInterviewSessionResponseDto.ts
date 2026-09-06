@@ -14,7 +14,21 @@ export interface MockInterviewSessionResponseDto {
 
     status: InterviewSessionStatus;
 
+    durationMinutes: number;
+
+    /**
+     * A real, derived value (durationMinutes / MAX_QUESTIONS) - not a
+     * separately stored field, so it can never drift out of sync with
+     * the real overall duration. This is what the frontend uses to
+     * render a real per-question countdown.
+     */
+    perQuestionSeconds: number;
+
     feedback?: string;
+
+    strengths?: string[];
+
+    improvements?: string[];
 
     score?: number;
 

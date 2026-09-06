@@ -4,7 +4,7 @@ import { InterviewFeedback } from "../../application/ports/InterviewFeedback.js"
 
 import { GeminiClient } from "../../../../../shared/infrastructure/ai/GeminiClient.js";
 
-import { computeInterviewScore, buildQuestionPrompt, buildFeedbackPrompt } from "./interviewPrompts.js";
+import { buildQuestionPrompt, buildFeedbackPrompt, buildQualityAssessmentPrompt, parseQualityScore, parseFeedbackResponse } from "./interviewPrompts.js";
 
 /*
  Real Gemini-backed mock interview - the cloud counterpart to
@@ -15,20 +15,29 @@ import { computeInterviewScore, buildQuestionPrompt, buildFeedbackPrompt } from 
 export class GeminiMockInterviewProvider implements IMockInterviewProvider {
     async nextQuestion(
         role: string,
-        previousExchanges: IInterviewExchange[]
+        previousExchanges: IInterviewExchange[],
+        candidateContext: string
     ): Promise<string> {
-        const prompt = buildQuestionPrompt(role, previousExchanges);
+        const prompt = buildQuestionPrompt(role, previousExchanges, candidateContext);
         return GeminiClient.generateText(prompt);
     }
 
     async generateFeedback(
         role: string,
-        exchanges: IInterviewExchange[]
+        exchanges: IInterviewExchange[],
+        score: number
     ): Promise<InterviewFeedback> {
-        const score = computeInterviewScore(exchanges);
         const prompt = buildFeedbackPrompt(role, exchanges, score);
-        const feedback = await GeminiClient.generateText(prompt);
+        const raw = await GeminiClient.generateText(prompt);
+        return parseFeedbackResponse(raw);
+    }
 
-        return { score, feedback };
+    async assessAnswerQuality(
+        question: string,
+        answer: string
+    ): Promise<number> {
+        const prompt = buildQualityAssessmentPrompt(question, answer);
+        const raw = await GeminiClient.generateText(prompt);
+        return parseQualityScore(raw);
     }
 }

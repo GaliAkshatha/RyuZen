@@ -2,6 +2,8 @@ import { MockInterviewSession } from "../../domain/entities/MockInterviewSession
 
 import { InterviewSessionStatus } from "../../domain/constants/InterviewSessionStatus.js";
 
+import { InterviewDifficulty } from "../../domain/interfaces/IInterviewExchange.js";
+
 import {
     MockInterviewSessionDocument
 } from "../persistence/MockInterviewSessionModel.js";
@@ -33,6 +35,12 @@ export class MockInterviewSessionMapper {
                         question:
                             exchange.question,
 
+                        difficulty:
+                            exchange.difficulty as InterviewDifficulty,
+
+                        qualityScore:
+                            exchange.qualityScore,
+
                         answer:
                             exchange.answer,
 
@@ -49,8 +57,17 @@ export class MockInterviewSessionMapper {
             status:
                 document.status as InterviewSessionStatus,
 
+            durationMinutes:
+                document.durationMinutes,
+
             feedback:
                 document.feedback,
+
+            strengths:
+                document.strengths,
+
+            improvements:
+                document.improvements,
 
             score:
                 document.score,
@@ -85,8 +102,17 @@ export class MockInterviewSessionMapper {
             status:
                 data.status,
 
+            durationMinutes:
+                data.durationMinutes,
+
             feedback:
                 data.feedback,
+
+            strengths:
+                data.strengths,
+
+            improvements:
+                data.improvements,
 
             score:
                 data.score

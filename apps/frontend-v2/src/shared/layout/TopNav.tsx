@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
-import { Bell } from "lucide-react";
+import { Bell, ChevronDown } from "lucide-react";
 
 import { cn } from "@/shared/utils/cn";
 import { useAuth } from "@/domains/auth/AuthContext";
@@ -13,6 +13,84 @@ export interface TopNavItem {
   label: string;
   icon: LucideIcon;
   end?: boolean;
+  /**
+   * Optional dropdown group - when present, this item renders as a
+   * toggle button that reveals the listed items instead of being a
+   * direct link itself (its own `to`/`end` are ignored). Fully
+   * backward compatible: every portal that never sets this continues
+   * rendering flat top-level links exactly as before.
+   */
+  children?: TopNavItem[];
+}
+
+/**
+ * Click-to-toggle dropdown for a grouped nav item. Closes on
+ * click-outside (real document listener, not just blur, so clicking
+ * another nav item or anywhere else on the page closes it cleanly)
+ * and on route change (selecting a child link should close the menu,
+ * not leave it hanging open over the new page).
+ */
+function NavDropdown({ item }: { item: TopNavItem }) {
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+
+  const isChildActive = (item.children ?? []).some((child) =>
+    child.end ? location.pathname === child.to : location.pathname.startsWith(child.to),
+  );
+
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!open) return;
+    function handleClickOutside(event: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
+
+  return (
+    <div ref={containerRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className={cn(
+          "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+          isChildActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-accent hover:text-foreground",
+        )}
+        aria-expanded={open}
+      >
+        <item.icon className="h-4 w-4" aria-hidden="true" />
+        {item.label}
+        <ChevronDown className={cn("h-3 w-3 transition-transform", open && "rotate-180")} aria-hidden="true" />
+      </button>
+      {open && (
+        <div className="absolute left-1/2 top-full z-50 mt-1.5 flex w-48 -translate-x-1/2 flex-col gap-0.5 rounded-lg border border-border bg-card p-1.5 shadow-lg">
+          {(item.children ?? []).map((child) => (
+            <NavLink
+              key={child.to}
+              to={child.to}
+              end={child.end}
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors",
+                  isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                )
+              }
+            >
+              <child.icon className="h-3.5 w-3.5" aria-hidden="true" />
+              {child.label}
+            </NavLink>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 /**
@@ -43,22 +121,26 @@ export function TopNav({ items, roleLabel }: { items: TopNavItem[]; roleLabel: s
         </div>
 
         <nav className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1" aria-label="Primary">
-          {items.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
-              className={({ isActive }) =>
-                cn(
-                  "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
-                  isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-accent hover:text-foreground",
-                )
-              }
-            >
-              <item.icon className="h-4 w-4" aria-hidden="true" />
-              {item.label}
-            </NavLink>
-          ))}
+          {items.map((item) =>
+            item.children ? (
+              <NavDropdown key={item.label} item={item} />
+            ) : (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                className={({ isActive }) =>
+                  cn(
+                    "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+                    isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                  )
+                }
+              >
+                <item.icon className="h-4 w-4" aria-hidden="true" />
+                {item.label}
+              </NavLink>
+            ),
+          )}
         </nav>
 
         <div className="flex items-center gap-1.5">

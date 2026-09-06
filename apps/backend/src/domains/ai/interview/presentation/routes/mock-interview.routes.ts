@@ -123,4 +123,24 @@ router.post(
 
 );
 
+/*
+ Abandon Mock Interview - a real, distinct action from answering; the
+ candidate is quitting early, not submitting a final answer. No
+ request body needed.
+*/
+
+router.post(
+
+    "/:id/abandon",
+
+    authenticate,
+
+    asyncHandler(
+
+        controller.abandon.bind(controller)
+
+    )
+
+);
+
 export default router;

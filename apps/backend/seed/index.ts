@@ -5,6 +5,12 @@ import { seedOrganizations } from "./data/organizations.js";
 import { seedFaculty } from "./data/faculty.js";
 import { seedStudents } from "./data/students.js";
 import { seedAlumni } from "./data/alumni.js";
+import { seedClubs } from "./data/clubs.js";
+import { seedEvents } from "./data/events.js";
+import { seedBadges } from "./data/badges.js";
+import { seedAssessments } from "./data/assessments.js";
+import { seedAttendance } from "./data/attendance.js";
+import { seedMockInterviews } from "./data/mockInterviews.js";
 import { seedPlacementAdmin } from "./data/placementAdmins.js";
 import { seedCompanies } from "./data/companies.js";
 import { seedRecruiters } from "./data/recruiters.js";
@@ -51,6 +57,12 @@ async function main(): Promise<void> {
 
     const faculty = await seedFaculty(org);
     const students = await seedStudents(org);
+    const clubs = await seedClubs(org, faculty, students);
+    await seedEvents(org, faculty, students, clubs);
+    await seedBadges(org, faculty, students);
+    await seedAssessments(org, faculty, students);
+    await seedAttendance(org, faculty, students);
+    await seedMockInterviews(org, students);
     const alumni = await seedAlumni(org);
     const placementAdmin = await seedPlacementAdmin(org);
     await seedNews(org, faculty, placementAdmin);

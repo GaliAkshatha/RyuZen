@@ -13,6 +13,7 @@
     "seed:credentials": "tsx seed/regenerateCredentials.ts",
     "seed:backfill-chat-notifications": "tsx seed/backfillChatAndNotifications.ts",
     "seed:backfill-demo-completeness": "tsx seed/backfillDemoAccountCompleteness.ts",
+    "seed:backfill-clubs-campus-life": "tsx seed/backfillClubsAndCampusLife.ts",
     "build": "tsc",
     "start": "node dist/server.js"
   },

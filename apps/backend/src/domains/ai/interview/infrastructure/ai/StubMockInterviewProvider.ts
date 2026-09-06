@@ -44,7 +44,9 @@ implements IMockInterviewProvider {
 
         role: string,
 
-        previousExchanges: IInterviewExchange[]
+        previousExchanges: IInterviewExchange[],
+
+        _candidateContext: string
 
     ): Promise<string> {
 
@@ -68,44 +70,47 @@ implements IMockInterviewProvider {
 
         role: string,
 
-        exchanges: IInterviewExchange[]
+        exchanges: IInterviewExchange[],
+
+        score: number
 
     ): Promise<InterviewFeedback> {
 
-        const MIN_ANSWER_LENGTH = 20;
-
-        const substantiveAnswers =
-
-            exchanges.filter(
-
-                exchange =>
-                    (exchange.answer?.trim().length ?? 0) >= MIN_ANSWER_LENGTH
-
-            ).length;
-
-        const score =
-
-            exchanges.length > 0
-
-                ? Math.round(
-
-                    (substantiveAnswers / exchanges.length) * 100
-
-                )
-
-                : 0;
-
         return {
 
-            score,
+            summary:
+                `This is a placeholder review (score: ${score}/100). No live language-model ` +
+                `provider is configured yet - configure AI_PROVIDER to get real, ` +
+                `content-aware feedback instead of this placeholder.`,
 
-            feedback:
-                "This is a placeholder review. No live language-model " +
-                "provider is configured yet; the score above reflects " +
-                `how many of your ${exchanges.length} answer(s) were ` +
-                "substantive, but this feedback text is not AI-generated."
+            strengths: [],
+
+            improvements: []
 
         };
+
+    }
+
+    /**
+     * Honest limitation: with no live LLM configured, this can't
+     * genuinely assess content quality - it falls back to a length
+     * proxy (longer, up to a point, scores higher), which is a real
+     * regression from the real providers' actual content assessment.
+     * This exists so the feature still functions end-to-end (adaptive
+     * difficulty, the hybrid score) when no AI_PROVIDER is configured,
+     * not to claim equivalent quality to a real assessment.
+     */
+    async assessAnswerQuality(
+
+        _question: string,
+
+        answer: string
+
+    ): Promise<number> {
+
+        const length = answer.trim().length;
+
+        return Math.min(100, Math.round((length / 200) * 100));
 
     }
 

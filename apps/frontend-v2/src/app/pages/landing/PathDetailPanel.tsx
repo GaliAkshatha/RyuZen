@@ -80,7 +80,7 @@ export function PathDetailPanel({ selected }: PathDetailPanelProps) {
       {detail && (
         <div
           ref={contentRef}
-          className="relative px-6 py-16 sm:px-12"
+          className="relative px-6 py-10 sm:px-12"
           style={{
             background: `radial-gradient(ellipse 900px 500px at 50% 0%, ${detail.glow}, transparent 65%), var(--rz-void)`,
           }}
@@ -98,7 +98,7 @@ export function PathDetailPanel({ selected }: PathDetailPanelProps) {
               <h3 className="rz-display mb-2 text-2xl font-bold sm:text-4xl" style={{ color: detail.color }}>
                 {detail.label} Experience
               </h3>
-              <p className="mx-auto mb-7 max-w-lg text-sm leading-relaxed text-[var(--rz-text-dim)]">
+              <p className="mx-auto mb-5 max-w-lg text-sm leading-relaxed text-[var(--rz-text-dim)]">
                 {detail.tagline}
               </p>
             </div>
@@ -106,7 +106,7 @@ export function PathDetailPanel({ selected }: PathDetailPanelProps) {
             {/* Why Us / Philosophy callout */}
             <div
               ref={whyRef}
-              className="mx-auto mb-10 max-w-xl rounded-xl border-l-3 px-6 py-4.5 backdrop-blur-md"
+              className="mx-auto mb-6 max-w-xl rounded-xl border-l-3 px-6 py-3.5 backdrop-blur-md"
               style={{
                 borderColor: detail.color,
                 background: "rgba(11,14,20,.7)",
@@ -119,14 +119,14 @@ export function PathDetailPanel({ selected }: PathDetailPanelProps) {
             </div>
 
             {/* Feature Cards Grid */}
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {detail.items.map((item, i) => (
                 <div
                   key={item.title}
                   ref={(el) => {
                     itemRefs.current[i] = el;
                   }}
-                  className="rz-glass-card group flex items-start gap-4 rounded-xl p-5"
+                  className="rz-glass-card group flex items-start gap-4 rounded-xl p-4"
                 >
                   <div
                     className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition-transform duration-300 group-hover:scale-110"
@@ -151,7 +151,7 @@ export function PathDetailPanel({ selected }: PathDetailPanelProps) {
 
             {/* Direct Sandbox Launcher CTA */}
             {demoRoleKey && (
-              <div className="mt-12 flex flex-col items-center justify-center gap-3">
+              <div className="mt-8 flex flex-col items-center justify-center gap-3">
                 <button
                   type="button"
                   disabled={pendingRole !== null}

@@ -96,6 +96,54 @@ export class MockInterviewController {
 
     }
 
+    async abandon(
+
+        req: Request,
+
+        res: Response
+
+    ) {
+
+        const { id } = req.params;
+
+        if (!id || Array.isArray(id)) {
+
+            throw new ApiError(
+
+                "Invalid interview session id.",
+
+                HttpStatus.BAD_REQUEST
+
+            );
+
+        }
+
+        const session =
+
+            await mockInterviewContainer
+
+                .abandonMockInterview
+
+                .execute(
+
+                    id,
+
+                    req.user!.userId
+
+                );
+
+        return ApiResponse.success(
+
+            res,
+
+            session,
+
+            "Interview ended."
+
+        );
+
+    }
+
     async list(
 
         req: Request,

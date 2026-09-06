@@ -8,6 +8,11 @@ import { MockInterviewSessionResponseMapper } from "../../infrastructure/mappers
 
 import { IMockInterviewProvider } from "../ports/IMockInterviewProvider.js";
 
+import { buildCandidateContext } from "../services/buildCandidateContext.js";
+
+import { IPortfolioProjectRepository } from "../../../../career/portfolio/infrastructure/repositories/IPortfolioProjectRepository.js";
+import { ISkillRepository } from "../../../../career/skills/infrastructure/repositories/ISkillRepository.js";
+
 import { StartMockInterviewDto } from "../dto/StartMockInterviewDto.js";
 import { MockInterviewSessionResponseDto } from "../dto/MockInterviewSessionResponseDto.js";
 
@@ -17,7 +22,11 @@ export class StartMockInterviewUseCase {
 
         private readonly repository: IMockInterviewSessionRepository,
 
-        private readonly provider: IMockInterviewProvider
+        private readonly provider: IMockInterviewProvider,
+
+        private readonly projectRepository: IPortfolioProjectRepository,
+
+        private readonly skillRepository: ISkillRepository
 
     ) {}
 
@@ -40,9 +49,24 @@ export class StartMockInterviewUseCase {
                 [],
 
             status:
-                InterviewSessionStatus.IN_PROGRESS
+                InterviewSessionStatus.IN_PROGRESS,
+
+            durationMinutes:
+                dto.durationMinutes
 
         });
+
+        const candidateContext =
+
+            await buildCandidateContext(
+
+                userId,
+
+                this.projectRepository,
+
+                this.skillRepository
+
+            );
 
         const firstQuestion =
 
@@ -50,7 +74,9 @@ export class StartMockInterviewUseCase {
 
                 dto.role,
 
-                []
+                [],
+
+                candidateContext
 
             );
 

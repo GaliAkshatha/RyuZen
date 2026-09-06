@@ -4,7 +4,11 @@ export interface InterviewExchangeSubdocument {
 
     question: string;
 
+    difficulty: string;
+
     answer?: string;
+
+    qualityScore?: number;
 
     askedAt: Date;
 
@@ -22,7 +26,13 @@ export interface MockInterviewSessionDocument extends Document {
 
     status: string;
 
+    durationMinutes: number;
+
     feedback?: string;
+
+    strengths?: string[];
+
+    improvements?: string[];
 
     score?: number;
 
@@ -42,9 +52,27 @@ const InterviewExchangeSchema = new Schema<InterviewExchangeSubdocument>(
 
         },
 
+        difficulty: {
+
+            type: String,
+
+            enum: ["EASY", "MEDIUM", "HARD"],
+
+            required: true,
+
+            default: "MEDIUM",
+
+        },
+
         answer: {
 
             type: String,
+
+        },
+
+        qualityScore: {
+
+            type: Number,
 
         },
 
@@ -104,15 +132,41 @@ const MockInterviewSessionSchema = new Schema<MockInterviewSessionDocument>(
 
             type: String,
 
-            enum: ["IN_PROGRESS", "COMPLETED"],
+            enum: ["IN_PROGRESS", "COMPLETED", "ABANDONED"],
 
             default: "IN_PROGRESS",
+
+        },
+
+        durationMinutes: {
+
+            type: Number,
+
+            required: true,
+
+            default: 20,
 
         },
 
         feedback: {
 
             type: String,
+
+        },
+
+        strengths: {
+
+            type: [String],
+
+            default: undefined,
+
+        },
+
+        improvements: {
+
+            type: [String],
+
+            default: undefined,
 
         },
 

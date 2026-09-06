@@ -2,12 +2,19 @@ import { MockInterviewSessionRepository } from "../../infrastructure/repositorie
 
 import { createMockInterviewProvider } from "../../../../../shared/infrastructure/ai/AIProviderFactory.js";
 
+import { PortfolioProjectRepository } from "../../../../career/portfolio/infrastructure/repositories/PortfolioProjectRepository.js";
+import { SkillRepository } from "../../../../career/skills/infrastructure/repositories/SkillRepository.js";
+
 import { StartMockInterviewUseCase } from "../use-cases/StartMockInterviewUseCase.js";
 import { AnswerMockInterviewUseCase } from "../use-cases/AnswerMockInterviewUseCase.js";
+import { AbandonMockInterviewUseCase } from "../use-cases/AbandonMockInterviewUseCase.js";
 import { GetMockInterviewUseCase } from "../use-cases/GetMockInterviewUseCase.js";
 import { GetMyMockInterviewsUseCase } from "../use-cases/GetMyMockInterviewsUseCase.js";
 
 const mockInterviewSessionRepository = new MockInterviewSessionRepository();
+
+const portfolioProjectRepository = new PortfolioProjectRepository();
+const skillRepository = new SkillRepository();
 
 /*
  Real Ollama-backed mock interview (see
@@ -25,13 +32,31 @@ export const mockInterviewContainer = {
 
             mockInterviewSessionRepository,
 
-            mockInterviewProvider
+            mockInterviewProvider,
+
+            portfolioProjectRepository,
+
+            skillRepository
 
         ),
 
     answerMockInterview:
 
         new AnswerMockInterviewUseCase(
+
+            mockInterviewSessionRepository,
+
+            mockInterviewProvider,
+
+            portfolioProjectRepository,
+
+            skillRepository
+
+        ),
+
+    abandonMockInterview:
+
+        new AbandonMockInterviewUseCase(
 
             mockInterviewSessionRepository,
 

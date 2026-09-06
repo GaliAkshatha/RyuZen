@@ -4,32 +4,42 @@ import { InterviewFeedback } from "../../application/ports/InterviewFeedback.js"
 
 import { OllamaClient } from "../../../../../shared/infrastructure/ai/OllamaClient.js";
 
-import { computeInterviewScore, buildQuestionPrompt, buildFeedbackPrompt } from "./interviewPrompts.js";
+import { buildQuestionPrompt, buildFeedbackPrompt, buildQualityAssessmentPrompt, parseQualityScore, parseFeedbackResponse } from "./interviewPrompts.js";
 
 /*
  Real Ollama-backed mock interview. nextQuestion is genuinely
  role-aware and avoids repeating prior questions. generateFeedback's
- SCORE is deterministic (shared with GeminiMockInterviewProvider via
- interviewPrompts.ts) - only the feedback narrative is AI-generated.
+ SCORE is computed upstream by the use case (real hybrid scoring, see
+ interviewPrompts.computeHybridScore) - this only writes the
+ narrative feedback text consistent with a score it did not invent.
 */
 
 export class OllamaMockInterviewProvider implements IMockInterviewProvider {
     async nextQuestion(
         role: string,
-        previousExchanges: IInterviewExchange[]
+        previousExchanges: IInterviewExchange[],
+        candidateContext: string
     ): Promise<string> {
-        const prompt = buildQuestionPrompt(role, previousExchanges);
+        const prompt = buildQuestionPrompt(role, previousExchanges, candidateContext);
         return OllamaClient.generateText(prompt);
     }
 
     async generateFeedback(
         role: string,
-        exchanges: IInterviewExchange[]
+        exchanges: IInterviewExchange[],
+        score: number
     ): Promise<InterviewFeedback> {
-        const score = computeInterviewScore(exchanges);
         const prompt = buildFeedbackPrompt(role, exchanges, score);
-        const feedback = await OllamaClient.generateText(prompt);
+        const raw = await OllamaClient.generateText(prompt);
+        return parseFeedbackResponse(raw);
+    }
 
-        return { score, feedback };
+    async assessAnswerQuality(
+        question: string,
+        answer: string
+    ): Promise<number> {
+        const prompt = buildQualityAssessmentPrompt(question, answer);
+        const raw = await OllamaClient.generateText(prompt);
+        return parseQualityScore(raw);
     }
 }

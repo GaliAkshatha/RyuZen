@@ -4,6 +4,13 @@ import { MockInterviewSessionResponseMapper } from "../../infrastructure/mappers
 
 import { IMockInterviewProvider } from "../ports/IMockInterviewProvider.js";
 
+import { buildCandidateContext } from "../services/buildCandidateContext.js";
+
+import { computeHybridScore, MAX_QUESTIONS } from "../../infrastructure/ai/interviewPrompts.js";
+
+import { IPortfolioProjectRepository } from "../../../../career/portfolio/infrastructure/repositories/IPortfolioProjectRepository.js";
+import { ISkillRepository } from "../../../../career/skills/infrastructure/repositories/ISkillRepository.js";
+
 import { InterviewSessionStatus } from "../../domain/constants/InterviewSessionStatus.js";
 
 import { AnswerMockInterviewDto } from "../dto/AnswerMockInterviewDto.js";
@@ -12,15 +19,17 @@ import { MockInterviewSessionResponseDto } from "../dto/MockInterviewSessionResp
 import { ApiError } from "../../../../../shared/core/http/ApiError.js";
 import { HttpStatus } from "../../../../../shared/core/http/HttpStatus.js";
 
-const MAX_QUESTIONS = 5;
-
 export class AnswerMockInterviewUseCase {
 
     constructor(
 
         private readonly repository: IMockInterviewSessionRepository,
 
-        private readonly provider: IMockInterviewProvider
+        private readonly provider: IMockInterviewProvider,
+
+        private readonly projectRepository: IPortfolioProjectRepository,
+
+        private readonly skillRepository: ISkillRepository
 
     ) {}
 
@@ -75,27 +84,95 @@ export class AnswerMockInterviewUseCase {
 
         );
 
-        if (session.exchanges.length >= MAX_QUESTIONS) {
+        /**
+         * Real, immediate quality assessment - not deferred to the
+         * end of the interview. The result drives adaptive difficulty
+         * for the very next question (if any) and becomes part of the
+         * real hybrid score at completion. Assessed for every answer
+         * regardless of length, so a short-but-wrong answer still
+         * correctly lowers difficulty rather than being invisible to
+         * the adaptive system until the end.
+         */
+        const lastExchange =
+            session.exchanges[session.exchanges.length - 1]!;
 
-            const result =
+        const qualityScore =
+
+            await this.provider.assessAnswerQuality(
+
+                lastExchange.question,
+
+                dto.answer
+
+            );
+
+        session.recordAnswerQuality(
+
+            qualityScore
+
+        );
+
+        /**
+         * Real backend-enforced time limit: once a real interview's
+         * time is up, it ends there - the candidate doesn't get a
+         * 6th question just because they were mid-answer when the
+         * clock ran out. The answer they just gave is still recorded
+         * and scored; only a further question is denied.
+         */
+        const timeIsUp =
+            session.isExpired();
+
+        if (
+
+            session.exchanges.length >= MAX_QUESTIONS ||
+            timeIsUp
+
+        ) {
+
+            const finalScore =
+
+                computeHybridScore(
+                    session.exchanges,
+                    session.durationMinutes
+                );
+
+            const feedback =
 
                 await this.provider.generateFeedback(
 
                     session.role,
 
-                    session.exchanges
+                    session.exchanges,
+
+                    finalScore
 
                 );
 
             session.complete(
 
-                result.feedback,
+                feedback,
 
-                result.score
+                finalScore
 
             );
 
         } else {
+
+            const candidateContext =
+
+                await buildCandidateContext(
+
+                    userId,
+
+                    this.projectRepository,
+
+                    this.skillRepository
+
+                );
+
+            const nextDifficulty =
+
+                session.nextDifficulty();
 
             const nextQuestion =
 
@@ -103,13 +180,17 @@ export class AnswerMockInterviewUseCase {
 
                     session.role,
 
-                    session.exchanges
+                    session.exchanges,
+
+                    candidateContext
 
                 );
 
             session.askQuestion(
 
-                nextQuestion
+                nextQuestion,
+
+                nextDifficulty
 
             );
 

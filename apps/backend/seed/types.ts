@@ -94,6 +94,12 @@ export interface SeededActivity {
   points: number;
 }
 
+export interface SeededClub {
+  id: string;
+  name: string;
+  code: string;
+}
+
 /** The full, growing context threaded through every seed step for one organization. */
 export interface OrgSeedContext {
   org: SeededOrganization;

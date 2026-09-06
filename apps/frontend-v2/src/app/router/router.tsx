@@ -44,6 +44,9 @@ import { AlumniHomePage } from "@/portals/alumni/pages/AlumniHomePage";
 import { ConnectPage } from "@/domains/connections/components/ConnectPage";
 import { ProfilePage } from "@/domains/auth/pages/ProfilePage";
 import { AIAssistantPage } from "@/portals/student/pages/AIAssistantPage";
+import { InterviewHistoryPage } from "@/portals/student/pages/InterviewHistoryPage";
+import { ClubsListPage as StudentClubsListPage } from "@/portals/student/pages/ClubsListPage";
+import { ClubDetailPage as StudentClubDetailPage } from "@/portals/student/pages/ClubDetailPage";
 
 import { StudentLayout } from "@/portals/student/layout/StudentLayout";
 import { StudentHomePage } from "@/portals/student/pages/StudentHomePage";
@@ -204,6 +207,8 @@ export const router = createBrowserRouter([
       { path: "career-score", element: <CareerScorePage /> },
       { path: "portfolio", element: <PortfolioPage /> },
       { path: "resume", element: <ResumePage /> },
+      { path: "clubs", element: <StudentClubsListPage /> },
+      { path: "clubs/:id", element: <StudentClubDetailPage /> },
       { path: "events", element: <EventsListPage /> },
       { path: "events/:id", element: <EventDetailPage /> },
       { path: "attendance", element: <MyAttendancePage /> },
@@ -211,6 +216,7 @@ export const router = createBrowserRouter([
       { path: "assessments/:id", element: <AssessmentAttemptPage /> },
       { path: "connect", element: <ConnectPage /> },
       { path: "ai-assistant", element: <AIAssistantPage /> },
+      { path: "interview-history", element: <InterviewHistoryPage /> },
     ],
   },
   {

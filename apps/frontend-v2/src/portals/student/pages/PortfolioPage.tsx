@@ -30,6 +30,7 @@ import { CertificationFileUpload } from "@/domains/portfolio/components/Certific
 import { CodingProfileManager } from "@/domains/coding-profiles/components/CodingProfileManager";
 import { MyBadgesCard } from "@/domains/badges/components/MyBadgesCard";
 import { MyIssuedCertificatesCard } from "@/domains/issued-certificates/components/MyIssuedCertificatesCard";
+import { InterviewHistorySummaryCard } from "@/domains/mock-interview/components/InterviewHistorySummaryCard";
 
 type SectionKey = "skills" | "projects" | "achievements" | "experience" | "education" | "certifications";
 
@@ -171,6 +172,7 @@ export function PortfolioPage() {
       <CodingProfileManager />
       <MyBadgesCard />
       <MyIssuedCertificatesCard />
+      <InterviewHistorySummaryCard />
 
       {/* Expanded section detail */}
       {activeSection === "skills" && (
