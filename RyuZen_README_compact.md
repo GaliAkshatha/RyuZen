@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="apps/frontend-v2/public/ryuzen.png" alt="RyuZen Logo" width="140" />
+  <img src="apps/frontend-v2/public/favicon.svg" alt="RyuZen Logo" width="140" />
 </p>
 
 <h1 align="center">RyuZen — Intelligent Student Journey Platform</h1>
@@ -446,4 +446,3 @@ Never commit real secrets or API credentials.
 <p align="center">
   Built by <a href="https://github.com/GaliAkshatha">Akshatha Gali</a>
 </p>
-
