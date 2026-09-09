@@ -545,7 +545,7 @@ VITE_API_BASE_URL=http://localhost:5000/api/v1
 ---
 
 <p align="center">
-  Built by <a href="https://github.com/GaliAkshatha">Akshatha Gali</a>
+  Built by <a href="https://github.com/GaliAkshatha">Akshatha</a>
 </p>
 
 
